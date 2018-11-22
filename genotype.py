@@ -45,6 +45,9 @@ if __name__ == '__main__':
     parser.add_argument('-r', '--ref_root', dest = 'ref_root',
                         default = script_dir + "/references",
                         help = 'Root directly of references. Deault = MoNaS_v1.x/references')
+    parser.add_argument('-b', '--bin_root', dest = 'bin_root',
+                        default = script_dir + "/bin",
+                        help = 'Root directly of third party binaries. Deault = MoNaS_v1.x/bin')
 
 
     args = parser.parse_args()
