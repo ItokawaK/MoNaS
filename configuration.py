@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 
 class GenomeRef:
     # This is a class to hold path information of each species
@@ -14,6 +15,20 @@ class GenomeRef:
         self.mdom_coord_dl = os.path.join(root_dir, "ref.mdomcoord")
 
         self.check_existence()
+        
+    def creat_bwadb(self, dir):
+        bwadb = os.path.join(dir, 'bwadb')
+        if not os.path.isdir(bwadb):
+            os.mkdir(bwadb)
+            subprocess.call(['bwa', 'index',
+                             '-p', bwadb + '/ref',
+                            self.ref_fa])
+    def faidx(self):
+        if not os.path.isfile(self.ref_fa + '.fai'):
+            subprocess.call(['samtools', 'faidx', 'self.ref_fa'])
+
+    def fa_dict(self):
+        pass
 
     def check_existence(self):
         for file in [self.bwa_db + ".pac",
