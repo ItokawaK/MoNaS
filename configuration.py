@@ -29,12 +29,12 @@ class GenomeRef:
                 sys.exit(1)
 
 class Bin:
-    def __init__(self, script_dir):
-        self.bwa = os.path.join(script_dir, "bin/bwa/bwa")
-        self.samtools = os.path.join(script_dir, "bin/samtools-1.9/samtools")
-        self.bcftools = os.path.join(script_dir, "bin/bcftools-1.9/bcftools")
-        #self.freebayes = os.path.join(script_dir, "bin/freebayes/bin/freebayes")
-        self.gatk = os.path.join(script_dir, "bin/gatk-4.0.11.0/gatk")
+    def __init__(self, bin_root):
+        self.bwa = os.path.join(bin_root, "bwa/bwa")
+        self.samtools = os.path.join(bin_root, "samtools-1.9/samtools")
+        self.bcftools = os.path.join(bin_root, "bcftools-1.9/bcftools")
+        #self.freebayes = os.path.join(bin_root, "freebayes/bin/freebayes")
+        self.gatk = os.path.join(bin_root, "gatk-4.0.11.0/gatk")
 
         self.check_existence()
 
