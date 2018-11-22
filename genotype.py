@@ -62,7 +62,7 @@ if __name__ == '__main__':
     out_dir = args.out_dir
     out_bam_dir = out_dir + "/BAMs"
     vcf_out_dir = out_dir + "/VCFs"
-    bin_path = Bin(script_dir) #Bin object
+    bin_path = Bin(args.bin_root) #Bin object
     ref_dir = args.ref_root
     genome_ref = GenomeRef(ref_dir, species) #GenomeRef object
     out_table = out_dir + "/out_table"
