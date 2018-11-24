@@ -2,12 +2,10 @@ import os
 import subprocess
 import sys
 from configuration import GenomeRef
-from configuration import Bin
 from concurrent.futures import ProcessPoolExecutor
 
 class Job:
-    def __init__(self, bin, genome_ref):
-        self.bin = bin # Bin object
+    def __init__(self, genome_ref):
         self.gref = genome_ref
 
     def map_and_sort(self, sample, num_threads, out_bam_dir):
@@ -17,12 +15,12 @@ class Job:
 
         out_bam_path = out_bam_dir + "/" + sample[0] + ".bam"
 
-        cmd1 = [self.bin.bwa, "mem",
+        cmd1 = ['bwa', "mem",
                 "-t", str(num_threads),
                 "-R", r'@RG\tID:ID_' + sample[0] + r'\tSM:' + sample[0],
                 self.gref.bwa_db] + sample[1:3]
 
-        cmd2 = [self.bin.samtools, "sort",
+        cmd2 = ['samtools', "sort",
                 "-o", out_bam_path]
 
         # Uncomment to skip if bam.bai already exists. For debuggin variant calling.
@@ -44,7 +42,7 @@ class Job:
 
         tmp_bam_path = bam_dir + "/_" + bam_name + ".bam"
 
-        cmd1 = [self.bin.samtools, "rmdup",
+        cmd1 = ['samtools', "rmdup",
                "-s",
                bam_path,
                tmp_bam_path
@@ -53,7 +51,7 @@ class Job:
                tmp_bam_path,
                bam_path
                ]
-        cmd3 = [self.bin.samtools, "index",
+        cmd3 = ['samtools', "index",
                bam_path
                ]
 
@@ -70,7 +68,7 @@ class Job:
         out_csqvcf = out_dir + "/" + sample_name + "_csq.vcf"
         out_table = out_dir + "/" + sample_name + "_out_table"
 
-        cmd1 = [self.bin.gatk, "HaplotypeCaller",
+        cmd1 = ['gatk', "HaplotypeCaller",
                "-L", self.gref.bed,
                "-R", self.gref.ref_fa,
                "-I", in_bam,
@@ -79,12 +77,12 @@ class Job:
                "--max-mnp-distance", "5",
                "--native-pair-hmm-threads", "1"]
 
-        cmd2 = [self.bin.gatk, "GenotypeGVCFs",
+        cmd2 = ['gatk', "GenotypeGVCFs",
                "-R", self.gref.ref_fa,
                "-V", out_gvcf,
                "-O", out_vcf]
 
-        cmd3 = [self.bin.bcftools, "csq",
+        cmd3 = ['bcftools', "csq",
                "-g", self.gref.gff3,
                "-f", self.gref.ref_fa,
                "-p", "a"
@@ -96,7 +94,7 @@ class Job:
         proc2 = subprocess.call(cmd2)
         proc3 = subprocess.call(cmd3)
 
-        cmd4 = [self.bin.bcftools, "query",
+        cmd4 = ['bcftools', "query",
                "-f", r"[%SAMPLE\t%CHROM\t%POS\t%REF\t%ALT\t%QUAL\t%TBCSQ\t%TGT\t%AD\n]",
                "-o", out_table,
                out_csqvcf]

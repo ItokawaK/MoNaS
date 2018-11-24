@@ -1,9 +1,24 @@
 import sys
 import os
 import subprocess
+import shutil
+
+
 
 class GenomeRef:
-    # This is a class to hold path information of each species
+    '''
+    This is a class to hold path information of references for each species.
+    An instance is constructed with root directly of the MoNaS references and
+    a code of species (name of the subdirectly) are given.
+    The constructer automatically checks existence of bwa index and create them
+    if absent.
+    '''
+
+    for program in ['bwa', 'samtools', 'bcftools', 'gatk']:
+        if shutil.which(program) == None:
+            print("Error: " + program + " is not in $PATH /(*o*)\ !")
+            sys.exit(1)
+
     def __init__(self, ref_dir, species):
         root_dir = os.path.join(ref_dir, species)
         self.bwa_db = os.path.join(root_dir, "bwadb", "ref")
@@ -14,21 +29,32 @@ class GenomeRef:
         self.mdom_coord_ck = os.path.join(root_dir, "ref.mdomcoord")
         self.mdom_coord_dl = os.path.join(root_dir, "ref.mdomcoord")
 
+        if not os.path.isfile(self.bwa_db  + ".pac"):
+            print("Creating bwadb for " + self.ref_fa + "\n This may take for a while.", file = sys.stderr)
+            self.creat_bwadb(root_dir)
+
+        if not os.path.isfile(self.ref_fa + '.fai'):
+            self.faidx()
+
+        if not os.path.isfile(self.ref_fa + '.dict'):
+            self.fa_dict()
+
         self.check_existence()
-        
+
+
     def creat_bwadb(self, dir):
         bwadb = os.path.join(dir, 'bwadb')
-        if not os.path.isdir(bwadb):
+        if not os.path.exists(bwadb):
             os.mkdir(bwadb)
-            subprocess.call(['bwa', 'index',
-                             '-p', bwadb + '/ref',
-                            self.ref_fa])
+        subprocess.call(['bwa', 'index',
+                         '-p', bwadb + '/ref',
+                        self.ref_fa])
     def faidx(self):
-        if not os.path.isfile(self.ref_fa + '.fai'):
-            subprocess.call(['samtools', 'faidx', 'self.ref_fa'])
+        subprocess.call(['samtools', 'faidx', self.ref_fa])
 
     def fa_dict(self):
-        pass
+        subprocess.call(['gatk', 'CreateSequenceDictionary',
+                        '-R', self.ref_fa])
 
     def check_existence(self):
         for file in [self.bwa_db + ".pac",
@@ -39,25 +65,6 @@ class GenomeRef:
                      self.mdom_coord_ck]:
             if  os.path.exists(file):
                 print("Using the reference file " + file + ".", file = sys.stderr)
-            else:
-                print(r"ERROR!: " + file + " does not exists /(*o*)\ !", file = sys.stderr)
-                sys.exit(1)
-
-class Bin:
-    def __init__(self, bin_root):
-        self.bwa = os.path.join(bin_root, "bwa/bwa")
-        self.samtools = os.path.join(bin_root, "samtools-1.9/samtools")
-        self.bcftools = os.path.join(bin_root, "bcftools-1.9/bcftools")
-        #self.freebayes = os.path.join(bin_root, "freebayes/bin/freebayes")
-        self.gatk = os.path.join(bin_root, "gatk-4.0.11.0/gatk")
-
-        self.check_existence()
-
-    def check_existence(self):
-        for key in self.__dict__.keys():
-            file = self.__dict__[key]
-            if os.path.isfile(file):
-                print("Using " + key + " -> " + file, file = sys.stderr)
             else:
                 print(r"ERROR!: " + file + " does not exists /(*o*)\ !", file = sys.stderr)
                 sys.exit(1)

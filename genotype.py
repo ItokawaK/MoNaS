@@ -9,7 +9,6 @@ import sys
 from concurrent.futures import ProcessPoolExecutor
 import finalize_table
 from configuration import GenomeRef
-from configuration import Bin
 from jobs import Job
 
 def parse_sample_list(sample_list):
@@ -62,7 +61,7 @@ if __name__ == '__main__':
     out_dir = args.out_dir
     out_bam_dir = out_dir + "/BAMs"
     vcf_out_dir = out_dir + "/VCFs"
-    bin_path = Bin(args.bin_root) #Bin object
+    #bin_path = Bin(args.bin_root) #Bin object
     ref_dir = args.ref_root
     genome_ref = GenomeRef(ref_dir, species) #GenomeRef object
     out_table = out_dir + "/out_table"
@@ -81,7 +80,7 @@ if __name__ == '__main__':
         if to_proceed == "0":
             sys.exit(1)
 
-    job = Job(bin_path, genome_ref)
+    job = Job(genome_ref)
 
 
     #Create output dir
