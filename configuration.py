@@ -36,7 +36,7 @@ class GenomeRef:
         if not os.path.isfile(self.ref_fa + '.fai'):
             self.faidx()
 
-        if not os.path.isfile(self.ref_fa + '.dict'):
+        if not os.path.isfile(os.path.join(root_dir, "ref.dict")):
             self.fa_dict()
 
         self.check_existence()
