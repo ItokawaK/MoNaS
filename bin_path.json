@@ -1,0 +1,5 @@
+{"bwa": "~/tools/bwa/",
+ "samtools": "~/tools/INSTALL/bin/",
+ "bcftools": "~/tools/INSTALL/bin/",
+ "gatk": "~/tools/gatk-4.0.11.0"
+}

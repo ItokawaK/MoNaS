@@ -9,7 +9,6 @@ import sys
 from concurrent.futures import ProcessPoolExecutor
 import finalize_table
 from configuration import GenomeRef
-from configuration import Bin
 from jobs import Job
 
 def parse_sample_list(sample_list):
@@ -26,31 +25,59 @@ def parse_sample_list(sample_list):
 
     return(samples)
 
+def usage():
+    return ("genotyp.py -s species -o out_dir\n"
+            "\t         (--max_cpu int --ref_root path\n"
+            "\t          --sample_list path --fasta path\n"
+            "\t          --mode ngs_dna|ngs_rna|sanger_dna)\n")
+
 if __name__ == '__main__':
 
     script_dir = sys.path[0]
 
-    parser = argparse.ArgumentParser(description = 'Genotype VGSC gene.')
+    parser = argparse.ArgumentParser(description = 'Genotype VGSC gene.',
+                                     usage = usage())
 
-    parser.add_argument("species",
-                       choices = ['Cpip', 'Aalb', 'Aaeg'],
-                       help = 'Species name. It should be same to the dirname of references.')
-    parser.add_argument("sample_list",
+    parser.add_argument('-s', '--species', dest = 'species',
+                        help = 'Species name. It should be same to the dirname of references.')
+    parser.add_argument('-l', '--sample_list', dest = 'sample_list',
                        help = 'Path for a list file decribing name of sampeles and fastq files.')
-    parser.add_argument("num_cpu",
+    parser.add_argument('-t', '--max_cpu', dest = 'num_cpu',
                        type = int,
-                       help = 'Number of threads to use.')
-    parser.add_argument("out_dir",
+                       default = 4,
+                       help = 'Maximum number of threads. [4]')
+    parser.add_argument('-o', '--out_dir', dest = 'out_dir',
                        help = 'Name of out directly. Should be new.')
     parser.add_argument('-r', '--ref_root', dest = 'ref_root',
                         default = script_dir + "/references",
                         help = 'Root directly of references. Deault = MoNaS_v1.x/references')
-    parser.add_argument('-b', '--bin_root', dest = 'bin_root',
-                        default = script_dir + "/bin",
-                        help = 'Root directly of third party binaries. Deault = MoNaS_v1.x/bin')
+    parser.add_argument('-f', '--fasta', dest = 'fasta',
+                         help = 'Path to fasta file of Sanger seq.')
+    parser.add_argument('-m', '--mode', dest = 'mode',
+                         default = 'ngs_dna',
+                         choices = ['ngs_dna', 'ngs_rna', 'sanger_dna'],
+                         help = 'Analysis mode. [ngs_dna]'
+                         )
+
 
 
     args = parser.parse_args()
+
+    if not (args.species and args.ref_root and args.out_dir):
+        print("Error: species and out_dir are mandately!", file = sys.stderr)
+        print(usage())
+        sys.exit(1)
+
+    if args.mode in ['ngs_dna', 'ngs_rna']:
+        if not args.sample_list:
+            print("Error: sample_list is mandately for NGS data!", file = sys.stderr)
+            print(usage())
+            sys.exit(1)
+    else:
+        if not args.fasta:
+            print("Error: fasta is mandately for Sanger data!", file = sys.stderr)
+            print(usage())
+            sys.exit(1)
 
     species = args.species
     num_cpu = args.num_cpu
@@ -62,7 +89,7 @@ if __name__ == '__main__':
     out_dir = args.out_dir
     out_bam_dir = out_dir + "/BAMs"
     vcf_out_dir = out_dir + "/VCFs"
-    bin_path = Bin(args.bin_root) #Bin object
+    #bin_path = Bin(args.bin_root) #Bin object
     ref_dir = args.ref_root
     genome_ref = GenomeRef(ref_dir, species) #GenomeRef object
     out_table = out_dir + "/out_table"
@@ -75,13 +102,13 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if os.path.exists(out_dir):
-        print("Warning: " + out_dir + " already exists!")
-        print("  Do you wanna proceed anyway (._.)? 0: no, >0: yes")
+        print("Warning: " + out_dir + " already exists!", file = sys.stderr)
+        print("  Do you wanna proceed anyway (._.)? 0: no, >0: yes", file = sys.stderr)
         to_proceed = input(">>>>  ")
         if to_proceed == "0":
             sys.exit(1)
 
-    job = Job(bin_path, genome_ref)
+    job = Job(genome_ref)
 
 
     #Create output dir
