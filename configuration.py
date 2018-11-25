@@ -14,10 +14,19 @@ class GenomeRef:
     if absent.
     '''
 
+    program_path = {'bwa':None,
+                    'samtools':None,
+                    'bcftools':None,
+                    'gatk':None,
+                    }
+
     for program in ['bwa', 'samtools', 'bcftools', 'gatk']:
-        if shutil.which(program) == None:
-            print("Error: " + program + " is not in $PATH /(*o*)\ !")
-            sys.exit(1)
+        if program_path[program]:
+            os.environ['PATH'] = program_path[program] + os.pathsep + os.environ['PATH']
+        else:
+            if shutil.which(program) == None:
+                print("Error: " + program + " is not in $PATH /(*o*)\ !")
+                sys.exit(1)
 
     def __init__(self, ref_dir, species):
         root_dir = os.path.join(ref_dir, species)
