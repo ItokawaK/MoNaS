@@ -64,18 +64,18 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if not (args.species and args.ref_root and args.out_dir):
-        print("Error: species and out_dir are mandately!")
+        print("Error: species and out_dir are mandately!", file = sys.stderr)
         print(usage())
         sys.exit(1)
 
     if args.mode in ['ngs_dna', 'ngs_rna']:
         if not args.sample_list:
-            print("Error: sample_list is mandately for NGS data!")
+            print("Error: sample_list is mandately for NGS data!", file = sys.stderr)
             print(usage())
             sys.exit(1)
     else:
         if not args.fasta:
-            print("Error: fasta is mandately for Sanger data!")
+            print("Error: fasta is mandately for Sanger data!", file = sys.stderr)
             print(usage())
             sys.exit(1)
 
@@ -102,8 +102,8 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if os.path.exists(out_dir):
-        print("Warning: " + out_dir + " already exists!")
-        print("  Do you wanna proceed anyway (._.)? 0: no, >0: yes")
+        print("Warning: " + out_dir + " already exists!", file = sys.stderr)
+        print("  Do you wanna proceed anyway (._.)? 0: no, >0: yes", file = sys.stderr)
         to_proceed = input(">>>>  ")
         if to_proceed == "0":
             sys.exit(1)
