@@ -7,9 +7,9 @@ import subprocess
 import argparse
 import sys
 from concurrent.futures import ProcessPoolExecutor
-import finalize_table
-from configuration import GenomeRef
-from jobs import Job
+from scripts import finalize_table
+from scripts.configuration import GenomeRef
+from scripts.jobs import Job
 
 def parse_sample_list(sample_list):
     # Read sample list file
