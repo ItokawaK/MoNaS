@@ -37,15 +37,15 @@ MoNaS also requires a reference genome sequence (fasta), its bwa indices and ann
 ### Usage
 
 ```bash
-[MoNaS_v1.* directory path]/genotype.py  ref_root_dir  sample_list  num_cpu  out_dir
+[MoNaS_v1.* directory path]/genotype.py  -s ref_root_dir_name  -l sample_list  -t num_cpu  -o out_dir
 ```
-- species_ref_root_dir
+-r species_ref_root_dir
   
-The root directory for reference files. These files should have file names ref.* and be
+The directory storing reference files of each species. These files should have file names with prefix ref (eg. ref.ga) and be
 organiazed as:
 
 ```bash
-  ref_root_dir (arbitrary name)
+  ref_dir_name (arbitrary name)
        ├- ref.fa      # reference fasta
        ├- ref.fa.fai  # fasta index
        ├- ref.gff3    # gff3 annotation for VGSC CDSs
@@ -58,6 +58,9 @@ organiazed as:
             └- ref.sa # bwa indices for ref.fa
        
 ```
+In deafault, the reference directory is expexted to locate in the "references/" directory in the script directory. In stead, 
+you can explicitly assign the root directory of references with the -r, --ref_root option.
+
 
 - sample_list
 
