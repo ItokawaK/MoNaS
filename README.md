@@ -28,7 +28,7 @@ installed.
 - bcftools
 - GATK
 
-Root directries of these sofwares should be included in your $PATH, or you can directly
+Root directories of those sofwares should be included in your $PATH, or you can directly
 describe them in the **configuration.py** script file.
 
 MoNaS also requires a reference genome sequence (fasta), its bwa indices and annotation files 
@@ -37,11 +37,11 @@ MoNaS also requires a reference genome sequence (fasta), its bwa indices and ann
 ### Usage
 
 ```bash
-[MoNaS_v1.* directly path]/genotype.py  ref_root_dir  sample_list  num_cpu  out_dir
+[MoNaS_v1.* directory path]/genotype.py  ref_root_dir  sample_list  num_cpu  out_dir
 ```
 - species_ref_root_dir
   
-The root directly for reference files. These files should have file names ref.* and be
+The root directory for reference files. These files should have file names ref.* and be
 organiazed as:
 
 ```bash
@@ -70,7 +70,7 @@ organiazed as:
   sample_name_4 fastq_4F_path.fq[.gz] fastq_4R_path.fq[.gz]
 ```
 
-The *sample_names* are arbitrary strings but do not include characters such as / * \% etc.., and they should be unique because MoNaS will use *sample_names* as file names. The FASTQ path can be both absolute or relative to from where you run MoNaS.
+The *sample_names* are arbitrary strings but do not include characters such as / * \% etc.., and they should be unique because MoNaS will use *sample_names* as file names. The FASTQ path can be relative from where you run MoNaS.
 
 Pipeline detail
 --------------
