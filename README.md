@@ -37,7 +37,7 @@ MoNaS also requires a reference genome sequence (fasta), its bwa indices and ann
 ### Usage
 
 ```bash
-[MoNaS_v1.* directory path]/genotype.py  -s ref_root_dir_name  -l sample_list  -t num_cpu  -o out_dir
+MoNaS/genotype.py  -s ref_root_dir_name  -l sample_list  -t num_cpu  -o out_dir
 ```
 -r species_ref_root_dir
   
