@@ -9,16 +9,16 @@ class VCF_info:
     def __init__(self, info_str):
 
         self.dict = {}
+        self.allele = 'Wild'
 
-        if info_str == '.':
-            self.allele = 'Wild'
-        else:
+        if info_str != '.':
             split_info = info_str.split(",")
             split_info_lists = [tmp.split("|") for tmp in split_info]
 
-
             for info_list in split_info_lists:
-                if(info_list[0] in ["splice_region"]):
+                if(info_list[0] in ["splice_region", "splice_acceptor", "splice_donor"]):
+                    continue
+                if(info_list[0].startswith("@")):
                     continue
                 res = re.search(r"(..)$", info_list[2])
                 splice_variant = res.group(1)

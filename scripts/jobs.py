@@ -15,10 +15,23 @@ class Job:
 
         out_bam_path = out_bam_dir + "/" + sample[0] + ".bam"
 
-        cmd1 = ['bwa', "mem",
-                "-t", str(num_threads),
-                "-R", r'@RG\tID:ID_' + sample[0] + r'\tSM:' + sample[0],
-                self.gref.bwa_db] + sample[1:3]
+        if self.gref.mode in ['ngs_dna']:
+            cmd1 = ['bwa', "mem",
+                    "-t", str(num_threads),
+                    "-R", r'@RG\tID:ID_' + sample[0] + r'\tSM:' + sample[0],
+                    self.gref.bwa_db] + sample[1:3]
+        elif self.gref.mode in ['ngs_rna']:
+            if sample[2]:
+                sample_cmd = ["-1", sample[1], "-2", sample[2]]
+            else:
+                sample_cmd = ["-r", sample[1]]
+
+            cmd1 = ["hisat2",
+                    "-x", self.gref.hisat_db,
+                    "-p", str(num_threads),
+                    "--rg-id", r'ID_' + sample[0],
+                    "--rg", "SM:" + sample[0],
+                    ] + sample_cmd
 
         cmd2 = ['samtools', "sort",
                 "-o", out_bam_path]
