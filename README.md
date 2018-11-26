@@ -27,6 +27,7 @@ installed.
 - samtools
 - bcftools
 - GATK
+- Hisat2 (For RNA data)
 
 Root directories of those sofwares should be included in your $PATH, or you can directly
 describe them in the **configuration.py** script file.
@@ -74,6 +75,12 @@ you can explicitly assign the another directory of references with the -r, --ref
 ```
 
 The *sample_names* are arbitrary strings but do not include characters such as / * \% etc.., and they should be unique because MoNaS will use *sample_names* as file names. The FASTQ path can be relative from where you run MoNaS.
+
+- mode
+
+- fasta
+
+
 
 Pipeline detail
 --------------
