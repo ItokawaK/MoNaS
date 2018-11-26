@@ -79,7 +79,6 @@ if __name__ == '__main__':
             print(usage())
             sys.exit(1)
 
-    species = args.species
     num_cpu = args.num_cpu
     if num_cpu > 3:
         num_threads = 4
@@ -90,8 +89,10 @@ if __name__ == '__main__':
     out_bam_dir = out_dir + "/BAMs"
     vcf_out_dir = out_dir + "/VCFs"
     #bin_path = Bin(args.bin_root) #Bin object
-    ref_dir = args.ref_root
-    genome_ref = GenomeRef(ref_dir, species) #GenomeRef object
+    genome_ref = GenomeRef(args.ref_root,
+                           args.species,
+                           args.mode,
+                           args.num_cpu) #GenomeRef object
     out_table = out_dir + "/out_table"
 
     if os.path.isfile(args.sample_list):
