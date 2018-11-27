@@ -38,7 +38,7 @@ for each mosquito species. Currently, reference of MoNaS includes three species 
 ```bash
 MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir
 ```
-- species_name
+- `-s, --species`
   
 The name directory storing reference files of each species. Each file should have file names with prefix ref (eg. ref.ga) and be
 organiazed under this directory as:
@@ -67,7 +67,7 @@ you can explicitly specify another directory of references with the -r, --ref_ro
 **bwadb/**, **hisatdb/**, **ref.fa.fai** or **ref.dict**, `getnotype.py` will automaticaly create them.
 
 
-- sample_list.txt
+- `-l, --sample_list`
 
   A space delimited text file describing sample names and specifying FASTQ paths of paried-ends or single-end .
 
@@ -81,7 +81,7 @@ you can explicitly specify another directory of references with the -r, --ref_ro
 
 The *sample_names* are arbitrary unique strings identifying your each sample. Do not include a space or characters such as / * \% etc.., because MoNaS will use this value as a file name. The FASTQ path can be relative from where you run MoNaS.
 
-- mode
+- `-m, --mode`
 
 Choose your sample type among:
 
