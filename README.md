@@ -43,18 +43,22 @@ The name directory storing reference files of each species. Each file should hav
 organiazed as:
 
 ```bash
-  species_name (arbitrary name)
+  species_name/ (arbitrary name)
        ├- ref.fa      # reference fasta
        ├- ref.fa.fai  # fasta index
        ├- ref.gff3    # gff3 annotation for VGSC CDSs
        ├- ref.bed     # bed annotation for VGSC CDSs
-       └- bwadb/
-            ├- ref.amb
-            ├- ref.ann
-            ├- ref.bwt
-            ├- ref.pac
-            └- ref.sa # bwa indices for ref.fa
-       
+       ├- bwadb/ # bwa indicies
+       |     ├- ref.amb
+       |     ├- ref.ann
+       |     ├- ref.bwt
+       |     ├- ....
+       |     
+       └-hisatdb/ # hisat2 indicies
+             ├-ref.1.ht2
+             ├-ref.2.ht2
+             ├- .....
+             
 ```
 In deafault, the reference directory will be searched for the "references/" directory in the script directory. In stead, 
 you can explicitly assign the another directory of references with the -r, --ref_root option.
