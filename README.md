@@ -69,6 +69,7 @@ you can explicitly assign the another directory of references with the -r, --ref
   sample_name_2 pe_2F.fq[.gz] pe_2R.fq[.gz]
   sample_name_3 se_1.fq[.gz]
   sample_name_4 pe_3F.fq[.gz] pe_3R.fq[.gz]
+  ...            
 ```
 
 The *sample_names* are arbitrary strings but do not include characters such as / * \% etc.., and they should be unique because MoNaS will use *sample_names* as file names. The FASTQ path can be relative from where you run MoNaS.
