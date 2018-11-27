@@ -34,9 +34,16 @@ for each mosquito species. Currently, reference of MoNaS includes three species 
 
 ### Usage
 
+1. For DNA data: 
 ```bash
 MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir
 ```
+
+2. For RNA data:
+```bash
+MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir -m ngs_rna
+```
+
 - `-s`, `--species`
   
 The name directory storing reference files of each species. Each file should have file names with prefix ref (eg. ref.ga) and be
