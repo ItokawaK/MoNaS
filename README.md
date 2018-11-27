@@ -1,8 +1,8 @@
 
 # MoNaS - <u>Mo</u>squito <u>Na</u><sup>+</sup> channel mutation <u>S</u>earch
-==============
+======
 
-### Status: <font color="Red">Under construction. Sorry! </font>
+### Status: <font color="Red">Under construction. Sorry!</font>
 
 MoNaS is a pipelin tool to genotype voltage-gated sodium channel (VGSC) in mosquitos.
 Currently reference of MoNaS includes three species of mosquitos, *Aedes aegypti*, 
