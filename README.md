@@ -6,9 +6,7 @@ MoNaS
 
 MoNaS (**Mo**squito **Na**<sup>+</sup> channel mutation **S**earch) is a pipelin tool to genotype
 voltage-gated sodium channel (VGSC) in mosquitos.
- Basically, MoNaS is designed to
-handle NGS data from targeted captured library (SureSelect, xGen probes for instance), but we are planning to let this
-tool to treat data of Sanger sequence and RNA-seq.
+Basically, MoNaS is designed to handle NGS data from genomic DNA such as targeted captured library (SureSelect, xGen probes for instance) or RNA/cDNA such as shotgun library of PCR amplified VGSC cDNA. 
 
 Manuals
 -------
