@@ -8,9 +8,7 @@ MoNaS is a pipelin tool to genotype voltage-gated sodium channel (VGSC) in mosqu
 Currently reference of MoNaS includes three species of mosquitos, *Aedes aegypti*, 
 *Aedes albopictus* and *Culex quinquefasciatus*. Basically, MoNaS is designed to
 handle NGS data from targeted captured library (SureSelect, xGen probes for instance), but we are planning to let this
-tool to treat data from sanger sequence or RNA-seq.
-
-
+tool to treat data of Sanger sequence and RNA-seq.
 
 Manuals
 -------
