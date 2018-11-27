@@ -76,9 +76,9 @@ try to create them.
 
 - `-l`, `--sample_list`
 
- Please specify the path of space delimited text file describing sample names and FASTQ paths (paried-ends or single-end) in single row.
+ Specify a path of space-delimited text file describing sample names and FASTQ paths (paried-ends or single-end) in each single row.
 
-```
+```example
   sample1 pe_1F.fq[.gz] pe_1R.fq[.gz]
   sample2 pe_2F.fq[.gz] pe_2R.fq[.gz]
   sample3 se_1.fq[.gz]
