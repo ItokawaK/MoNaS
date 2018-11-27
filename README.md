@@ -1,7 +1,7 @@
 
 MoNaS 
 ======
-**A pipeline to genotype in mosquito's voltage-gated sodum channel gene**
+**A pipeline to genotype mosquito's voltage-gated sodum channel genes**
 ### Status: <font color="Red">Under construction. Sorry!</font>
 
 MoNaS (**Mo**squito **Na**<sup>+</sup> channel mutation **S**earch) is a pipelin tool to genotype
@@ -69,7 +69,7 @@ organiazed under this directory as:
              
 ```
 In deafault, the reference directory will be searched for the **references/** directory in the script directory. In stead, 
-you can explicitly specify another directory of references with the `-r, --ref_root` option. If the program could not find
+you can specify another directory explicitly with `-r, --ref_root` option. If the program could not find
 **bwadb/**, **hisatdb/**, **ref.fa.fai** or **ref.dict** within the reference directory, `getnotype.py` will automaticaly 
 try to create them.
 
