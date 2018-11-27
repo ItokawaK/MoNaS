@@ -92,7 +92,7 @@ The *sample_names* are arbitrary unique strings identifying your each sample. Do
 
 - `-m`, `--mode`
 
-Choose your sample type either `-m ngs_dna` or `-m ngs_rna`:
+Choose your sample type either between `-m ngs_dna` or `-m ngs_rna`:
 
      ngs_dna: NGS reads from genomic DNA (i.e. including intron) [default].
      ngs_rna: NGS reads from RNA/cDNA (i.e. introns are spliced).
