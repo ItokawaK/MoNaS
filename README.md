@@ -1,6 +1,6 @@
 
-# MoNaS - <u>Mo</u>squito <u>Na</u><sup>+</sup> channel mutation <u>S</u>earch
-======
+MoNaS - <u>Mo</u>squito <u>Na</u><sup>+</sup> channel mutation <u>S</u>earch
+============================================================================
 
 ### Status: <font color="Red">Under construction. Sorry!</font>
 
