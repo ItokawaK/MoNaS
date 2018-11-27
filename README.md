@@ -44,6 +44,7 @@ MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir
 ```bash
 MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir -m ngs_rna
 ```
+### Option details
 
 - `-s`, `--species`
   
@@ -77,7 +78,7 @@ try to create them.
 
 - `-l`, `--sample_list`
 
-  A space delimited text file describing sample names and FASTQ paths (paried-ends or single-end) in single row.
+ Please specify the path of space delimited text file describing sample names and FASTQ paths (paried-ends or single-end) in single row.
 
 ```
   sample1 pe_1F.fq[.gz] pe_1R.fq[.gz]
@@ -87,7 +88,7 @@ try to create them.
   ...            
 ```
 
-The *sample_names* are arbitrary unique strings identifying your each sample. Do not include a space or characters such as / * \% etc.., because MoNaS will use this value as a file name. The FASTQ paths can be relative from where you call `genotype.py`.
+`sample1, sample2, ...` are arbitrary unique strings identifying your each sample. Do not include a space or characters such as /, \*, \, etc.. because MoNaS will use these values for file names. The FASTQ paths can be relative from where you call `genotype.py`.
 
 - `-m`, `--mode`
 
