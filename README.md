@@ -88,7 +88,7 @@ try to create them.
   ...            
 ```
 
-`sample1, sample2, ...` are arbitrary unique strings identifying your each sample. Do not include a space or characters such as /, \*, \, etc.. because MoNaS will use these values for file names. The FASTQ paths can be relative from where you call `genotype.py`.
+`sample1, sample2, ...` are arbitrary unique strings identifying your each sample. Do not include a space or characters such as /, \*, \, etc. because MoNaS will use these values for file names. The FASTQ paths can be relative from where you call `genotype.py`.
 
 - `-m`, `--mode`
 
