@@ -28,9 +28,11 @@ However, MoNaS requires some third party softwares described below.
 Root directories of those sofwares should be included in your $PATH, or you can directly
 specify them in the **scripts/bin_path.json** file.
 
-MoNaS also requires a reference fasta sequence (ref.fa), and annotation files (ref.gff3, re.bed) 
-for each mosquito species. Currently, reference of MoNaS includes three species of mosquitos, *Aedes aegypti*, 
-*Aedes albopictus* and *Culex quinquefasciatus*. 
+### Genome references
+MoNaS requires a reference fasta sequence (ref.fa), and annotation files (ref.gff3, re.bed) for each mosquito species.
+Actually, accurate information for VGSC exons (in gff3 format) is the hurt of this pipeline. Currently, we have
+prepared reference files of three species of mosquitos, *Aedes aegypti*, *Aedes albopictus* and *Culex quinquefasciatus* which
+will be uploaded somewhere (please wait for a while).
 
 ### Usage
 
@@ -46,11 +48,11 @@ MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir -
 
 - `-s`, `--species`
   
-The name directory storing reference files of each species. Each file should have file names with prefix ref (eg. ref.ga) and be
-organiazed under this directory as:
+This option specifies the name of directory storing reference files of each species. Each file should have file names with
+prefix ref (eg. ref.ga) and be organiazed within this directory as:
 
 ```bash
-  species_name/ (arbitrary name)
+  species_dir/ # arbitrary name
        ├- ref.fa      # reference fasta
        ├- ref.fa.fai  # fasta index
        ├- ref.gff3    # gff3 annotation for VGSC CDSs
@@ -69,11 +71,10 @@ organiazed under this directory as:
              ├- .....
              
 ```
-In deafault, the reference directory will be searched for the **references/** directory in the script directory. In stead, 
-you can specify another directory explicitly with `-r, --ref_root` option. If the program could not find
+In deafault, the **species_dir/** will be searched in the **MoNaS/references/**. In stead, 
+you can explicitly specify another directory using `-r, --ref_root` option. If the program could not find
 **bwadb/**, **hisatdb/**, **ref.fa.fai** or **ref.dict** within the reference directory, `getnotype.py` will automaticaly 
 try to create them.
-
 
 - `-l`, `--sample_list`
 
@@ -91,10 +92,9 @@ The *sample_names* are arbitrary unique strings identifying your each sample. Do
 
 - `-m`, `--mode`
 
-Choose your sample type among:
+Choose your sample type either `-m ngs_dna` or `-m ngs_rna`:
 
      ngs_dna: NGS reads from genomic DNA (i.e. including intron) [default].
- 
      ngs_rna: NGS reads from RNA/cDNA (i.e. introns are spliced).
 
 - fasta
