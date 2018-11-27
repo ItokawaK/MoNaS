@@ -1,6 +1,7 @@
 
-MoNaS -A pipeline to genotype voltage-gated sodum channel in mosquitos
+MoNaS 
 ======
+*A pipeline to genotype voltage-gated sodum channel in mosquitos*
 ### Status: <font color="Red">Under construction. Sorry!</font>
 
 MoNaS (**Mo**squito **Na**<sup>+</sup> channel mutation **S**earch) is a pipelin tool to genotype voltage-gated sodium channel (VGSC) in mosquitos.
