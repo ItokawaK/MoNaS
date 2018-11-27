@@ -37,7 +37,7 @@ for each mosquito species. Currently, reference of MoNaS includes three species 
 ```bash
 MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir
 ```
-- `-s, --species`
+- `-s`, `--species`
   
 The name directory storing reference files of each species. Each file should have file names with prefix ref (eg. ref.ga) and be
 organiazed under this directory as:
@@ -67,7 +67,7 @@ you can explicitly specify another directory of references with the `-r, --ref_r
 try to create them.
 
 
-- `-l, --sample_list`
+- `-l`, `--sample_list`
 
   A space delimited text file describing sample names and FASTQ paths (paried-ends or single-end) in single row.
 
@@ -79,9 +79,9 @@ try to create them.
   ...            
 ```
 
-The *sample_names* are arbitrary unique strings identifying your each sample. Do not include a space or characters such as / * \% etc.., because MoNaS will use this value as a file name. The FASTQ path can be relative from where you run MoNaS.
+The *sample_names* are arbitrary unique strings identifying your each sample. Do not include a space or characters such as / * \% etc.., because MoNaS will use this value as a file name. The FASTQ paths can be relative from where you call `genotype.py`.
 
-- `-m, --mode`
+- `-m`, `--mode`
 
 Choose your sample type among:
 
@@ -98,14 +98,14 @@ Pipeline detail
 
 1. MoNaS maps NGS reads to reference genome of each mosquito species with `bwa mem` for DNA data or `hisat2` for RNA data.
 
-1. The resulted bam files are sorted, removed PCR duplicates, and indexed with `samtools sort, rmdup, index`. 
+1. The resulted bam files are sorted, removed PCR duplicates, and indexed with `samtools sort`, `rmdup` and `index`, respectively. 
 
 1. Each indexed bam file are processed with `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions analyzed.  
 
-1. `bcftools csq` annotate amino acid changes using information in ref.gff3
+1. `bcftools csq` annotate amino acid changes using information in **ref.gff3**.
 
 1. Finally, hunam-friendly table decribing amino acid changes and its corresponding AA positions in *Musca domestica* will be
-generated.
+generated from vcf files.
 
 Output
 ------
