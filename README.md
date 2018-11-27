@@ -85,7 +85,7 @@ The *sample_names* are arbitrary unique strings identifying your each sample. Do
 
 Choose your sample type among:
 
-     ngs_dna: NGS reads from genomic DNA (i.e. including intron) \[default\].
+     ngs_dna: NGS reads from genomic DNA (i.e. including intron) [default].
  
      ngs_rna: NGS reads from RNA/cDNA (i.e. introns are spliced).
 
