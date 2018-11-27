@@ -20,11 +20,11 @@ in Mac.
 
 MoNaS consists of several python3 scripts which do not require compilation.
 However, MoNaS requires some third party softwares described below.
-- bwa
-- samtools
-- bcftools
-- GATK
-- Hisat2 (For RNA data)
+- [bwa](https://github.com/lh3/bwa) 
+- [samtools](http://www.htslib.org/)
+- [bcftools](http://www.htslib.org/)
+- [GATK 4x](https://software.broadinstitute.org/gatk/)
+- [Hisat2](https://ccb.jhu.edu/software/hisat2/index.shtml) (For RNA data)
 
 Root directories of those sofwares should be included in your $PATH, or you can directly
 describe them in the **scripts/bin_path.json** file.
