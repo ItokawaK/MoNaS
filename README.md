@@ -1,7 +1,7 @@
 
 MoNaS 
 ======
-**A pipeline to genotype mosquito's voltage-gated sodum channel genes**
+**A pipeline to genotype mosquito's voltage-gated sodum channel genes using NGS data**
 ### Status: <font color="Red">Under construction. Sorry!</font>
 
 MoNaS (**Mo**squito **Na**<sup>+</sup> channel mutation **S**earch) is a pipelin tool to genotype
