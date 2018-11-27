@@ -27,10 +27,10 @@ However, MoNaS requires some third party softwares described below.
 - [GATK 4x](https://software.broadinstitute.org/gatk/)
 
 Root directories of those sofwares should be included in your $PATH, or you can directly
-describe them in the **scripts/bin_path.json** file.
+specify them in the **scripts/bin_path.json** file.
 
-MoNaS also requires a reference genome sequence (fasta), its bwa indices and annotation files 
-(gff3, bed) for each mosquito species. The fasta file should be pre-indexed by *samtools faidx*. 
+MoNaS also requires a reference fasta sequence (ref.fa), and annotation files (ref.gff3, re.bed) 
+for each mosquito species. 
 
 ### Usage
 
@@ -48,6 +48,7 @@ organiazed as:
        ├- ref.fa.fai  # fasta index
        ├- ref.gff3    # gff3 annotation for VGSC CDSs
        ├- ref.bed     # bed annotation for VGSC CDSs
+       ├- ref.dict    # genome dictionary for GATK
        ├- bwadb/ # bwa indicies
        |     ├- ref.amb
        |     ├- ref.ann
@@ -60,8 +61,9 @@ organiazed as:
              ├- .....
              
 ```
-In deafault, the reference directory will be searched for the "references/" directory in the script directory. In stead, 
-you can explicitly assign the another directory of references with the -r, --ref_root option.
+In deafault, the reference directory will be searched for the **references/** directory in the script directory. In stead, 
+you can explicitly specify another directory of references with the -r, --ref_root option. If the program could not find
+**bwadb/**, **hisatdb/**, **ref.fa.fai** or **ref.dict**, `getnotype.py` will automaticaly create them.
 
 
 - sample_list
