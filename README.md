@@ -13,7 +13,7 @@ tool to treat data of Sanger sequence and RNA-seq.
 Manuals
 -------
 
-### Instlation
+### Installation
 
 Currently, we have confirmed MoNaS works in Ubuntu18 and CentOS6. It may also work in Mac. 
 
