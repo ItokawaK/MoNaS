@@ -56,6 +56,7 @@ organiazed under this directory as:
        ├- ref.gff3    # gff3 annotation for VGSC CDSs
        ├- ref.bed     # bed annotation for VGSC CDSs
        ├- ref.dict    # genome dictionary for GATK
+       ├- ref.mdom.fa # pair-wise aligned AA seqs between mosquito and M. domestica
        ├- bwadb/ # bwa indicies
        │     ├- ref.amb
        │     ├- ref.ann
