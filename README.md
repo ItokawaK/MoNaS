@@ -21,8 +21,7 @@ Currently, we have confirmed MoNaS works in Ubuntu18 and CentOS6. It may work al
 in Mac. 
 
 MoNaS consists of several python3 scripts which do not require compilation.
-However, MoNaS requires some third party softwares described below are
-installed.
+However, MoNaS requires some third party softwares described below.
 - bwa
 - samtools
 - bcftools
@@ -30,7 +29,7 @@ installed.
 - Hisat2 (For RNA data)
 
 Root directories of those sofwares should be included in your $PATH, or you can directly
-describe them in the **configuration.py** script file.
+describe them in the **scripts/bin_path.json** file.
 
 MoNaS also requires a reference genome sequence (fasta), its bwa indices and annotation files 
 (gff3, bed) for each mosquito species. The fasta file should be pre-indexed by *samtools faidx*. 
