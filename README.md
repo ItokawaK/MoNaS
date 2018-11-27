@@ -4,9 +4,9 @@ MoNaS
 *A pipeline to genotype voltage-gated sodum channel in mosquitos*
 ### Status: <font color="Red">Under construction. Sorry!</font>
 
-MoNaS (**Mo**squito **Na**<sup>+</sup> channel mutation **S**earch) is a pipelin tool to genotype voltage-gated sodium channel (VGSC) in mosquitos.
-Currently reference of MoNaS includes three species of mosquitos, *Aedes aegypti*, 
-*Aedes albopictus* and *Culex quinquefasciatus*. Basically, MoNaS is designed to
+MoNaS (**Mo**squito **Na**<sup>+</sup> channel mutation **S**earch) is a pipelin tool to genotype
+voltage-gated sodium channel (VGSC) in mosquitos.
+ Basically, MoNaS is designed to
 handle NGS data from targeted captured library (SureSelect, xGen probes for instance), but we are planning to let this
 tool to treat data of Sanger sequence and RNA-seq.
 
@@ -30,7 +30,8 @@ Root directories of those sofwares should be included in your $PATH, or you can 
 specify them in the **scripts/bin_path.json** file.
 
 MoNaS also requires a reference fasta sequence (ref.fa), and annotation files (ref.gff3, re.bed) 
-for each mosquito species. 
+for each mosquito species. Currently, reference of MoNaS includes three species of mosquitos, *Aedes aegypti*, 
+*Aedes albopictus* and *Culex quinquefasciatus*. 
 
 ### Usage
 
@@ -40,7 +41,7 @@ MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir
 - species_name
   
 The name directory storing reference files of each species. Each file should have file names with prefix ref (eg. ref.ga) and be
-organiazed as:
+organiazed under this directory as:
 
 ```bash
   species_name/ (arbitrary name)
@@ -66,9 +67,9 @@ you can explicitly specify another directory of references with the -r, --ref_ro
 **bwadb/**, **hisatdb/**, **ref.fa.fai** or **ref.dict**, `getnotype.py` will automaticaly create them.
 
 
-- sample_list
+- sample_list.txt
 
-  A space delimited text file describing sample names and FASTQ of paried-ends or single-end .
+  A space delimited text file describing sample names and specifying FASTQ paths of paried-ends or single-end .
 
 ```
   sample_name_1 pe_1F.fq[.gz] pe_1R.fq[.gz]
@@ -78,9 +79,15 @@ you can explicitly specify another directory of references with the -r, --ref_ro
   ...            
 ```
 
-The *sample_names* are arbitrary strings but do not include characters such as / * \% etc.., and they should be unique because MoNaS will use *sample_names* as file names. The FASTQ path can be relative from where you run MoNaS.
+The *sample_names* are arbitrary unique strings identifying your each sample. Do not include a space or characters such as / * \% etc.., because MoNaS will use this value as a file name. The FASTQ path can be relative from where you run MoNaS.
 
 - mode
+
+Choose your sample type among:
+
+ *ngs_dna*: NGS reads from genomic DNA (i.e. including intron) \[defaul\].
+ 
+ *ngs_rna*: NGS reads from RNA/cDNA (i.e. introns are spliced).
 
 - fasta
 
