@@ -69,13 +69,13 @@ you can explicitly specify another directory of references with the -r, --ref_ro
 
 - `-l, --sample_list`
 
-  A space delimited text file describing sample names and specifying FASTQ paths of paried-ends or single-end .
+  A space delimited text file describing sample names and FASTQ paths (paried-ends or single-end) in single row.
 
 ```
-  sample_name_1 pe_1F.fq[.gz] pe_1R.fq[.gz]
-  sample_name_2 pe_2F.fq[.gz] pe_2R.fq[.gz]
-  sample_name_3 se_1.fq[.gz]
-  sample_name_4 pe_3F.fq[.gz] pe_3R.fq[.gz]
+  sample1 pe_1F.fq[.gz] pe_1R.fq[.gz]
+  sample2 pe_2F.fq[.gz] pe_2R.fq[.gz]
+  sample3 se_1.fq[.gz]
+  sample4 pe_3F.fq[.gz] pe_3R.fq[.gz]
   ...            
 ```
 
@@ -85,9 +85,9 @@ The *sample_names* are arbitrary unique strings identifying your each sample. Do
 
 Choose your sample type among:
 
-     `ngs_dna`: NGS reads from genomic DNA (i.e. including intron) \[default\].
+     ngs_dna: NGS reads from genomic DNA (i.e. including intron) \[default\].
  
-     `ngs_rna`: NGS reads from RNA/cDNA (i.e. introns are spliced).
+     ngs_rna: NGS reads from RNA/cDNA (i.e. introns are spliced).
 
 - fasta
 
@@ -102,4 +102,27 @@ functions. The indexed bam file is processed with *GATK* for variant calling for
 and then, amino acid changes are annotated with *bcftools csq*. Finally, hunam-friendly table
 decribing amino acid changes and its corresponding AA positions in *Musca domestica* will be
 generated.
+
+Output
+------
+The output data will look like:
+
+```bash
+  out_dir/ # your specified name
+       ├- BAMs/     # indexed and sorted bam files
+       │    ├- sample1.bam
+       │    ├- sample1.bam.bai
+       │    ├- sample2.bam
+       │    ├- ...
+       │
+       ├- VCFs/ # indexed vcf files
+       │     ├- sample1.vcf
+       │     ├- sample1.vcf.idx
+       │     ├- sample2.vcf
+       │     ├- ....
+       |     
+       ├- out_table # 
+       └- table_with_Mdomcoord.tsv # list of mutations and AA changes with M. domestica AA number
+            
+```
 
