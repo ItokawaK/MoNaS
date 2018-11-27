@@ -20,7 +20,7 @@ in Mac.
 
 MoNaS consists of several python3 scripts which do not require compilation.
 However, MoNaS requires some third party softwares described below.
-- [bwa](https://github.com/lh3/bwa) 
+- [bwa](https://github.com/lh3/bwa) (For genomic DNA data)
 - [samtools](http://www.htslib.org/)
 - [bcftools](http://www.htslib.org/)
 - [GATK 4x](https://software.broadinstitute.org/gatk/)
