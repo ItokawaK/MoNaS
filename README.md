@@ -38,15 +38,15 @@ MoNaS also requires a reference genome sequence (fasta), its bwa indices and ann
 ### Usage
 
 ```bash
-MoNaS/genotype.py  -s ref_dir_name  -l sample_list.txt  -t num_cpu  -o out_dir
+MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir
 ```
-- species_ref_dir
+- species_name
   
-The directory storing reference files of each species. These files should have file names with prefix ref (eg. ref.ga) and be
+The name directory storing reference files of each species. Each file should have file names with prefix ref (eg. ref.ga) and be
 organiazed as:
 
 ```bash
-  ref_dir_name (arbitrary name)
+  species_name (arbitrary name)
        ├- ref.fa      # reference fasta
        ├- ref.fa.fai  # fasta index
        ├- ref.gff3    # gff3 annotation for VGSC CDSs
