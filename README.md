@@ -51,11 +51,11 @@ organiazed under this directory as:
        ├- ref.bed     # bed annotation for VGSC CDSs
        ├- ref.dict    # genome dictionary for GATK
        ├- bwadb/ # bwa indicies
-       |     ├- ref.amb
-       |     ├- ref.ann
-       |     ├- ref.bwt
-       |     ├- ....
-       |     
+       │     ├- ref.amb
+       │     ├- ref.ann
+       │     ├- ref.bwt
+       │     ├- ....
+       │     
        └-hisatdb/ # hisat2 indicies
              ├-ref.1.ht2
              ├-ref.2.ht2
@@ -120,7 +120,7 @@ The output data will look like:
        │     ├- sample1.vcf.idx
        │     ├- sample2.vcf
        │     ├- ....
-       |     
+       │     
        ├- out_table # 
        └- table_with_Mdomcoord.tsv # list of mutations and AA changes with M. domestica AA number
             
