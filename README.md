@@ -15,8 +15,7 @@ Manuals
 
 ### Instlation
 
-Currently, we have confirmed MoNaS works in Ubuntu18 and CentOS6. It may work also
-in Mac. 
+Currently, we have confirmed MoNaS works in Ubuntu18 and CentOS6. It may also work in Mac. 
 
 MoNaS consists of several python3 scripts which do not require compilation.
 However, MoNaS requires some third party softwares described below.
@@ -63,8 +62,9 @@ organiazed under this directory as:
              
 ```
 In deafault, the reference directory will be searched for the **references/** directory in the script directory. In stead, 
-you can explicitly specify another directory of references with the -r, --ref_root option. If the program could not find
-**bwadb/**, **hisatdb/**, **ref.fa.fai** or **ref.dict**, `getnotype.py` will automaticaly create them.
+you can explicitly specify another directory of references with the `-r, --ref_root` option. If the program could not find
+**bwadb/**, **hisatdb/**, **ref.fa.fai** or **ref.dict** within the reference directory, `getnotype.py` will automaticaly 
+try to create them.
 
 
 - `-l, --sample_list`
@@ -96,11 +96,15 @@ Choose your sample type among:
 Pipeline detail
 --------------
 
-MoNaS first maps NGS reads to reference genome of each mosquito species with *bwa mem*. 
-Then, the resulted bam file is sorted, removed PCR duplicates, and indexed with *samtools* 
-functions. The indexed bam file is processed with *GATK* for variant calling for the VGSC gene,
-and then, amino acid changes are annotated with *bcftools csq*. Finally, hunam-friendly table
-decribing amino acid changes and its corresponding AA positions in *Musca domestica* will be
+1. MoNaS maps NGS reads to reference genome of each mosquito species with `bwa mem` for DNA data or `hisat2` for RNA data.
+
+1. The resulted bam files are sorted, removed PCR duplicates, and indexed with `samtools sort, rmdup, index`. 
+
+1. Each indexed bam file are processed with `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions analyzed.  
+
+1. `bcftools csq` annotate amino acid changes using information in ref.gff3
+
+1. Finally, hunam-friendly table decribing amino acid changes and its corresponding AA positions in *Musca domestica* will be
 generated.
 
 Output
