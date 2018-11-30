@@ -16,13 +16,13 @@ Currently, we have confirmed MoNaS works in both Ubuntu18 and CentOS6. It is pos
 
 MoNaS consists of several python3 scripts which do not require compilation.
 However, MoNaS requires some third party softwares: 
-- [bwa](https://github.com/lh3/bwa) v0.7.17 (For genomic DNA data)
-- [Hisat2](https://ccb.jhu.edu/software/hisat2/index.shtml) v2.1.0 (For RNA data)
-- [samtools](http://www.htslib.org/) v1.9
-- [bcftools](http://www.htslib.org/) v1.9
-- [GATK 4x](https://software.broadinstitute.org/gatk/) v4.0.11.0
+- [bwa](https://github.com/lh3/bwa) v0.7.17\* (For genomic DNA data)
+- [Hisat2](https://ccb.jhu.edu/software/hisat2/index.shtml) v2.1.0\* (For RNA data)
+- [samtools](http://www.htslib.org/) v1.9\*
+- [bcftools](http://www.htslib.org/) v1.9\*
+- [GATK 4x](https://software.broadinstitute.org/gatk/) v4.0.11.0\*
 
-    \*Versions we used. 
+    \*Versions we use. 
 
 Root directories of those sofwares should be included in your $PATH, or you can directly
 specify them in the **scripts/bin_path.json** file.
