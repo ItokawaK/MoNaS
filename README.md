@@ -1,10 +1,10 @@
 
 MoNaS 
 ======
-**A pipeline to genotype mosquito's voltage-gated sodum channel genes using NGS data**
+**An automated pipeline to genotype mosquito's voltage-gated sodum channel genes using NGS data**
 ### Status: <font color="Red">Under construction. Sorry!</font>
 
-MoNaS (**Mo**squito **Na**<sup>+</sup> channel mutation **S**earch) is a pipelin tool to genotype
+MoNaS (**Mo**squito **Na**<sup>+</sup> channel mutation **S**earch) is an automated pipeline to assist genotyping
 voltage-gated sodium channel (VGSC) in mosquitos.
 Basically, MoNaS is designed to handle NGS data from genomic DNA such as targeted captured library (SureSelect, xGen probes for instance) or RNA/cDNA such as shotgun library of PCR amplified VGSC cDNA. 
 
@@ -27,7 +27,7 @@ specify them in the **scripts/bin_path.json** file.
 
 ### Genome references
 MoNaS requires a reference fasta sequence (ref.fa), and annotation files (ref.gff3, re.bed) for each mosquito species.
-Actually, accurate information for VGSC exons (in gff3 format) is the hurt of this pipeline. Currently, we have
+Actually, accurate information for VGSC exons (in gff3 format) is the heart of this pipeline. Currently, we have
 prepared reference files of three species of mosquitos, *Aedes aegypti*, *Aedes albopictus* and *Culex quinquefasciatus* which
 will be uploaded somewhere (please wait for a while).
 
