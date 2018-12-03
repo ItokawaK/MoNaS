@@ -1,7 +1,7 @@
 
 MoNaS 
 ======
-**An automated pipeline to genotype mosquito's voltage-gated sodum channel genes using NGS data**
+**An automated pipeline to genotype mosquito's voltage-gated sodium channel genes using NGS data**
 ### Status: <font color="Red">Under construction. Sorry!</font>
 
 MoNaS (**Mo**squito **Na**<sup>+</sup> channel mutation **S**earch) is an automated pipeline to assist genotyping
@@ -15,20 +15,20 @@ Currently, we have confirmed MoNaS works in both Ubuntu18 and CentOS6. It is pos
 ### Installation
 
 MoNaS consists of several python3 scripts which do not require compilation.
-However, MoNaS requires some third party softwares: 
+However, MoNaS requires some third-party softwares: 
 - [bwa](https://github.com/lh3/bwa) v0.7.17\* (For genomic DNA data)
 - [Hisat2](https://ccb.jhu.edu/software/hisat2/index.shtml) v2.1.0\* (For RNA data)
 - [samtools](http://www.htslib.org/) v1.9\*
 - [bcftools](http://www.htslib.org/) v1.9\*
 - [GATK 4x](https://software.broadinstitute.org/gatk/) v4.0.11.0\*
 
-    \*Versions we use. 
+    \*Versions we currently using. 
 
-Root directories of those sofwares should be included in your $PATH, or you can directly
+Root directories of those softwares should be included in your $PATH, or you can directly
 specify them in the **scripts/bin_path.json** file.
 
 ### Genome references
-MoNaS requires a reference fasta sequence (ref.fa), and annotation files (ref.gff3, re.bed) for each mosquito species.
+MoNaS requires a reference fasta sequence (ref.fa), and annotation files (ref.gff3, ref.bed) for each mosquito species.
 Actually, accurate information for VGSC exons (in gff3 format) is the heart of this pipeline. Currently, we have
 prepared reference files of three species of mosquitos, *Aedes aegypti*, *Aedes albopictus* and *Culex quinquefasciatus* which
 will be uploaded somewhere (please wait for a while).
@@ -49,7 +49,7 @@ MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir -
 - `-s`, `--species`
   
 This option specifies the name of directory storing reference files of each species. Each file should have file names with
-prefix ref (eg. ref.ga) and be organiazed within this directory as:
+prefix ref (eg. ref.ga) and be organized within this directory as:
 
 ```bash
   species_dir/ # arbitrary name
@@ -88,7 +88,7 @@ try to create them.
   ...            
 ```
 
-`sample1, sample2, ...` are arbitrary unique strings identifying your each sample. Do not include a space or characters such as /, \*, \, etc. because MoNaS will use these values for file names. The FASTQ paths can be relative from where you call `genotype.py`.
+`sample1, sample2, ...` are arbitrary unique strings identifying each your sample. Do not include a space or characters such as /, \*, \, etc. because MoNaS will use these values for file names. The FASTQ paths can be relative from where you call `genotype.py`.
 
 - `-m`, `--mode`
 
@@ -112,7 +112,7 @@ Pipeline detail
 
 1. `bcftools csq` annotate amino acid changes using information in **ref.gff3**.
 
-1. Finally, hunam-friendly table decribing amino acid changes and its corresponding AA positions in *Musca domestica* will be
+1. Finally, human-friendly table describing amino acid changes and its corresponding AA positions in *Musca domestica* will be
 generated from vcf files.
 
 Output
