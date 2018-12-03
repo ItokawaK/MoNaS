@@ -56,7 +56,6 @@ class Job:
         tmp_bam_path = bam_dir + "/_" + bam_name + ".bam"
 
         cmd1 = ['samtools', "rmdup",
-               "-s",
                bam_path,
                tmp_bam_path
                ]
