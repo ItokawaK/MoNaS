@@ -91,7 +91,8 @@ if __name__ == '__main__':
         num_threads = 1
     num_proc = num_cpu // num_threads
     out_dir = args.out_dir
-    out_bam_dir = out_dir + "/BAMs"
+    out_bam_dir1 = out_dir + "/BAMs"
+    out_bam_dir2 = out_dir + "/BAMs_rmdup"
     vcf_out_dir = out_dir + "/VCFs"
     #bin_path = Bin(args.bin_root) #Bin object
     genome_ref = GenomeRef(args.ref_root,
@@ -120,23 +121,33 @@ if __name__ == '__main__':
     #Create output dir
     if not os.path.isdir(out_dir):
         os.mkdir(out_dir)
-    if not os.path.isdir(out_bam_dir):
-        os.mkdir(out_bam_dir)
+
+    if not os.path.isdir(out_bam_dir1):
+        os.mkdir(out_bam_dir1)
 
     #Executing multiprocesses of bwa mem | samtools sort
     with  ProcessPoolExecutor(max_workers = num_proc) as executor:
         executed = [executor.submit(job.map_and_sort,
                                     sample,
                                     num_threads,
-                                    out_bam_dir) for sample in samples]
+                                    out_bam_dir1) for sample in samples]
 
     out_bams = [ex.result() for ex in executed]
+
+    if not os.path.isdir(out_bam_dir2):
+        os.mkdir(out_bam_dir2)
 
     #Executing multiprocesses of samtools rmdup and samtools index
     with ProcessPoolExecutor(max_workers = num_cpu) as executor:
         executed = [executor.submit(job.rmdup_and_index,
                                     bam,
-                                    do_clean = args.do_clean) for bam in out_bams]
+                                    out_bam_dir2
+                                    ) for bam in out_bams]
+
+    out_bams = [ex.result() for ex in executed]
+
+    if args.do_clean:
+        shutil.rmtree(out_bam_dir1)
 
     if not os.path.isdir(vcf_out_dir):
         os.mkdir(vcf_out_dir)

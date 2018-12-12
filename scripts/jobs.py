@@ -46,35 +46,28 @@ class Job:
         proc2.communicate()
         return(out_bam_path)
 
-    def rmdup_and_index(self, bam_path, do_clean = True):
+    def rmdup_and_index(self, in_bam_path, out_bam_dir):
         # samptools rmdup and index for a given bam
         # Result is stored in same dir
         # Original bam file will be relaced
 
-        bam_dir = os.path.dirname(bam_path)
-        bam_name = os.path.basename(bam_path)
-
-        tmp_bam_path = bam_dir + "/_" + bam_name + ".bam"
+        in_bam_dir = os.path.dirname(in_bam_path)
+        in_bam_basename = os.path.basename(in_bam_path)
+        out_bam_path = os.path.join(out_bam_dir, in_bam_basename + ".bam")
 
         cmd1 = ['samtools', "rmdup",
-               bam_path,
-               tmp_bam_path
+               in_bam_path,
+               out_bam_path
                ]
 
-        if not do_clean:
-            shutil.copy(bam_path, bam_dir + "/" + bam_name + "_ori.bam")
-
-        cmd2 = ["mv",
-               tmp_bam_path,
-               bam_path
-               ]
-        cmd3 = ['samtools', "index",
-               bam_path
+        cmd2 = ['samtools', "index",
+               out_bam_path
                ]
 
         subprocess.call(cmd1)
         subprocess.call(cmd2)
-        subprocess.call(cmd3)
+
+        return(out_bam_path)
 
     def variant_analysis(self, out_dir, in_bam, sample_name):
         # Variant calling using gatk and annotion usig bcftools csq
