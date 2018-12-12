@@ -35,6 +35,40 @@ will be uploaded somewhere (please wait for a while).
 
 ### Usage
 
+```
+$./genotype.py -h
+
+usage: genotyp.py -s species -o out_dir
+                 (--max_cpu int --ref_root path
+                  --sample_list path --fasta path
+                  --mode ngs_dna|ngs_rna|sanger_dna)
+
+Genotype VGSC gene.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s SPECIES, --species SPECIES
+                        Species name. It should be same to the dirname of
+                        references.
+  -l SAMPLE_LIST, --sample_list SAMPLE_LIST
+                        Path for a list file decribing name of sampeles and
+                        fastq files.
+  -t NUM_CPU, --max_cpu NUM_CPU
+                        Maximum number of threads. [4]
+  -o OUT_DIR, --out_dir OUT_DIR
+                        Name of out directly. Should be new.
+  -r REF_ROOT, --ref_root REF_ROOT
+                        Root directly of references. Deault =
+                        MoNaS_v1.x/references
+  -f FASTA, --fasta FASTA
+                        Path to fasta file of Sanger seq.
+  -m {ngs_dna,ngs_rna,sanger_dna}, --mode {ngs_dna,ngs_rna,sanger_dna}
+                        Analysis mode. [ngs_dna]
+  -n, --no_clean        Do not clean old BAM files after rmdup. Off in
+                        default.
+```
+
+
 1. For DNA data: 
 ```bash
 MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir
@@ -121,12 +155,17 @@ The output data will look like:
 
 ```bash
   out_dir/ # your specified name
-       ├- BAMs/     # indexed and sorted bam files
+       ├- BAMs/     # Sorted bam files. Will be removed after samtools rmdupped in default.
+       │    ├- sample1.bam
+       │    ├- sample2.bam
+       │    ├- ...
+       │
+       ├- BAMs_rmdup/　# Indexed bam files after remove PCR duplicates.
        │    ├- sample1.bam
        │    ├- sample1.bam.bai
        │    ├- sample2.bam
        │    ├- ...
-       │
+       │       
        ├- VCFs/ # indexed vcf files
        │     ├- sample1.vcf
        │     ├- sample1.vcf.idx
