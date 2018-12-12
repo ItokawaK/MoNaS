@@ -3,6 +3,7 @@ import subprocess
 import sys
 from scripts.configuration import GenomeRef
 from concurrent.futures import ProcessPoolExecutor
+import shutil
 
 class Job:
     def __init__(self, genome_ref):
@@ -45,7 +46,7 @@ class Job:
         proc2.communicate()
         return(out_bam_path)
 
-    def rmdup_and_index(self, bam_path):
+    def rmdup_and_index(self, bam_path, do_clean = True):
         # samptools rmdup and index for a given bam
         # Result is stored in same dir
         # Original bam file will be relaced
@@ -59,6 +60,10 @@ class Job:
                bam_path,
                tmp_bam_path
                ]
+
+        if not do_clean:
+            shutil.copy(bam_path, bam_dir + "/" + bam_name + "_ori.bam")
+
         cmd2 = ["mv",
                tmp_bam_path,
                bam_path

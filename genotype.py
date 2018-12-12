@@ -58,6 +58,11 @@ if __name__ == '__main__':
                          choices = ['ngs_dna', 'ngs_rna', 'sanger_dna'],
                          help = 'Analysis mode. [ngs_dna]'
                          )
+    parser.add_argument('-n', '--no_clean', dest = 'do_clean',
+                         action='store_false',
+                         default = True,
+                         help = 'Do not clean old BAM files after rmdup. Off in default.'
+                         )
 
 
 
@@ -119,7 +124,7 @@ if __name__ == '__main__':
         os.mkdir(out_bam_dir)
 
     #Executing multiprocesses of bwa mem | samtools sort
-    with ProcessPoolExecutor(max_workers = num_proc) as executor:
+    with  ProcessPoolExecutor(max_workers = num_proc) as executor:
         executed = [executor.submit(job.map_and_sort,
                                     sample,
                                     num_threads,
@@ -129,7 +134,9 @@ if __name__ == '__main__':
 
     #Executing multiprocesses of samtools rmdup and samtools index
     with ProcessPoolExecutor(max_workers = num_cpu) as executor:
-        executed = [executor.submit(job.rmdup_and_index, bam) for bam in out_bams]
+        executed = [executor.submit(job.rmdup_and_index,
+                                    bam,
+                                    do_clean = args.do_clean) for bam in out_bams]
 
     if not os.path.isdir(vcf_out_dir):
         os.mkdir(vcf_out_dir)
