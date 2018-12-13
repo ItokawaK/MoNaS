@@ -53,7 +53,7 @@ class Job:
 
         in_bam_dir = os.path.dirname(in_bam_path)
         in_bam_basename = os.path.basename(in_bam_path)
-        out_bam_path = os.path.join(out_bam_dir, in_bam_basename + ".bam")
+        out_bam_path = os.path.join(out_bam_dir, in_bam_basename)
 
         cmd1 = ['samtools', "rmdup",
                in_bam_path,
