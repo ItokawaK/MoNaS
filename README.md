@@ -22,7 +22,7 @@ However, MoNaS requires some third-party softwares:
 - [bcftools](http://www.htslib.org/) v1.9\*
 - [GATK 4x](https://software.broadinstitute.org/gatk/) v4.0.11.0\*
 
-    \*Versions we currently using. 
+    \*Versions we are currently using. 
 
 Root directories of those softwares should be included in your $PATH, or you can directly
 specify them in the **scripts/bin_path.json** file.
