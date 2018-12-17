@@ -14,7 +14,7 @@ class GenomeRef:
     if absent.
     '''
 
-    def __init__(self, ref_dir, species, mode, num_cpu):
+    def __init__(self, ref_dir, species, mode, num_cpu, variant_caller):
 
         self.root_dir = os.path.join(ref_dir, species)
         if not os.path.isdir(self.root_dir):
@@ -32,7 +32,7 @@ class GenomeRef:
         self.mode = mode
         self.num_cpu = num_cpu
 
-        self.check_program_path(self.mode)
+        self.check_program_path(self.mode, variant_caller)
 
         self.check_genomedb(self.mode)
 
@@ -74,15 +74,19 @@ class GenomeRef:
             print(mode + " is currently not supproted.")
             sys.exit(1)
 
-    def check_program_path(self, mode):
+    def check_program_path(self, mode, variant_caller):
 
         with open(os.path.dirname(os.path.abspath(__file__)) + '/bin_path.json') as f:
             program_path = json.load(f)
 
+        required_programs = ['samtools', 'bcftools']
+
         if mode == 'ngs_dna':
-            required_programs = ['bwa', 'samtools', 'bcftools', 'gatk']
+            required_programs.append('bwa')
         if mode == 'ngs_rna':
-            required_programs = ['hisat2', 'samtools', 'bcftools', 'gatk']
+            required_programs.append('hisat2')
+
+        required_programs.append(variant_caller) 
 
         for program in required_programs:
             if (program in program_path) and program_path[program]:

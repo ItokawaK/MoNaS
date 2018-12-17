@@ -8,7 +8,6 @@ import shutil
 class Job:
     def __init__(self, genome_ref):
         self.gref = genome_ref
-        self.bams_to_process = [] #List of bam files to be processed in next step
 
     def map_and_sort(self, sample, num_threads, out_bam_dir):
         #Mapping and sort
@@ -47,15 +46,6 @@ class Job:
         proc2.communicate()
         return(out_bam_path)
 
-    def map_and_sort_mp(self, num_threads, num_proc, samples, out_bam_dir):
-        with  ProcessPoolExecutor(max_workers = num_proc) as executor:
-            executed = [executor.submit(self.map_and_sort,
-                                        sample,
-                                        num_threads,
-                                        out_bam_dir) for sample in samples]
-
-        self.bams_to_process = [ex.result() for ex in executed]
-
     def rmdup_and_index(self, in_bam_path, out_bam_dir):
         # samptools rmdup and index for a given bam
         # Result is stored in same dir
@@ -79,16 +69,7 @@ class Job:
 
         return(out_bam_path)
 
-    def rmdup_and_index_mp(self, num_cpu, in_bams, out_bam_dir):
-        with ProcessPoolExecutor(max_workers = num_cpu) as executor:
-            executed = [executor.submit(self.rmdup_and_index,
-                                        bam,
-                                        out_bam_dir
-                                        ) for bam in in_bams]
-
-        self.bams_to_process = [ex.result() for ex in executed]
-
-    def variant_analysis_gatk(self, out_dir, in_bam, sample_name):
+    def variant_analysis(self, out_dir, in_bam, sample_name):
         # Variant calling using gatk and annotion usig bcftools csq
         # Returns path of out_table
 
@@ -101,15 +82,15 @@ class Job:
                "-L", self.gref.bed,
                "-R", self.gref.ref_fa,
                "-I", in_bam,
-               "-O", out_vcf,
-               #"-ERC", "GVCF",
+               "-O", out_gvcf,
+               "-ERC", "GVCF",
                "--max-mnp-distance", "5",
                "--native-pair-hmm-threads", "1"]
 
-#        cmd2 = ['gatk', "GenotypeGVCFs",
-#               "-R", self.gref.ref_fa,
-#               "-V", out_gvcf,
-#               "-O", out_vcf]
+        cmd2 = ['gatk', "GenotypeGVCFs",
+               "-R", self.gref.ref_fa,
+               "-V", out_gvcf,
+               "-O", out_vcf]
 
         cmd3 = ['bcftools', "csq",
                "-g", self.gref.gff3,
@@ -120,7 +101,7 @@ class Job:
                out_vcf]
 
         proc1 = subprocess.call(cmd1)
-        #proc2 = subprocess.call(cmd2)
+        proc2 = subprocess.call(cmd2)
         proc3 = subprocess.call(cmd3)
 
         cmd4 = ['bcftools', "query",
@@ -133,48 +114,3 @@ class Job:
 
         #with open(final_out_table, 'w') as f:
         #    subprocess.Popen(cmd4, stdout = f)
-
-    def variant_analysis_gatk_mp(self, num_cpu, in_bams, vcf_out_dir, out_table):
-
-        executed2 = []
-
-        with ProcessPoolExecutor(max_workers = num_cpu) as executor:
-            for bam in in_bams:
-                vcf_name = os.path.basename(bam).rstrip(".bam")
-                executed2.append(executor.submit(self.variant_analysis_gatk,
-                                                 vcf_out_dir,
-                                                 bam,
-                                                 vcf_name)
-                                )
-
-        out_tables = [ex.result() for ex in executed2]
-
-        #Concatenating tables
-        with open(out_table, 'w') as outfile:
-            for table in out_tables:
-                with open(table) as infile:
-                    outfile.write(infile.read())
-
-    def variant_analysis_fb(self, in_bam_list, out_vcf,
-                                              out_csqvcf, out_table):
-        cmd1 = ['freebayes',
-                "-t", self.gref.bed,
-                "-f", self.gref.ref_fa,
-                "-v", out_vcf] + in_bam_list
-
-        cmd2 = ['bcftools', "csq",
-                "-g", self.gref.gff3,
-                "-f", self.gref.ref_fa,
-                "-p", "a"
-                "-l",
-                "-o", out_csqvcf,
-                out_vcf]
-
-        cmd3 = ['bcftools', "query",
-               "-f", r"[%SAMPLE\t%CHROM\t%POS\t%REF\t%ALT\t%QUAL\t%TBCSQ\t%TGT\t%AD\n]",
-               "-o", out_table,
-               out_csqvcf]
-
-        subprocess.call(cmd1)
-        subprocess.call(cmd2)
-        subprocess.call(cmd3)

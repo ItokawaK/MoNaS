@@ -58,6 +58,11 @@ if __name__ == '__main__':
                          choices = ['ngs_dna', 'ngs_rna', 'sanger_dna'],
                          help = 'Analysis mode. [ngs_dna]'
                          )
+    parser.add_argument('-v', '--variant_caller', dest = 'variant_caller',
+                         default = "freebayes",
+                         choices = ['freebayes', 'gatk'],
+                         help = 'Variant caller to be used. Default is freebayes.'
+                         )
     parser.add_argument('-n', '--no_clean', dest = 'do_clean',
                          action='store_false',
                          default = True,
@@ -98,7 +103,8 @@ if __name__ == '__main__':
     genome_ref = GenomeRef(args.ref_root,
                            args.species,
                            args.mode,
-                           args.num_cpu) #GenomeRef object
+                           args.num_cpu,
+                           args.variant_caller) #GenomeRef object
     out_table = out_dir + "/out_table"
 
     if os.path.isfile(args.sample_list):
@@ -125,52 +131,33 @@ if __name__ == '__main__':
     if not os.path.isdir(out_bam_dir1):
         os.mkdir(out_bam_dir1)
 
-    #Executing multiprocesses of bwa mem | samtools sort
-    with  ProcessPoolExecutor(max_workers = num_proc) as executor:
-        executed = [executor.submit(job.map_and_sort,
-                                    sample,
-                                    num_threads,
-                                    out_bam_dir1) for sample in samples]
-
-    out_bams = [ex.result() for ex in executed]
+    job.map_and_sort_mp(num_threads = num_threads,
+                        num_proc = num_proc,
+                        samples = samples,
+                        out_bam_dir = out_bam_dir1)
 
     if not os.path.isdir(out_bam_dir2):
         os.mkdir(out_bam_dir2)
 
-    #Executing multiprocesses of samtools rmdup and samtools index
-    with ProcessPoolExecutor(max_workers = num_cpu) as executor:
-        executed = [executor.submit(job.rmdup_and_index,
-                                    bam,
-                                    out_bam_dir2
-                                    ) for bam in out_bams]
-
-    out_bams = [ex.result() for ex in executed]
+    job.rmdup_and_index_mp(num_cpu = num_cpu,
+                           in_bams = job.bams_to_process,
+                           out_bam_dir = out_bam_dir2)
 
     if args.do_clean:
         shutil.rmtree(out_bam_dir1)
 
-    if not os.path.isdir(vcf_out_dir):
-        os.mkdir(vcf_out_dir)
-
-    #Executing multiprocesses of gatk
-    #Output files include table queried by bcftools
-    executed2 = []
-    with ProcessPoolExecutor(max_workers = 12) as executor:
-        for bam in out_bams:
-            vcf_name = os.path.basename(bam).rstrip(".bam")
-            executed2.append(executor.submit(job.variant_analysis,
-                                             vcf_out_dir,
-                                             bam,
-                                             vcf_name)
-                            )
-
-    single_tables = [ex.result() for ex in executed2]
-
-    #Concatenating tables
-    with open(out_table, 'w') as outfile:
-        for single_table in single_tables:
-            with open(single_table) as infile:
-                outfile.write(infile.read())
+    if args.variant_caller == "gatk":
+        if not os.path.isdir(vcf_out_dir):
+            os.mkdir(vcf_out_dir)
+        job.variant_analysis_gatk_mp(num_cpu = 12,
+                                     in_bams = job.bams_to_process,
+                                     vcf_out_dir = vcf_out_dir,
+                                     out_table = out_table)
+    else:
+        job.variant_analysis_fb(in_bam_list = job.bams_to_process,
+                                out_vcf = out_dir + "/out.vcf",
+                                out_csqvcf = out_dir + "/out_csq.vcf",
+                                out_table = out_table)
 
     finalize_table.create_table(out_table,
                                 genome_ref.bed,
