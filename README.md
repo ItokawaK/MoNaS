@@ -36,8 +36,6 @@ will be uploaded somewhere (please wait for a while).
 ### Usage
 
 ```
-$./genotype.py -h
-
 usage: genotyp.py -s species -o out_dir
                  (--max_cpu int --ref_root path
                   --sample_list path --fasta path
@@ -64,6 +62,8 @@ optional arguments:
                         Path to fasta file of Sanger seq.
   -m {ngs_dna,ngs_rna,sanger_dna}, --mode {ngs_dna,ngs_rna,sanger_dna}
                         Analysis mode. [ngs_dna]
+  -v {freebayes,gatk}, --variant_caller {freebayes,gatk}
+                        Variant caller to be used. Default is freebayes.
   -n, --no_clean        Do not clean old BAM files after rmdup. Off in
                         default.
 ```
