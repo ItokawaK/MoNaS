@@ -20,8 +20,7 @@ class VCF_info:
                     continue
                 if(info_list[0].startswith("@")):
                     continue
-                #res = re.search(r"(..)$", info_list[2])
-                splice_variant = info_list[2][-2:] #res.group(1)
+                splice_variant = info_list[2][-2:]
                 self.dict[splice_variant] = info_list
                 self.allele = info_list
 
