@@ -114,7 +114,7 @@ class Job:
         cmd3 = ['bcftools', "csq",
                "-g", self.gref.gff3,
                "-f", self.gref.ref_fa,
-               "-p", "a"
+               "-p", "a",
                "-l",
                "-o", out_csqvcf,
                out_vcf]
@@ -165,7 +165,7 @@ class Job:
         cmd2 = ['bcftools', "csq",
                 "-g", self.gref.gff3,
                 "-f", self.gref.ref_fa,
-                "-p", "a"
+                "-p", "a",
                 "-l",
                 "-o", out_csqvcf,
                 out_vcf]
