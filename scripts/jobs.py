@@ -101,15 +101,15 @@ class Job:
                "-L", self.gref.bed,
                "-R", self.gref.ref_fa,
                "-I", in_bam,
-               "-O", out_vcf,
-               #"-ERC", "GVCF",
+               "-O", out_gvcf,
+               "-ERC", "GVCF",
                "--max-mnp-distance", "5",
                "--native-pair-hmm-threads", "1"]
 
-#        cmd2 = ['gatk', "GenotypeGVCFs",
-#               "-R", self.gref.ref_fa,
-#               "-V", out_gvcf,
-#               "-O", out_vcf]
+        cmd2 = ['gatk', "GenotypeGVCFs",
+               "-R", self.gref.ref_fa,
+               "-V", out_gvcf,
+               "-O", out_vcf]
 
         cmd3 = ['bcftools', "csq",
                "-g", self.gref.gff3,
@@ -120,7 +120,7 @@ class Job:
                out_vcf]
 
         proc1 = subprocess.call(cmd1)
-        #proc2 = subprocess.call(cmd2)
+        proc2 = subprocess.call(cmd2)
         proc3 = subprocess.call(cmd3)
 
         cmd4 = ['bcftools', "query",
@@ -130,9 +130,6 @@ class Job:
 
         subprocess.call(cmd4)
         return(out_table)
-
-        #with open(final_out_table, 'w') as f:
-        #    subprocess.Popen(cmd4, stdout = f)
 
     def variant_analysis_gatk_mp(self, num_cpu, in_bams, vcf_out_dir, out_table):
 
