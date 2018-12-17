@@ -20,7 +20,7 @@ However, MoNaS requires some third-party softwares:
 - [Hisat2](https://ccb.jhu.edu/software/hisat2/index.shtml) v2.1.0\* (For RNA data)
 - [samtools](http://www.htslib.org/) v1.9\*
 - [bcftools](http://www.htslib.org/) v1.9\*
-- [GATK 4x](https://software.broadinstitute.org/gatk/) v4.0.11.0\*
+- [freebayes](https://github.com/ekg/freebayes) v1.2.0-2\* or  [GATK 4x](https://software.broadinstitute.org/gatk/) v4.0.11.0\*
 
     \*Versions we are currently using. 
 
