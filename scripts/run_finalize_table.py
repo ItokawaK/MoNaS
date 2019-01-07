@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import finalize_table
 import sys
 

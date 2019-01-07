@@ -167,11 +167,11 @@ class Job:
                 "-o", out_csqvcf,
                 out_vcf]
 
-        cmd3 = ['bcftools', "query",
-               "-f", r"[%SAMPLE\t%CHROM\t%POS\t%REF\t%ALT\t%QUAL\t%TBCSQ\t%TGT\t%AD\n]",
-               "-o", out_table,
-               out_csqvcf]
+        # cmd3 = ['bcftools', "query",
+        #        "-f", r"[%SAMPLE\t%CHROM\t%POS\t%REF\t%ALT\t%QUAL\t%TBCSQ\t%TGT\t%AD\n]",
+        #        "-o", out_table,
+        #        out_csqvcf]
 
         subprocess.call(cmd1)
         subprocess.call(cmd2)
-        subprocess.call(cmd3)
+        #subprocess.call(cmd3)

@@ -4,12 +4,87 @@ import os
 import sys
 import re
 
-class VCF_info:
+class VCF_line:
+    def __init__(self, line, bed, mdom_conv, samples):
+
+        def vcf_samples(Fs, vcf_format, samples):
+            out_dict = {}
+            for i in range(len(samples)):
+                sample_dict = {}
+                sample_F = Fs[i].split(":")
+                for ii in range(len(vcf_format)):
+                    sample_dict[vcf_format[ii]] = sample_F[ii]
+                out_dict[samples[i]] = sample_dict
+            return out_dict
+
+        Fs = line.split("\t")
+        self.line = line
+        self.chrom = Fs[0]
+        self.pos = int(Fs[1])
+        self.ref = Fs[3]
+        self.alt = Fs[4]
+        self.alleles = [Fs[3]] + Fs[4].split(",")
+        self.qual = float(Fs[5])
+        self.info = {ll[0]:ll[1] for ll in [l.split("=") for l in Fs[7].split(";")]}
+        if "BCSQ" in self.info:
+            self.tbcsq = BCSQ(self.info["BCSQ"])
+        else:
+            self.tbcsq = None
+        self.format = Fs[8].split(":")
+        self.exon = bed.which_exon(self.pos)
+        self.mdom_conv = mdom_conv
+        self.sample_data = vcf_samples(Fs[9:], self.format, samples)
+
+
+    def get_sample_data(self, sample_name):
+
+        GT_indx = [int(i) for i in self.sample_data[sample_name]["GT"].split("/")]
+        al = [ "", ""]
+        AA_change = ["", ""]
+        for i in [0, 1]:
+            al[i] = self.alleles[GT_indx[i]]
+
+            if al[i] == self.ref:
+                AA_change[i] = "wild"
+                continue
+
+            if len(self.tbcsq.dict_ck) == 0 and len(self.tbcsq.dict_ck) == 0:
+                AA_change[i] = "synonymous"
+            elif len(self.tbcsq.dict_ck) > 0:
+                try:
+                    AA_change[i] = self.tbcsq.dict_ck[al[i]]
+                except:
+                    print("error!:" + self.line)
+
+            else:
+                try:
+                    AA_change[i] = self.tbcsq.dict_dl[al[i]]
+                except:
+                    print("error!:" + self.line)
+
+
+        return [sample_name,
+                self.chrom,
+                str(self.pos),
+                self.ref,
+                self.alt,
+                al[0] + "/" + al[1],
+                AA_change[0] + "/" + AA_change[1],
+                self.mdom_conv.mos2fly(AA_change[0]) + "/" + self.mdom_conv.mos2fly(AA_change[1]),
+                self.sample_data[sample_name]["AD"],
+                self.exon
+                 ]
+
+class BCSQ:
+    """
+    A class for INFO/BCSQ field of a single VCF line
+    """
 
     def __init__(self, info_str):
 
-        self.dict = {}
-        self.allele = 'Wild'
+        self.dict_ck = {} # key: ALT_allele, value: AA subsutuitoin eg. nnnX>nnnX
+        self.dict_dl = {} # key: ALT_allele, value: AA subsutuitoin eg. nnnX>nnnX
+        #self.allele = 'Wild'
 
         if info_str != '.':
             split_info = info_str.split(",")
@@ -20,84 +95,14 @@ class VCF_info:
                     continue
                 if(info_list[0].startswith("@")):
                     continue
-                splice_variant = info_list[2][-2:]
-                self.dict[splice_variant] = info_list
-                self.allele = info_list
+                splice_variant = info_list[2][-2:] # "ck" or "dl"
+                alt_allele = info_list[6].split(">")[1]
 
+                if splice_variant == "ck":
+                    self.dict_ck[alt_allele] = info_list[5]
 
-class VCF_line:
-
-    def __init__(self, line, bed, mdom_coord):
-
-        Fs = line.split("\t")
-        #print(Fs)
-        self.sample_id = Fs[0]
-        self.chrom = Fs[1]
-        self.pos = Fs[2]
-        self.ref_allele = Fs[3]
-        self.alt_alleles = Fs[4].split(",")
-        self.qual = Fs[5]
-        self.info = []
-        self.info.append(VCF_info(Fs[6]))
-        self.info.append(VCF_info(Fs[7]))
-        self.gt = Fs[8].split("/")
-        self.depth  = Fs[9]
-        self.exon = bed.which_exon(self.pos)
-        self.mdom_coord = mdom_coord
-
-    def get_table(self):
-
-        allele = []
-        mdom_allele = []
-        for i in [0, 1]:
-            if self.info[i].allele == 'Wild':
-                al = "Wild"
-                md_al = "Wild"
-            else:
-                al = self.info[i].allele[5]
-                md_al = self.mdom_coord.mos2fly(al)
-            allele.append(al)
-            mdom_allele.append(md_al)
-        return("\t".join(
-               [
-                self.sample_id,
-                self.chrom,
-                self.pos,
-                self.ref_allele,
-                ",".join(self.alt_alleles),
-                self.qual,
-                "/".join(self.gt),
-                allele[0] + "/" + allele[1],
-                mdom_allele[0]  + "/" + mdom_allele[1],
-                self.exon,
-                self.depth
-                ]
-             )
-        )
-
-class Exon:
-    def __init__(self, name, start , end):
-        self.name = name
-        self.start = start
-        self.end = end
-
-class Bed:
-    def __init__(self, bed_file):
-
-        with open(bed_file) as f:
-            bed_lines = [l.rstrip() for l in f.readlines()]
-
-        entries = []
-        for line in bed_lines:
-            chrom, start, end, name = line.split("\t")
-            entries.append(Exon(name, start, end))
-        self.entries = entries
-
-    def which_exon(self, pos):
-            for Exon in self.entries:
-                if pos > Exon.start and pos <= Exon.end:
-                    return(Exon.name)
-            return('intron')
+                if splice_variant == "dl":
+                    self.dict_dl[alt_allele] = info_list[5]
 
 
 class MDom_comvert:
@@ -145,6 +150,9 @@ class MDom_comvert:
                 self.hash[a] = b
 
     def mos2fly(self, AA_str):
+        if AA_str == "wild":
+            return("wild")
+
         matchOB = re.match(r"(\d+)([^\d]+)>(\d+)([^\d]+)", AA_str)
         if matchOB:
             mos_coord = matchOB.group(1)
@@ -155,14 +163,44 @@ class MDom_comvert:
         else:
             return("synonymous")
 
-def create_table(table_file, bed_file, fasta, out_table_file):
-    with open(table_file) as f:
-        lines = f.readlines()
 
+class Bed:
+    class Exon:
+        def __init__(self, name, start , end):
+            self.name = name
+            self.start = int(start)
+            self.end = int(end)
+
+    def __init__(self, bed_file):
+
+        with open(bed_file) as f:
+            bed_lines = [l.rstrip() for l in f.readlines()]
+
+        entries = []
+        for line in bed_lines:
+            chrom, start, end, name = line.split("\t")
+            entries.append(self.Exon(name, start, end))
+        self.entries = entries
+
+    def which_exon(self, pos):
+            for Exon in self.entries:
+                if pos > Exon.start and pos <= Exon.end:
+                    return(Exon.name)
+            return('intron')
+
+def create_table(csqvcf, bed_file, fasta, out_table_file):
+    md_conv = MDom_comvert(fasta)
     bed = Bed(bed_file)
-    mdom_coord = MDom_comvert(fasta)
-    lines = [VCF_line(l.rstrip(), bed, mdom_coord) for l in lines]
 
-    with open(out_table_file, 'w') as f:
-        for l in lines:
-            f.write(l.get_table() + "\n")
+    with open(csqvcf) as f:
+        with open(out_table_file, "w") as out_f:
+            for l in f.readlines():
+                if l.startswith("#CHROM"):
+                    samples = l.rstrip().split("\t")[9:]
+                if not l.startswith("#"):
+                    vcf_l = VCF_line(l.rstrip(), bed, md_conv, samples)
+                    if vcf_l.tbcsq == None:
+                        continue
+                    for s in samples:
+                        if not vcf_l.sample_data[s]["GT"] == "0/0":
+                            print("\t".join(vcf_l.get_sample_data(s)), file = out_f)

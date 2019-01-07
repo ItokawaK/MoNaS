@@ -159,7 +159,7 @@ if __name__ == '__main__':
                                 out_csqvcf = out_dir + "/out_csq.vcf",
                                 out_table = out_table)
 
-    finalize_table.create_table(out_table,
+    finalize_table.create_table(out_dir + "/out_csq.vcf",
                                 genome_ref.bed,
                                 genome_ref.mdom_fa,
                                 out_dir + "/table_with_Mdomcoord.tsv")

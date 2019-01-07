@@ -39,7 +39,7 @@ class GenomeRef:
         if not os.path.isfile(self.ref_fa + '.fai'):
             subprocess.call(['samtools', 'faidx', self.ref_fa])
 
-        if not os.path.isfile(os.path.join(self.root_dir, "ref.dict")):
+        if variant_caller == "gatk" and not os.path.isfile(os.path.join(self.root_dir, "ref.dict")):
             subprocess.call(['gatk', 'CreateSequenceDictionary',
                             '-R', self.ref_fa])
 
@@ -86,7 +86,7 @@ class GenomeRef:
         if mode == 'ngs_rna':
             required_programs.append('hisat2')
 
-        required_programs.append(variant_caller) 
+        required_programs.append(variant_caller)
 
         for program in required_programs:
             if (program in program_path) and program_path[program]:
