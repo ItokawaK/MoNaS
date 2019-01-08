@@ -142,9 +142,9 @@ Pipeline detail
 
 1. The resulted bam files are sorted, removed PCR duplicates, and indexed with `samtools sort`, `rmdup` and `index`, respectively. 
 
-1. Each indexed bam file are processed with `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions analyzed.  
+1. Each indexed bam file are processed with `freebayes` or `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions analyzed.  
 
-1. `bcftools csq` annotate amino acid changes using information in **ref.gff3**.
+1. Annotates amino acid changes by `bcftools csq -p a -l` using information in **ref.gff3**.
 
 1. Finally, human-friendly table describing amino acid changes and its corresponding AA positions in *Musca domestica* will be
 generated from vcf files.
@@ -166,13 +166,14 @@ The output data will look like:
        │    ├- sample2.bam
        │    ├- ...
        │       
-       ├- VCFs/ # indexed vcf files
+       ├- VCFs/ # indexed vcf files for each individual by gatk
        │     ├- sample1.vcf
        │     ├- sample1.vcf.idx
        │     ├- sample2.vcf
        │     ├- ....
        │     
-       ├- out_table # 
+       ├- out.vcf # vcf file for multiple samples by freebayes
+       ├- out_csq.vcf # vcf file for multiple samples with csq tag
        └- table_with_Mdomcoord.tsv # list of mutations and AA changes with M. domestica AA number
             
 ```
