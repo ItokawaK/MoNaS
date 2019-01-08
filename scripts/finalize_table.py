@@ -4,7 +4,7 @@ import os
 import sys
 import re
 
-debug = True
+debug = False
 
 class VCF_line:
     def __init__(self, line, bed, mdom_conv, samples):
