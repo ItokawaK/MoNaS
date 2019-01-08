@@ -58,7 +58,7 @@ proc2 = subprocess.Popen([muscle_path], stdin = proc1.stdout, stdout = subproces
 
 aligned[1] = [line.decode().rstrip() for line in proc2.stdout.readlines()]
 
-with open(args.out_fasta_path) as f:
+with open(args.out_fasta_path, 'w') as f:
     for l in aligned[0]:
         print(l, file = f)
 
