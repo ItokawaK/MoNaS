@@ -12,11 +12,12 @@ parser = argparse.ArgumentParser(description='Genotype VGSC gene.')
 parser.add_argument("ref_path",
                    help = 'Reference genome fasta path')
 
-parser.add_argument("mdom_path",
-                   help = 'M. domestica aa fasta path')
-
 parser.add_argument("bed_path",
                    help = "Reference bed path")
+
+parser.add_argument("-m", "--mdom_path", dest = "mdom_path",
+                   help = 'M. domestica aa fasta path',
+                   default = sys.path[0] + "/AAB47604.fa")
 
 args = parser.parse_args()
 
@@ -43,43 +44,51 @@ else:
 Mdom_AA = [seq.seq for seq in SeqIO.parse(Mdom_path, "fasta")]
 Mdom_AA = str(Mdom_AA[0])
 
+aligned = [ "", ""]
 proc1 = subprocess.Popen(["echo", ">Mdom\n" + Mdom_AA + "\n>Mos\n" + AA_ck], stdout = subprocess.PIPE)
 proc2 = subprocess.Popen([muscle_path], stdin = proc1.stdout, stdout = subprocess.PIPE)
 
-aligned = [line.decode().rstrip() for line in proc2.stdout.readlines()]
+aligned[0] = [line.decode().rstrip() for line in proc2.stdout.readlines()]
 
-for l in aligned:
+proc1 = subprocess.Popen(["echo", ">Mdom\n" + Mdom_AA + "\n>Mos\n" + AA_dl], stdout = subprocess.PIPE)
+proc2 = subprocess.Popen([muscle_path], stdin = proc1.stdout, stdout = subprocess.PIPE)
+
+aligned[1] = [line.decode().rstrip() for line in proc2.stdout.readlines()]
+
+for l in aligned[0]:
     print(l)
 
-sys.exit(0)
+for i in (0 , 1):
 
-Mdom_AA_aligned = []
-Mos_AA_aligned = []
-is_Mdom = True
-for line in aligned[1:]:
-    if line.startswith(">"):
-        is_Mdom = False
-        continue
-    if is_Mdom:
-        Mdom_AA_aligned += list(line)
-    else:
-        Mos_AA_aligned += list(line)
+    Mdom_AA_aligned = []
+    Mos_AA_aligned = []
+    is_Mdom = True
+    for line in aligned[i][1:]:
+        if line.startswith(">"):
+            is_Mdom = False
+            continue
+        if is_Mdom:
+            Mdom_AA_aligned += list(line)
+        else:
+            Mos_AA_aligned += list(line)
 
-if not len(Mdom_AA_aligned) == len(Mos_AA_aligned):
-    raise ValueError("error!")
+    if not len(Mdom_AA_aligned) == len(Mos_AA_aligned):
+        raise ValueError("error!")
 
-idx = [0, 0]
+    idx = [0, 0]
 
-for mos, mdom in zip(Mos_AA_aligned, Mdom_AA_aligned):
-    if mos != "-":
-        idx[0] += 1
-        a = str(idx[0])
-    else:
-        a = "-"
-    if mdom != "-":
-        idx[1] += 1
-        b = str(idx[1])
-    else:
-        b = "-"
+    for mos, mdom in zip(Mos_AA_aligned, Mdom_AA_aligned):
+        if mos != "-":
+            idx[0] += 1
+            a = str(idx[0])
+        else:
+            a = "-"
+        if mdom != "-":
+            idx[1] += 1
+            b = str(idx[1])
+        else:
+            b = "-"
 
-    print(a + "\t.\t "+ b)
+        if mos != "-" and mdom != "-":
+            if mos != mdom:
+                print(b + mdom + " -> " + mos, file = sys.stderr)
