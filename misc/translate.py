@@ -15,7 +15,7 @@ parser.add_argument("ref_path",
 parser.add_argument("bed_path",
                    help = "Reference bed path")
 
-parparser.add_argument("out_fasta_path",
+parser.add_argument("out_fasta_path",
                    help = "fasta to output")
 
 parser.add_argument("-m", "--mdom_path", dest = "mdom_path",
