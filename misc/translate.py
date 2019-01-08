@@ -30,8 +30,8 @@ dna = {seq.id:seq.seq for seq in SeqIO.parse(ref_path, "fasta")}
 with open(bed_path) as f:
     bed = [l.rstrip().split("\t")  for l in f.readlines()]
 
-vgsc_ck = [dna[l[0]][int(l[1]):int(l[2])] for l in bed if not l[3] in ["Exon19d", "Exon26l"]]
-vgsc_dl = [dna[l[0]][int(l[1]):int(l[2])] for l in bed if not l[3] in ["Exon19c", "Exon26k"]]
+vgsc_ck = [dna[l[0]][int(l[1]):int(l[2])] for l in bed if not (l[3].endswith('d') or  l[3].endswith('l'))]
+vgsc_dl = [dna[l[0]][int(l[1]):int(l[2])] for l in bed if not (l[3].endswith('c') or  l[3].endswith('k'))]
 
 if bed[0][3] == "Exon1":
     AA_ck = str(sum(vgsc_ck, Seq("")).translate())
