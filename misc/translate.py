@@ -15,6 +15,9 @@ parser.add_argument("ref_path",
 parser.add_argument("bed_path",
                    help = "Reference bed path")
 
+parparser.add_argument("out_fasta_path",
+                   help = "fasta to output")
+
 parser.add_argument("-m", "--mdom_path", dest = "mdom_path",
                    help = 'M. domestica aa fasta path',
                    default = sys.path[0] + "/AAB47604.fa")
@@ -55,8 +58,12 @@ proc2 = subprocess.Popen([muscle_path], stdin = proc1.stdout, stdout = subproces
 
 aligned[1] = [line.decode().rstrip() for line in proc2.stdout.readlines()]
 
-for l in aligned[0]:
-    print(l)
+with open(args.out_fasta_path) as f:
+    for l in aligned[0]:
+        print(l, file = f)
+
+for l in aligned[1]:
+    print(l, file = sys.stderr)
 
 for i in (0 , 1):
 
