@@ -91,4 +91,4 @@ for i in (0 , 1):
 
         if mos != "-" and mdom != "-":
             if mos != mdom:
-                print(b + mdom + " -> " + mos, file = sys.stderr)
+                print(b + "\t" + mdom + "->" + mos, file = sys.stderr)
