@@ -75,9 +75,9 @@ for i in (0 , 1):
             is_Mdom = False
             continue
         if is_Mdom:
-            Mdom_AA_aligned += list(line)
+            Mdom_AA_aligned += list(line.rstrip())
         else:
-            Mos_AA_aligned += list(line)
+            Mos_AA_aligned += list(line.rstrip())
 
     if not len(Mdom_AA_aligned) == len(Mos_AA_aligned):
         raise ValueError("error!")

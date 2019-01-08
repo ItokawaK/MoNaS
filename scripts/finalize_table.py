@@ -4,6 +4,8 @@ import os
 import sys
 import re
 
+debug = True
+
 class VCF_line:
     def __init__(self, line, bed, mdom_conv, samples):
 
@@ -37,6 +39,9 @@ class VCF_line:
 
 
     def get_sample_data(self, sample_name):
+
+        if self.sample_data[sample_name]["GT"] == ".":
+            return None
 
         GT_indx = [int(i) for i in self.sample_data[sample_name]["GT"].split("/")]
         al = [ "", ""]
@@ -91,12 +96,20 @@ class BCSQ:
             split_info_lists = [tmp.split("|") for tmp in split_info]
 
             for info_list in split_info_lists:
-                if(info_list[0] in ["splice_region", "splice_acceptor", "splice_donor"]):
+                do_skip = False
+                for pat in ["splice_region", "splice_acceptor", "splice_donor"]:
+                    if pat in info_list[0]:
+                        do_skip = True
+                if do_skip:
                     continue
                 if(info_list[0].startswith("@")):
                     continue
                 splice_variant = info_list[2][-2:] # "ck" or "dl"
-                alt_allele = info_list[6].split(">")[1]
+                try:
+                    alt_allele = info_list[6].split(">")[1]
+                except:
+                    print("Unexpexted format of vcf: " + info_str, file = sys.stderr)
+                    print(info_list, file = sys.stderr)
 
                 if splice_variant == "ck":
                     self.dict_ck[alt_allele] = info_list[5]
@@ -125,9 +138,9 @@ class MDom_comvert:
                     is_Mdom = False
                     continue
                 if is_Mdom:
-                    Mdom_AA_aligned += list(line)
+                    Mdom_AA_aligned += list(line.rstrip())
                 else:
-                    Mos_AA_aligned += list(line)
+                    Mos_AA_aligned += list(line.rstrip())
 
         if not len(Mdom_AA_aligned) == len(Mos_AA_aligned):
             raise ValueError("error!")
@@ -148,6 +161,9 @@ class MDom_comvert:
 
             if a != "-":
                 self.hash[a] = b
+
+            if debug:
+                print("\t".join([str(idx[0]), mos, mdom, str(idx[1])]), file = sys.stderr)
 
     def mos2fly(self, AA_str):
         if AA_str == "wild":
@@ -202,5 +218,5 @@ def create_table(csqvcf, bed_file, fasta, out_table_file):
                     if vcf_l.tbcsq == None:
                         continue
                     for s in samples:
-                        if not vcf_l.sample_data[s]["GT"] == "0/0":
+                        if not vcf_l.sample_data[s]["GT"] in ["0/0", "."]:
                             print("\t".join(vcf_l.get_sample_data(s)), file = out_f)
