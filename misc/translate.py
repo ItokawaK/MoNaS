@@ -6,6 +6,7 @@ from Bio import Align
 import subprocess
 import argparse
 import sys
+import json
 
 parser = argparse.ArgumentParser(description='Genotype VGSC gene.')
 
@@ -84,7 +85,11 @@ for i in (0 , 1):
 
     idx = [0, 0]
 
+    with open(sys.path[0] + "/../scripts/kdr_list.json") as f:
+        kdr_dict = json.load(f)
+
     for mos, mdom in zip(Mos_AA_aligned, Mdom_AA_aligned):
+        kdr_symbol = ""
         if mos != "-":
             idx[0] += 1
             a = str(idx[0])
@@ -98,4 +103,9 @@ for i in (0 , 1):
 
         if mos != "-" and mdom != "-":
             if mos != mdom:
-                print(b + "\t" + mdom + "->" + mos, file = sys.stderr)
+                if (b + mos) in kdr_dict:
+                    if kdr_dict[(b + mos)] == 1:
+                        kdr_symbol = "kdr!"
+                    else:
+                        kdr_symbol = "kdr?"
+                print(b + "\t" + mdom + "->" + mos + "  " + kdr_symbol, file = sys.stderr)

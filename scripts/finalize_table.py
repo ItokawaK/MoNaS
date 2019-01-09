@@ -3,6 +3,7 @@
 import os
 import sys
 import re
+import json
 
 debug = False
 
@@ -74,6 +75,7 @@ class VCF_line:
                 self.ref,
                 self.alt,
                 al[0] + "/" + al[1],
+                str(self.qual),
                 AA_change[0] + "/" + AA_change[1],
                 self.mdom_conv.mos2fly(AA_change[0]) + "/" + self.mdom_conv.mos2fly(AA_change[1]),
                 self.sample_data[sample_name]["AD"],
@@ -119,9 +121,12 @@ class BCSQ:
 
 
 class MDom_comvert:
-    def __init__(self, fasta):
+    def __init__(self, fasta, kdr_list_path): #kdr_list_path is a json file
         self.hash = {}
         self.fasta_2_hash(fasta)
+
+        with open(kdr_list_path) as f:
+            self.kdr_dict = json.load(f)
 
     def fasta_2_hash(self, fasta):
         Mdom_AA_aligned = []
@@ -175,7 +180,13 @@ class MDom_comvert:
             old_AA = matchOB.group(2)
             new_AA = matchOB.group(4)
             fly_coord = self.hash[mos_coord]
-            return(old_AA + fly_coord + new_AA)
+            kdr_symbol = ""
+            if (fly_coord + new_AA) in self.kdr_dict:
+                if self.kdr_dict[(fly_coord + new_AA)] == 1:
+                    kdr_symbol = "!!"
+                else:
+                    kdr_symbol = "??"
+            return(old_AA + fly_coord + new_AA + kdr_symbol)
         else:
             return("synonymous")
 
@@ -204,8 +215,10 @@ class Bed:
                     return(Exon.name)
             return('intron')
 
+
+
 def create_table(csqvcf, bed_file, fasta, out_table_file):
-    md_conv = MDom_comvert(fasta)
+    md_conv = MDom_comvert(fasta, sys.path[0] + "/kdr_list.json")
     bed = Bed(bed_file)
 
     with open(csqvcf) as f:
