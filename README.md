@@ -142,16 +142,15 @@ Pipeline detail
 
 1. The resulted bam files are sorted, removed PCR duplicates, and indexed with `samtools sort`, `rmdup` and `index`, respectively. 
 
-1. Each indexed bam file are processed with `freebayes` or `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions analyzed.  
+1. Each indexed bam file are processed with `freebayes` or `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions to be analyzed. `freebayes` processes all bam files as single run, but multithreaded by dividing the region of interest into many sub-regions (exons) which will be integrated in single `out.vcf` file at the end.
 
-1. Annotates amino acid changes by `bcftools csq -p a -l` using information in **ref.gff3**.
+1. Annotates the `out.vcf` for amino acid changes by `bcftools csq -p a -l` using information in **ref.gff3** resulting in `out_csq.vcf`.
 
-1. Finally, human-friendly table describing amino acid changes and its corresponding AA positions in *Musca domestica* will be
-generated from vcf files.
+1. Finally, human-friendly table `table_with_Mdomcoord.tsv` describing amino acid changes and its corresponding AA positions in *Musca domestica* will be generated from `out_csq.vcf` files.
 
 Output
 ------
-The output data will look like:
+The output directly will look like:
 
 ```bash
   out_dir/ # your specified name
@@ -175,6 +174,11 @@ The output data will look like:
        ├- out.vcf # vcf file for multiple samples by freebayes
        ├- out_csq.vcf # vcf file for multiple samples with csq tag
        └- table_with_Mdomcoord.tsv # list of mutations and AA changes with M. domestica AA number
+       
+
             
 ```
 
+table_with_Mdomcoord.tsv
+------
+The format of output table
