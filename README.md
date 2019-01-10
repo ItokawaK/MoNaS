@@ -218,6 +218,8 @@ Collumn10: Read depth for each allele
 
 Collumn11: Corresponding exon 
 
+Helper tools
+------
 
 
 
