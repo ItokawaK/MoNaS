@@ -217,12 +217,25 @@ class Bed:
 
 
 
-def create_table(csqvcf, bed_file, fasta, out_table_file):
-    md_conv = MDom_comvert(fasta, sys.path[0] + "/kdr_list.json")
+def create_table(csqvcf, bed_file, fasta, kdr_list, out_table_file):
+    md_conv = MDom_comvert(fasta, kdr_list)
     bed = Bed(bed_file)
 
     with open(csqvcf) as f:
         with open(out_table_file, "w") as out_f:
+            print("\t".join(["#ID",
+                             "CHROM",
+                             "POS",
+                             "REF_ALELE",
+                             "ALT_ALLELE(s)",
+                             "GT",
+                             "QUAL",
+                             "AA_CHANGE",
+                             "AA_CHANGE_HOUSEFLY",
+                             "AD",
+                             "EXON"]
+                             ),
+                  file = out_f)
             for l in f.readlines():
                 if l.startswith("#CHROM"):
                     samples = l.rstrip().split("\t")[9:]
