@@ -181,4 +181,41 @@ The output directly will look like:
 
 table_with_Mdomcoord.tsv
 ------
-The format of output table
+The the final output table `table_with_Mdomcoord.tsv` will look like below.
+
+```
+#ID             CHROM          POS   REF_ALELE  ALT_ALLELE(s)   GT      QUAL    AA_CHANGE    AA_CHANGE_HOUSEFLY   AD  EXON
+Aalb-SP-08      MNAF02001058.1  2207911 T   G  G/G  231859.0   1574F>1574C/1574F>1574C F1534C!!/F1534C!!   0,931   Exon29
+Aalb-SP-06      MNAF02001058.1  2207911 T   G  G/G  231859.0   1574F>1574C/1574F>1574C F1534C!!/F1534C!!   0,847   Exon29
+Aalb-SP-01      MNAF02001058.1  2207911 T   G  G/G  231859.0   1574F>1574C/1574F>1574C F1534C!!/F1534C!!   1,934   Exon29
+Aalb-SP-03      MNAF02001058.1  2207911 T   G  G/G  231859.0   1574F>1574C/1574F>1574C F1534C!!/F1534C!!   0,910   Exon29
+Aalb-SP-02      MNAF02001058.1  2207911 T   G  G/G  231859.0   1574F>1574C/1574F>1574C F1534C!!/F1534C!!   1,990   Exon29
+Aalb-Toyama-01  MNAF02001058.1  2226519 G   A  G/A  279220.0   wild/2062A>2062T        wild/A2023T         444,472 Exon32
+Aalb-Viet-01    MNAF02001058.1  2226519 G   A  G/A  279220.0   wild/2062A>2062T        wild/A2023T         434,372 Exon32
+Aalb-SP-08      MNAF02001058.1  2226519 G   A  A/A  279220.0   2062A>2062T/2062A>2062T A2023T/A2023T       0,1048  Exon32
+```
+Collumn1: Sample ID
+
+Collumn2: Name of scaffold
+
+Collumn3: Nucleotide position of variant
+
+Collumn4: Nucleotide(s) in reference
+
+Collumn5: Set of alternative alleles
+
+Collumn6: Genotype of each sample
+
+Collumn7: Quolity of variant
+
+Collumn8: Annotated AA change **in reference AA position**
+
+Collumn9: Annotated AA change **in *M. domestica* AA position**
+
+Collumn10: Read depth for each allele
+
+Collumn11: Corresponding exon 
+
+
+
+
