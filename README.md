@@ -211,6 +211,7 @@ Collumn7: Quolity of variant
 Collumn8: Annotated AA change **in reference AA position**
 
 Collumn9: Annotated AA change **in *M. domestica* AA position**
+          AA changes which is identical to already known *kdr* mutation will be annotated with "!!" character.
 
 Collumn10: Read depth for each allele
 
