@@ -152,12 +152,59 @@ class Job:
                 with open(table) as infile:
                     outfile.write(infile.read())
 
-    def variant_analysis_fb(self, in_bam_list, out_vcf,
+    def run_freebayes(self, in_bams, region):
+        cmd = ["freebayes",
+                   "-r", region,
+                   "-f", self.gref.ref_fa] + in_bams
+
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        header = []
+        body = []
+
+        stdout_data = proc.communicate()[0]
+        lines = stdout_data.decode().split("\n")
+        for line in lines:
+            line = line
+            if line.startswith("#"):
+                header.append(line)
+            else:
+                body.append(line)
+
+        return([header, body])
+
+
+    def variant_analysis_fb(self, num_cpu, in_bams, out_vcf,
                                               out_csqvcf, out_table):
-        cmd1 = ['freebayes',
-                "-t", self.gref.bed,
-                "-f", self.gref.ref_fa,
-                "-v", out_vcf] + in_bam_list
+
+        bed = []
+        with open(self.gref.bed) as f:
+            bed = [l.rstrip().split("\t") for l in f.readlines()]
+
+        regions = [b[0] + ":" + b[1] + "-" + b[2] for b in bed if b is not '']
+
+        with ProcessPoolExecutor(max_workers = num_cpu) as executor:
+            executed = [executor.submit(self.run_freebayes,
+                                        in_bams,
+                                        region) for region in regions]
+
+        header = executed[0].result()[0]
+        bodies = [ex.result()[1] for ex in executed]
+
+        with open(out_vcf, 'w') as f:
+
+            for l in header:
+                if l.rstrip() is not '':
+                   print(l.rstrip(), file = f)
+            for body in bodies:
+                for l in body:
+                    if l.rstrip() is not '':
+                        print(l.rstrip(), file = f)
+
+        # cmd1 = ['freebayes',
+        #         "-t", self.gref.bed,
+        #         "-f", self.gref.ref_fa,
+        #         "-v", out_vcf] + in_bam_list
 
         cmd2 = ['bcftools', "csq",
                 "-g", self.gref.gff3,
@@ -172,6 +219,6 @@ class Job:
         #        "-o", out_table,
         #        out_csqvcf]
 
-        subprocess.call(cmd1)
+        #subprocess.call(cmd1)
         subprocess.call(cmd2)
         #subprocess.call(cmd3)

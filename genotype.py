@@ -154,7 +154,8 @@ if __name__ == '__main__':
                                      vcf_out_dir = vcf_out_dir,
                                      out_table = out_table)
     else:
-        job.variant_analysis_fb(in_bam_list = job.bams_to_process,
+        job.variant_analysis_fb(num_cpu = num_cpu,
+                                in_bams = job.bams_to_process,
                                 out_vcf = out_dir + "/out.vcf",
                                 out_csqvcf = out_dir + "/out_csq.vcf",
                                 out_table = out_table)
