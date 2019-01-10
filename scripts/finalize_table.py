@@ -215,9 +215,9 @@ class Bed:
                     return(Exon.name)
             return('intron')
 
-
-
-def create_table(csqvcf, bed_file, fasta, kdr_list, out_table_file):
+def create_table(csqvcf, bed_file, fasta, out_table_file):
+    kdr_list = os.path.dirname(os.path.abspath(__file__)) + "/kdr_list.json"
+    print(kdr_list, file = sys.stderr)
     md_conv = MDom_comvert(fasta, kdr_list)
     bed = Bed(bed_file)
 

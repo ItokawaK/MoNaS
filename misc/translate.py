@@ -7,6 +7,7 @@ import subprocess
 import argparse
 import sys
 import json
+import os
 
 parser = argparse.ArgumentParser(description='Genotype VGSC gene.')
 
@@ -85,7 +86,9 @@ for i in (0 , 1):
 
     idx = [0, 0]
 
-    with open(sys.path[0] + "/../scripts/kdr_list.json") as f:
+    kdr_list = os.path.dirname(os.path.abspath(__file__)) + "/../scripts/kdr_list.json"
+
+    with open(kdr_list) as f:
         kdr_dict = json.load(f)
 
     for mos, mdom in zip(Mos_AA_aligned, Mdom_AA_aligned):

@@ -11,5 +11,4 @@ if len(sys.argv) != 4:
 finalize_table.create_table(sys.argv[1],
                             sys.argv[2],
                             sys.argv[3],
-                            sys.path[0] + "/kdr_list.json",
                             "/dev/stdout")

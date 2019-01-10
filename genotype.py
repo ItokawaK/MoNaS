@@ -162,7 +162,6 @@ if __name__ == '__main__':
     finalize_table.create_table(out_dir + "/out_csq.vcf",
                                 genome_ref.bed,
                                 genome_ref.mdom_fa,
-                                script_dir + "/scripts/kdr_list.json",
                                 out_dir + "/table_with_Mdomcoord.tsv")
 
     print(r"MoNaS is done \(^o^)/ !", file = sys.stderr)
