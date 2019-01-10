@@ -211,7 +211,8 @@ Collumn7: Quolity of variant
 Collumn8: Annotated AA change **in reference AA position**
 
 Collumn9: Annotated AA change **in *M. domestica* AA position**. 
-          Already known *kdr* mutation will be annotated with "!!" character.
+          Known *kdr* mutations which are listed in `scripts/kdr_list.json` will be annotated with "!!" character. 
+          Note that the list would not always be perfect.
 
 Collumn10: Read depth for each allele
 
