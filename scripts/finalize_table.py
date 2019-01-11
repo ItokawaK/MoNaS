@@ -195,19 +195,29 @@ class Bed:
     class Exon:
         def __init__(self, name, start , end):
             self.name = name
+            self.no = int(re.search(pattern= "\d+", string= name).group())
             self.start = int(start)
             self.end = int(end)
+            if name[-1] in ('c', 'k', 'd', 'l'):
+               self.mut_excl = name[-1]
+            else:
+               self.mut_excl = None
 
     def __init__(self, bed_file):
 
         with open(bed_file) as f:
-            bed_lines = [l.rstrip() for l in f.readlines()]
+            bed_lines = [l.rstrip() for l in f.readlines() if not l.startswith("#")]
 
         entries = []
         for line in bed_lines:
-            chrom, start, end, name = line.split("\t")
+            self.chrom, start, end, name = line.split("\t")
             entries.append(self.Exon(name, start, end))
         self.entries = entries
+        if (self.entries[1].no < self.entries[2].no) == \
+                            (self.entries[1].start < self.entries[2].end):
+            self.strand = "+"
+        else:
+            self.strand = "-"
 
     def which_exon(self, pos):
             for Exon in self.entries:
