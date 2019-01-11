@@ -220,6 +220,6 @@ Collumn11: Corresponding exon
 
 Helper tools
 ------
-
+1. **scripts/bed2gff** creates gff3 file interpretable by bcftools csq. The bed file should indicate only CDS regions exactly from the start codon to the last amino-acid or stop codon.
 
 
