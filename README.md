@@ -220,7 +220,7 @@ Collumn11: Corresponding exon
 
 Helper tools
 ------
-1. **scripts/bed2gff.py** creates gff3 file interpretable by bcftools csq. 
+1. **scripts/bed2gff.py** converts bed file to gff3 file which is interpretable by bcftools csq. 
 1. **misc/translate.py** translates genome to VGSC protein using CDS information described in bed file, then conducts
 pairwise alignment with VGSC in *M. domestica* which is usable as **ref.mdom.fa**. The script also output mismatched AA
 between your reference VGSC and *M. domestica* VGSC as stdandard error whith notation for potential kdr(s) listed in 
