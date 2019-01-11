@@ -220,6 +220,10 @@ Collumn11: Corresponding exon
 
 Helper tools
 ------
-1. **scripts/bed2gff** creates gff3 file interpretable by bcftools csq. The bed file should indicate only CDS regions exactly from the start codon to the last amino-acid or stop codon.
+1. **scripts/bed2gff.py** creates gff3 file interpretable by bcftools csq. 
+1. **misc/translate.py** translates genome to VGSC protein using information in bed file describing CDSs, then conducts
+pairwise alignment with VGSC in *M. domestica* which is usable as **ref.mdom.fa**. The script also output mismatched AA
+between your reference VGSC and *M. domestica* VGSC as stdandard error whith notation for potential kdr(s) listed in 
+**scripts/kdr_list.json** if exist in your reference genome.   
 
 
