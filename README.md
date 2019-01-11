@@ -181,7 +181,7 @@ The output directly will look like:
 
 table_with_Mdomcoord.tsv
 ------
-The the final output table **table_with_Mdomcoord.tsv** will look like below.
+The the final output table, **table_with_Mdomcoord.tsv**, will look like as below.
 
 ```
 #ID             CHROM          POS   REF_ALELE  ALT_ALLELE(s)   GT      QUAL    AA_CHANGE    AA_CHANGE_HOUSEFLY   AD  EXON
@@ -206,7 +206,7 @@ Collumn5: Set of alternative alleles
 
 Collumn6: Genotype of each sample
 
-Collumn7: Quolity of variant
+Collumn7: Quality of variant
 
 Collumn8: Annotated AA change **in reference AA position**
 
