@@ -225,34 +225,38 @@ class Bed:
                     return(Exon.name)
             return('intron')
 
-def create_table(csqvcf, bed_file, fasta, out_table_file):
+def create_table(csqvcfs, bed_file, fasta, out_table_file):
     kdr_list = os.path.dirname(os.path.abspath(__file__)) + "/kdr_list.json"
     #print(kdr_list, file = sys.stderr)
     md_conv = MDom_comvert(fasta, kdr_list)
     bed = Bed(bed_file)
 
-    with open(csqvcf) as f:
-        with open(out_table_file, "w") as out_f:
-            print("\t".join(["#ID",
-                             "CHROM",
-                             "POS",
-                             "REF_ALELE",
-                             "ALT_ALLELE(s)",
-                             "GT",
-                             "QUAL",
-                             "AA_CHANGE",
-                             "AA_CHANGE_HOUSEFLY",
-                             "AD",
-                             "EXON"]
-                             ),
-                  file = out_f)
-            for l in f.readlines():
-                if l.startswith("#CHROM"):
-                    samples = l.rstrip().split("\t")[9:]
-                if not l.startswith("#"):
-                    vcf_l = VCF_line(l.rstrip(), bed, md_conv, samples)
-                    if vcf_l.tbcsq == None:
-                        continue
-                    for s in samples:
-                        if not vcf_l.sample_data[s]["GT"] in ["0/0", "."]:
-                            print("\t".join(vcf_l.get_sample_data(s)), file = out_f)
+    with open(out_table_file, "w") as out_f:
+        print_header = True
+        for csqvcf in csqvcfs:
+            with open(csqvcf) as f:
+                if print_header:
+                    print("\t".join(["#ID",
+                                     "CHROM",
+                                     "POS",
+                                     "REF_ALELE",
+                                     "ALT_ALLELE(s)",
+                                     "GT",
+                                     "QUAL",
+                                     "AA_CHANGE",
+                                     "AA_CHANGE_HOUSEFLY",
+                                     "AD",
+                                     "EXON"]
+                                     ),
+                          file = out_f)
+                    print_header = False
+                for l in f.readlines():
+                    if l.startswith("#CHROM"):
+                        samples = l.rstrip().split("\t")[9:]
+                    if not l.startswith("#"):
+                        vcf_l = VCF_line(l.rstrip(), bed, md_conv, samples)
+                        if vcf_l.tbcsq == None:
+                            continue
+                        for s in samples:
+                            if not vcf_l.sample_data[s]["GT"] in ["0/0", "."]:
+                                print("\t".join(vcf_l.get_sample_data(s)), file = out_f)

@@ -14,7 +14,7 @@ class GenomeRef:
     if absent.
     '''
 
-    def __init__(self, ref_dir, species, mode, num_cpu, variant_caller):
+    def __init__(self, ref_dir, species):
 
         self.root_dir = os.path.join(ref_dir, species)
         if not os.path.isdir(self.root_dir):
@@ -29,25 +29,15 @@ class GenomeRef:
         self.mdom_fa = os.path.join(self.root_dir, "ref.mdom.fa")
         self.mdom_coord_ck = os.path.join(self.root_dir, "ref.mdomcoord")
         self.mdom_coord_dl = os.path.join(self.root_dir, "ref.mdomcoord")
-        self.mode = mode
-        self.num_cpu = num_cpu
 
-        self.check_program_path(self.mode, variant_caller)
-
-        self.check_genomedb(self.mode)
-
+    #########################################################################
+    def check_genomedb(self, mode, variant_caller, num_cpu = 1):
         if not os.path.isfile(self.ref_fa + '.fai'):
             subprocess.call(['samtools', 'faidx', self.ref_fa])
 
         if variant_caller == "gatk" and not os.path.isfile(os.path.join(self.root_dir, "ref.dict")):
             subprocess.call(['gatk', 'CreateSequenceDictionary',
                             '-R', self.ref_fa])
-
-        self.check_existence()
-
-
-    #########################################################################
-    def check_genomedb(self, mode):
 
         if mode == 'ngs_dna':
             bwadb = os.path.join(self.root_dir, 'bwadb')
@@ -67,7 +57,7 @@ class GenomeRef:
                       file = sys.stderr)
                 os.mkdir(hisatdb)
                 subprocess.call(['hisat2-build',
-                                '-p', self.num_cpu,
+                                '-p', num_cpu,
                                 self.ref_fa,
                                 hisatdb + '/ref'])
         else:
@@ -103,7 +93,7 @@ class GenomeRef:
                           file = sys.stderr)
                     sys.exit(1)
 
-    def check_existence(self):
+    def check_existence_for_genotype(self):
         for file in [self.gff3,
                      self.ref_fa,
                      self.bed,

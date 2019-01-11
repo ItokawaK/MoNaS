@@ -100,11 +100,14 @@ if __name__ == '__main__':
     out_bam_dir2 = out_dir + "/BAMs_rmdup"
     vcf_out_dir = out_dir + "/VCFs"
     #bin_path = Bin(args.bin_root) #Bin object
-    genome_ref = GenomeRef(args.ref_root,
-                           args.species,
-                           args.mode,
-                           args.num_cpu,
-                           args.variant_caller) #GenomeRef object
+    genome_ref = GenomeRef(args.ref_root, args.species)  #GenomeRef object
+
+    #configuration for genotyping
+    genome_ref.check_program_path(args.mode, args.variant_caller)
+    genome_ref.check_genomedb(args.mode, args.variant_caller, num_cpu = args.num_cpu)
+    genome_ref.check_existence_for_genotype()
+
+
     out_table = out_dir + "/out_table"
 
     if os.path.isfile(args.sample_list):
@@ -121,7 +124,7 @@ if __name__ == '__main__':
         if to_proceed == "0":
             sys.exit(1)
 
-    job = Job(genome_ref)
+    job = Job(genome_ref, args.mode)
 
 
     #Create output dir
@@ -149,18 +152,18 @@ if __name__ == '__main__':
     if args.variant_caller == "gatk":
         if not os.path.isdir(vcf_out_dir):
             os.mkdir(vcf_out_dir)
-        job.variant_analysis_gatk_mp(num_cpu = 12,
-                                     in_bams = job.bams_to_process,
-                                     vcf_out_dir = vcf_out_dir,
-                                     out_table = out_table)
+        csqvcfs = job.variant_analysis_gatk_mp(num_cpu = 12,
+                                               in_bams = job.bams_to_process,
+                                               vcf_out_dir = vcf_out_dir)
     else:
         job.variant_analysis_fb(num_cpu = num_cpu,
                                 in_bams = job.bams_to_process,
                                 out_vcf = out_dir + "/out.vcf",
-                                out_csqvcf = out_dir + "/out_csq.vcf",
-                                out_table = out_table)
+                                out_csqvcf = out_dir + "/out_csq.vcf")
 
-    finalize_table.create_table(out_dir + "/out_csq.vcf",
+        csqvcfs = [out_dir + "/out_csq.vcf"]
+
+    finalize_table.create_table(csqvcfs,
                                 genome_ref.bed,
                                 genome_ref.mdom_fa,
                                 out_dir + "/table_with_Mdomcoord.tsv")

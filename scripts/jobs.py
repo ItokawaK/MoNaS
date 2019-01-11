@@ -6,9 +6,10 @@ from concurrent.futures import ProcessPoolExecutor
 import shutil
 
 class Job:
-    def __init__(self, genome_ref):
+    def __init__(self, genome_ref, mode):
         self.gref = genome_ref
         self.bams_to_process = [] #List of bam files to be processed in next step
+        self.mode = mode
 
     def map_and_sort(self, sample, num_threads, out_bam_dir):
         #Mapping and sort
@@ -17,12 +18,12 @@ class Job:
 
         out_bam_path = out_bam_dir + "/" + sample[0] + ".bam"
 
-        if self.gref.mode in ['ngs_dna']:
+        if self.mode in ['ngs_dna']:
             cmd1 = ['bwa', "mem",
                     "-t", str(num_threads),
                     "-R", r'@RG\tID:ID_' + sample[0] + r'\tSM:' + sample[0],
                     self.gref.bwa_db] + sample[1:3]
-        elif self.gref.mode in ['ngs_rna']:
+        elif self.mode in ['ngs_rna']:
             if sample[2]:
                 sample_cmd = ["-1", sample[1], "-2", sample[2]]
             else:
@@ -123,15 +124,9 @@ class Job:
         proc2 = subprocess.call(cmd2)
         proc3 = subprocess.call(cmd3)
 
-        cmd4 = ['bcftools', "query",
-               "-f", r"[%SAMPLE\t%CHROM\t%POS\t%REF\t%ALT\t%QUAL\t%TBCSQ\t%TGT\t%AD\n]",
-               "-o", out_table,
-               out_csqvcf]
+        return(out_csqvcf)
 
-        subprocess.call(cmd4)
-        return(out_table)
-
-    def variant_analysis_gatk_mp(self, num_cpu, in_bams, vcf_out_dir, out_table):
+    def variant_analysis_gatk_mp(self, num_cpu, in_bams, vcf_out_dir):
 
         executed2 = []
 
@@ -144,13 +139,10 @@ class Job:
                                                  vcf_name)
                                 )
 
-        out_tables = [ex.result() for ex in executed2]
+        csqvcfs = [ex.result() for ex in executed2]
 
-        #Concatenating tables
-        with open(out_table, 'w') as outfile:
-            for table in out_tables:
-                with open(table) as infile:
-                    outfile.write(infile.read())
+        return csqvcfs
+
 
     def run_freebayes(self, in_bams, region):
         cmd = ["freebayes",
@@ -174,8 +166,7 @@ class Job:
         return([header, body])
 
 
-    def variant_analysis_fb(self, num_cpu, in_bams, out_vcf,
-                                              out_csqvcf, out_table):
+    def variant_analysis_fb(self, num_cpu, in_bams, out_vcf, out_csqvcf):
 
         bed = []
         with open(self.gref.bed) as f:
