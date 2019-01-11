@@ -142,7 +142,7 @@ Pipeline detail
 
 1. The resulted bam files are sorted, removed PCR duplicates, and indexed with `samtools sort`, `rmdup` and `index`, respectively. 
 
-1. Each indexed bam file are processed with `freebayes` or `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions to be analyzed. `freebayes` processes all bam files as single run, but multithreaded by dividing the region of interest into many sub-regions (exons) which will be integrated in single **out.vcf** file at the end.
+1. Each indexed bam file are processed with `freebayes` or `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions to be analyzed. `freebayes` processes all bam files as single run, but multiprocessed by dividing the region of interest into many sub-regions (exons) which will be integrated in single **out.vcf** file at the end. `gatk HaplotypeCaller`, on the other hand, processes only single bam at once, creating vcf files for each sample. 
 
 1. Annotates the **out.vcf** for amino acid changes by `bcftools csq -p a -l` using information in **ref.gff3** resulting in **out_csq.vcf**.
 
@@ -150,7 +150,7 @@ Pipeline detail
 
 Output
 ------
-The output directly will look like:
+The output directry will look like:
 
 ```bash
   out_dir/ # your specified name
