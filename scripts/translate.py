@@ -10,43 +10,12 @@ import json
 import os
 from configuration import GenomeRef
 
-def show_alignment(algn, file):
-
-    seq_list =[[], []]
-    names = ["", ""]
-    idx = -1
-    for l in algn:
-        if l.startswith(">"):
-            idx += 1
-            names[idx] = l.lstrip(">").rstrip()
-        else:
-            seq_list[idx].append(l.rstrip())
-
-    for i in range(len(seq_list[0])):
-        seq1 = seq_list[0][i]
-        seq2 = seq_list[1][i]
-        matches = ""
-        for ii in range(len(seq1)):
-            match = " "
-            if seq1[ii] is not "-" and seq2 is not "-":
-                if seq1[ii] == seq2[ii]:
-                    match = "|"
-            matches += match
-
-        print(names[0] + "\t" + seq1, file = file)
-        print("    " + "\t" + matches, file = file)
-        print(names[1] + "\t" + seq2, file = file)
-        print("", file = file)
-
-
-
-
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 parser = argparse.ArgumentParser(description='Genotype VGSC gene.')
 
 parser.add_argument("-r", "--ref_dir", dest = "ref_dir",
-                   help = 'Reference genome roor_dir',
+                   help = 'Reference genome roor_dir [MoNaS/references] ',
                    default = script_dir + "/../references")
 
 parser.add_argument("-s", "--sepcies", dest = "species",
@@ -64,9 +33,15 @@ args = parser.parse_args()
 gref = GenomeRef(args.ref_dir, args.species)
 
 muscle_path = "muscle"
+
 ref_path = gref.ref_fa
 bed_path = gref.bed
 Mdom_path = args.mdom_path
+
+for file in [ref_path, bed_path, Mdom_path]:
+    if not os.path.isfile(file):
+        print(file + " was not found!", file = sys.stderr)
+        sys.exit(1)
 
 if not args.out_fasta_path:
     out_fasta = os.path.join(args.ref_dir, args.species, "ref.mdom.fa")
@@ -78,40 +53,38 @@ dna = {seq.id:seq.seq for seq in SeqIO.parse(ref_path, "fasta")}
 with open(bed_path) as f:
     bed = [l.rstrip().split("\t")  for l in f.readlines()]
 
-vgsc_ck = [dna[l[0]][int(l[1]):int(l[2])] for l in bed if not (l[3].endswith('d') or  l[3].endswith('l'))]
-vgsc_dl = [dna[l[0]][int(l[1]):int(l[2])] for l in bed if not (l[3].endswith('c') or  l[3].endswith('k'))]
+vgsc_mrna = dict()
+vgsc_prot = dict()
+vgsc_mrna['ck'] = [dna[l[0]][int(l[1]):int(l[2])] for l in bed if not l[3][-1] in ["d", "l"]]
+vgsc_mrna['dl'] = [dna[l[0]][int(l[1]):int(l[2])] for l in bed if not l[3][-1] in ["c", "k"]]
 
-if bed[0][3] == "Exon1":
-    AA_ck = str(sum(vgsc_ck, Seq("")).translate()).rstrip("*")
-    AA_dl = str(sum(vgsc_dl, Seq("")).translate()).rstrip("*")
-else:
-    AA_ck = str(sum(vgsc_ck, Seq("")).reverse_complement().translate()).rstrip("*")
-    AA_dl = str(sum(vgsc_dl, Seq("")).reverse_complement().translate()).rstrip("*")
+for variant in ['ck', 'dl']:
+    if bed[0][3] == "Exon1":
+        vgsc_prot[variant] = str(sum(vgsc_mrna[variant], Seq("")).translate()).rstrip("*")
+    else:
+        vgsc_prot[variant] = str(sum(vgsc_mrna[variant], Seq("")).reverse_complement().translate()).rstrip("*")
 
-cnt = 0
-for aa in AA_ck:
-    cnt +=1
-    if aa is "*":
-        print("Warning !: Imature stop codon (*) was found at the " + cnt +
-              "-th position in in VGSC_ck.", file = sys.stderr)
-cnt = 0
-for aa in AA_dl:
-    cnt +=1
-    if aa is "*":
-        print("Warning !: Imature stop codon (*) was found at the " + cnt +
-              "-th position in in VGSC_dl.", file = sys.stderr)
-
+    cnt = 0
+    for aa in vgsc_prot[variant]:
+        cnt +=1
+        if aa is "*":
+            print("Warning !: Imature stop codon (*) was found at the " + cnt +
+                  "-th position in in VGSC_" + variant + ".", file = sys.stderr)
 
 Mdom_AA = [seq.seq for seq in SeqIO.parse(Mdom_path, "fasta")]
 Mdom_AA = str(Mdom_AA[0])
 
 #show_alignment(aligned[0], sys.stderr)
 
-proc1 = subprocess.Popen(["echo", ">Mdom\n" + Mdom_AA + \
-                                  "\n>Mos_ck\n" + AA_ck + \
-                                  "\n>Mos_dl\n" + AA_dl],
+proc1 = subprocess.Popen(["echo", ">Mdom\n" + Mdom_AA + "\n"\
+                                  ">Mos_ck\n" + vgsc_prot['ck'] + "\n"\
+                                  ">Mos_dl\n" + vgsc_prot['dl']
+                          ],
+                          stdout = subprocess.PIPE)
+
+proc2 = subprocess.Popen([muscle_path, "-clw"],
+                         stdin = proc1.stdout,
                          stdout = subprocess.PIPE)
-proc2 = subprocess.Popen([muscle_path, "-clw"], stdin = proc1.stdout, stdout = subprocess.PIPE)
 
 for l in proc2.stdout.readlines():
     print(l.decode().rstrip(), file=sys.stderr)
@@ -123,25 +96,21 @@ if to_proceed == "0":
 
 
 aligned = [ "", ""]
-proc1 = subprocess.Popen(["echo", ">Mdom\n" + Mdom_AA + "\n>Mos\n" + AA_ck], stdout = subprocess.PIPE)
-proc2 = subprocess.Popen([muscle_path], stdin = proc1.stdout, stdout = subprocess.PIPE)
 
-aligned[0] = [line.decode().rstrip() for line in proc2.stdout.readlines()]
+for i in (0, 1):
+    proc1 = subprocess.Popen(["echo", ">Mdom\n" + Mdom_AA + "\n"\
+                                      ">Mos\n" + vgsc_prot[['ck', 'dl'][i]]
+                             ],
+                              stdout = subprocess.PIPE)
+    proc2 = subprocess.Popen([muscle_path],
+                             stdin = proc1.stdout,
+                             stdout = subprocess.PIPE)
 
-proc1 = subprocess.Popen(["echo", ">Mdom\n" + Mdom_AA + "\n>Mos\n" + AA_dl], stdout = subprocess.PIPE)
-proc2 = subprocess.Popen([muscle_path], stdin = proc1.stdout, stdout = subprocess.PIPE)
-
-aligned[1] = [line.decode().rstrip() for line in proc2.stdout.readlines()]
+    aligned[i] = [line.decode().rstrip() for line in proc2.stdout.readlines()]
 
 with open(out_fasta, 'w') as f:
     for l in aligned[0]:
         print(l, file = f)
-
-
-
-
-for l in aligned[1]:
-    print(l, file = sys.stderr)
 
 for i in (0 , 1):
 
