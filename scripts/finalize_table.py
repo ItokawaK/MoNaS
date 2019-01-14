@@ -260,3 +260,21 @@ def create_table(csqvcfs, bed_file, fasta, out_table_file):
                         for s in samples:
                             if not vcf_l.sample_data[s]["GT"] in ["0/0", "."]:
                                 print("\t".join(vcf_l.get_sample_data(s)), file = out_f)
+
+if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser(description = 'Convert csqvcf to table')
+
+    parser.add_argument("out_csq",
+                        help = "out_csq file path")
+
+    parser.add_argument("ref_bed",
+                        help = "ref.bed file path")
+
+    parser.add_argument("mdom_fa",
+                        help = "ref.mdom.fa file path")
+
+    args = parser.parse_args()
+
+    create_table(args.out_csq, args.ref_bed, args.mdom_fa, "/dev/stdout")
