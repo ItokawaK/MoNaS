@@ -277,4 +277,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    create_table(args.out_csq, args.ref_bed, args.mdom_fa, "/dev/stdout")
+    create_table([args.out_csq], args.ref_bed, args.mdom_fa, "/dev/stdout")
