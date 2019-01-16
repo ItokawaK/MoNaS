@@ -15,7 +15,7 @@ Currently, we have confirmed MoNaS works in both Ubuntu18 and CentOS6. It is pos
 ### Installation
 
 MoNaS consists of several python3 scripts which do not require compilation.
-However, MoNaS requires some third-party softwares: 
+However, MoNaS requires some third-party softwares described below: 
 - [bwa](https://github.com/lh3/bwa) v0.7.17\* (For genomic DNA data)
 - [Hisat2](https://ccb.jhu.edu/software/hisat2/index.shtml) v2.1.0\* (For RNA data)
 - [samtools](http://www.htslib.org/) v1.9\*
@@ -23,9 +23,12 @@ However, MoNaS requires some third-party softwares:
 - [freebayes](https://github.com/ekg/freebayes) v1.2.0-2\* or  [GATK 4x](https://software.broadinstitute.org/gatk/) v4.0.11.0\*
 
     \*Versions we are currently using. 
-
+    
 Root directories of those softwares should be included in your $PATH, or you can directly
 specify them in the **scripts/bin_path.json** file.
+
+Additionary, you will need [biopython](https://biopython.org/) installed in your python to run **genotype_sanger.py**, and some
+helper tools to create files for your own reference genome.
 
 ### Genome references
 MoNaS requires a reference fasta sequence (ref.fa), and annotation files (ref.gff3, ref.bed) for each mosquito species.
@@ -68,16 +71,17 @@ optional arguments:
                         default.
 ```
 
-
-1. For DNA data: 
+#### For NGS reads
+1. Example for DNA data: 
 ```bash
-MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir
+MoNaS/genotype.py  -s Aalb  -l sample_list.txt  -t 16  -o out_dir
 ```
 
-2. For RNA data:
+2. Example for RNA data:
 ```bash
-MoNaS/genotype.py  -s species_name  -l sample_list.txt  -t num_cpu  -o out_dir -m ngs_rna
+MoNaS/genotype.py  -s Aalb  -l sample_list.txt  -t 16  -o out_dir -m ngs_rna
 ```
+
 ### Option details
 
 - `-s`, `--species`
@@ -217,6 +221,20 @@ Collumn9: Annotated AA change **in *M. domestica* AA position**.
 Collumn10: Read depth for each allele
 
 Collumn11: Corresponding exon 
+
+### Aanlyzing Sanger sequence reads
+Although it does not seem the best approach, reads from Sanger sequence technology could be analyzed in
+MoNaS pipeline by regarding those Sanger reads as NGS reads. **genotype_sanger.py** is a wrapper script to conduct 
+chopping input Sanger reads into 150 bp short reads (~ x5 coverage) with fake quality values, writing fastq and sample list files, 
+and then executing MoNaS for those data.
+
+As any sequecing errors existing in input Sanger reads will be considered as **true variants**, it is important to
+trim low-quality regions in advance. Also, ambiguaous nucleotide codes (R, Y, S, etc...) are not supported yet (ToDo). 
+
+```bash
+MoNaS/genotype_sanger.py -s Aalb -t 16 -o out_table.tsv sanger_reads.fa
+```
+
 
 Helper tools
 ------
