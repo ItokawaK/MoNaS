@@ -32,7 +32,7 @@ def usage():
 
 if __name__ == '__main__':
 
-    script_dir = sys.path[0]
+    script_dir = os.path.dirname(os.path.abspath(__file__))
 
     parser = argparse.ArgumentParser(description = 'Genotype VGSC gene.',
                                      usage = usage())
@@ -45,11 +45,15 @@ if __name__ == '__main__':
                        type = int,
                        default = 4,
                        help = 'Maximum number of threads. [4]')
+    parser.add_argument('-b', '--bwa_treads', dest = 'num_threads',
+                       type = int,
+                       default = 4,
+                       help = 'Number of treads per bwa process. [4]')
     parser.add_argument('-o', '--out_dir', dest = 'out_dir',
                        help = 'Name of out directly. Should be new.')
     parser.add_argument('-r', '--ref_root', dest = 'ref_root',
                         default = script_dir + "/references",
-                        help = 'Root directly of references. Deault = MoNaS_v1.x/references')
+                        help = 'Root directly of references. Deault = MoNaS/references')
     parser.add_argument('-f', '--fasta', dest = 'fasta',
                          help = 'Path to fasta file of Sanger seq.')
     parser.add_argument('-m', '--mode', dest = 'mode',
@@ -89,11 +93,20 @@ if __name__ == '__main__':
             sys.exit(1)
 
     num_cpu = args.num_cpu
-    if num_cpu > 3:
-        num_threads = 4
+    if args.num_threads:
+        num_threads = args.num_threads
+        if  num_threads < num_cpu:
+            num_proc = num_cpu // num_threads
+        else:
+            num_threads = num_cpu
+            num_proc = 1
     else:
-        num_threads = 1
-    num_proc = num_cpu // num_threads
+        if num_cpu > 3:
+            num_threads = 4
+        else:
+            num_threads = 1
+        num_proc = num_cpu // num_threads
+
     out_dir = args.out_dir
     out_bam_dir1 = out_dir + "/BAMs"
     out_bam_dir2 = out_dir + "/BAMs_rmdup"
