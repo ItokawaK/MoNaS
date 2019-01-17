@@ -51,7 +51,7 @@ def write_fasta(in_seq_fasta, out_fa_dir, out_list):
     out_list_lines = []
     for seq in seqs:
         chopped_dna = chop_dna(seq)
-        out_file_path = os.path.join(out_fa_dir, seq.id + ".fas")
+        out_file_path = os.path.join(out_fa_dir, seq.id + ".fq")
         out_list_lines.append(seq.id + " " + os.path.abspath(out_file_path))
         with open(out_file_path, 'w') as f:
             SeqIO.write(chopped_dna, f, 'fastq')

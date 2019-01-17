@@ -21,25 +21,31 @@ class VCF_line:
             return out_dict
 
         Fs = line.split("\t")
+
+        self.entries = dict()
+        self.entries['CHROM'] = Fs[0]
+        self.entries['POS'] = int(Fs[1])
+        self.entries['REF_ALLELE'] = Fs[3]
+        self.entries['ALT_ALLELE'] = Fs[4]
+        self.entries['QUAL'] = float(Fs[5])
+        self.entries['EXON'] = bed.which_exon(self.entries['POS'])
+
+
         self.line = line
-        self.chrom = Fs[0]
-        self.pos = int(Fs[1])
-        self.ref = Fs[3]
-        self.alt = Fs[4]
         self.alleles = [Fs[3]] + Fs[4].split(",")
-        self.qual = float(Fs[5])
-        self.info = {ll[0]:ll[1] for ll in [l.split("=") for l in Fs[7].split(";")]}
-        if "BCSQ" in self.info:
-            self.tbcsq = BCSQ(self.info["BCSQ"])
+        info = {ll[0]:ll[1] for ll in [l.split("=") for l in Fs[7].split(";")]}
+        if "BCSQ" in info:
+            self.tbcsq = BCSQ(info["BCSQ"])
         else:
             self.tbcsq = None
-        self.format = Fs[8].split(":")
-        self.exon = bed.which_exon(self.pos)
+        self.exon = bed.which_exon(self.entries['POS'])
         self.mdom_conv = mdom_conv
-        self.sample_data = vcf_samples(Fs[9:], self.format, samples)
+        format = Fs[8].split(":")
+        self.sample_data = vcf_samples(Fs[9:], format, samples)
+        for sample in samples:
+            self.set_sample_data(sample)
 
-
-    def get_sample_data(self, sample_name):
+    def set_sample_data(self, sample_name):
 
         if self.sample_data[sample_name]["GT"] == ".":
             return None
@@ -50,7 +56,7 @@ class VCF_line:
         for i in [0, 1]:
             al[i] = self.alleles[GT_indx[i]]
 
-            if al[i] == self.ref:
+            if al[i] == self.entries['REF_ALLELE']:
                 AA_change[i] = "wild"
                 continue
 
@@ -68,19 +74,30 @@ class VCF_line:
                 except:
                     print("error!:" + self.line)
 
+        AA_change_mdom = [self.mdom_conv.mos2fly(AA_change[0]),
+                          self.mdom_conv.mos2fly(AA_change[1])]
 
-        return [sample_name,
-                self.chrom,
-                str(self.pos),
-                self.ref,
-                self.alt,
-                al[0] + "/" + al[1],
-                str(self.qual),
-                AA_change[0] + "/" + AA_change[1],
-                self.mdom_conv.mos2fly(AA_change[0]) + "/" + self.mdom_conv.mos2fly(AA_change[1]),
-                self.sample_data[sample_name]["AD"],
-                self.exon
-                 ]
+        self.sample_data[sample_name]["GT"] = al[0] + "/" + al[1]
+        self.sample_data[sample_name]["AA_CHANGE"] = \
+                                    AA_change[0] + "/" + AA_change[1]
+        self.sample_data[sample_name]["AA_CHANGE_MDOM"] = \
+                                  AA_change_mdom[0] + "/" + AA_change_mdom[1]
+
+    def get_info(self, sample, info_to_get):
+        """
+        Get information in info_to_get for sample
+        info_to_get is a list of string formated like
+         ["CHROM", "POS", "REF_ALLELE", ...]
+        """
+        out_list = []
+        for info in info_to_get:
+            if info in self.entries:
+                out_list.append(self.entries[info])
+            elif info in self.sample_data[sample]:
+                out_list.append(self.sample_data[sample][info])
+            else:
+                out_list.append("NO_DATA")
+        return out_list
 
 class BCSQ:
     """
@@ -225,31 +242,32 @@ class Bed:
                     return(Exon.name)
             return('intron')
 
-def create_table(csqvcfs, bed_file, fasta, out_table_file):
+def create_table(csqvcfs, info_to_get, bed_file, mdom_fasta, out_table_file, header = 'auto'):
+    """
+    Out put table in single out_table_file with header containig info_to_get
+
+    1. prints header string
+    2. Reads VCF files in list csqvcfs
+    3. Retrieves sample name from line starts with #CHROM
+    4. Converts VCF lines into VCF_line object
+    5. Retrieves information described in info_to_get string from VCF_line object
+    """
+
     kdr_list = os.path.dirname(os.path.abspath(__file__)) + "/kdr_list.json"
     #print(kdr_list, file = sys.stderr)
-    md_conv = MDom_comvert(fasta, kdr_list)
+    md_conv = MDom_comvert(mdom_fasta, kdr_list)
     bed = Bed(bed_file)
+
+    if header == 'auto':
+        header = "\t".join(["#ID"] + info_to_get)
 
     with open(out_table_file, "w") as out_f:
         print_header = True
         for csqvcf in csqvcfs:
             with open(csqvcf) as f:
                 if print_header:
-                    print("\t".join(["#ID",
-                                     "CHROM",
-                                     "POS",
-                                     "REF_ALELE",
-                                     "ALT_ALLELE(s)",
-                                     "GT",
-                                     "QUAL",
-                                     "AA_CHANGE",
-                                     "AA_CHANGE_HOUSEFLY",
-                                     "AD",
-                                     "EXON"]
-                                     ),
-                          file = out_f)
-                    print_header = False
+                    print(header, file = out_f)
+                print_header = False
                 for l in f.readlines():
                     if l.startswith("#CHROM"):
                         samples = l.rstrip().split("\t")[9:]
@@ -257,9 +275,11 @@ def create_table(csqvcfs, bed_file, fasta, out_table_file):
                         vcf_l = VCF_line(l.rstrip(), bed, md_conv, samples)
                         if vcf_l.tbcsq == None:
                             continue
-                        for s in samples:
-                            if not vcf_l.sample_data[s]["GT"] in ["0/0", "."]:
-                                print("\t".join(vcf_l.get_sample_data(s)), file = out_f)
+                        for sample in samples:
+                            if not vcf_l.sample_data[sample]["GT"] in ["0/0", "."]:
+                                out_str = [sample] + [str(info) for info in vcf_l.get_info(sample, info_to_get)]
+
+                                print("\t".join(out_str), file = out_f)
 
 if __name__ == '__main__':
     import argparse
@@ -277,4 +297,18 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    create_table([args.out_csq], args.ref_bed, args.mdom_fa, "/dev/stdout")
+    create_table(csqvcfs = [args.out_csq],
+                 info_to_get = ["CHROM",
+                                "POS",
+                                "REF_ALLELE",
+                                "ALT_ALLELE",
+                                "QUAL",
+                                "GT",
+                                "AA_CHANGE",
+                                "AA_CHANGE_MDOM",
+                                "AD",
+                                "EXON"],
+                 bed_file = args.ref_bed,
+                 mdom_fasta = args.mdom_fa,
+                 out_table_file = "/dev/stdout"
+                 )
