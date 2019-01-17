@@ -25,10 +25,13 @@ def parse_sample_list(sample_list):
     return(samples)
 
 def usage():
-    return ("genotyp.py -s species -o out_dir\n"
-            "\t         (--max_cpu int --ref_root path\n"
-            "\t          --sample_list path --fasta path\n"
-            "\t          --mode ngs_dna|ngs_rna|sanger_dna)\n")
+    return (
+    """genotyp.py -s species_name -o out_dir_path -l list_file_path
+                 (-t num_max_threads -b num_threads_per_bwa
+                  -m mode[ngs_dna|ngs_rna] -r ref_dir_path
+                  -v variant_caller[freebayes|gatk]
+                  )
+    """)
 
 if __name__ == '__main__':
 
@@ -54,11 +57,9 @@ if __name__ == '__main__':
     parser.add_argument('-r', '--ref_root', dest = 'ref_root',
                         default = script_dir + "/references",
                         help = 'Root directly of references. Deault = MoNaS/references')
-    parser.add_argument('-f', '--fasta', dest = 'fasta',
-                         help = 'Path to fasta file of Sanger seq.')
     parser.add_argument('-m', '--mode', dest = 'mode',
                          default = 'ngs_dna',
-                         choices = ['ngs_dna', 'ngs_rna', 'sanger_dna'],
+                         choices = ['ngs_dna', 'ngs_rna'],
                          help = 'Analysis mode. [ngs_dna]'
                          )
     parser.add_argument('-v', '--variant_caller', dest = 'variant_caller',
@@ -76,21 +77,11 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if not (args.species and args.ref_root and args.out_dir):
-        print("Error: species and out_dir are mandately!", file = sys.stderr)
-        print(usage())
+    if not (args.species and args.out_dir and args.sample_list):
+        print("Error: Species, out_dir and list are mandately!", file = sys.stderr)
+        print("USAGE", file = sys.stderr)
+        print(usage(), file = sys.stderr)
         sys.exit(1)
-
-    if args.mode in ['ngs_dna', 'ngs_rna']:
-        if not args.sample_list:
-            print("Error: sample_list is mandately for NGS data!", file = sys.stderr)
-            print(usage())
-            sys.exit(1)
-    else:
-        if not args.fasta:
-            print("Error: fasta is mandately for Sanger data!", file = sys.stderr)
-            print(usage())
-            sys.exit(1)
 
     num_cpu = args.num_cpu
     if args.num_threads:
@@ -130,18 +121,14 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if os.path.exists(out_dir):
-        print("Warning: " + out_dir + " already exists!", file = sys.stderr)
-        print("  Do you wanna proceed anyway (._.)? 0: no, >0: yes", file = sys.stderr)
-        to_proceed = input(">>>>  ")
-        if to_proceed == "0":
-            sys.exit(1)
+        print("Error: " + out_dir + " already exists!", file = sys.stderr)
+        sys.exit(1)
 
     job = Job(genome_ref, args.mode)
 
 
     #Create output dir
-    if not os.path.isdir(out_dir):
-        os.mkdir(out_dir)
+    os.mkdir(out_dir)
 
     if not os.path.isdir(out_bam_dir1):
         os.mkdir(out_bam_dir1)
@@ -177,8 +164,16 @@ if __name__ == '__main__':
 
     finalize_table.create_table(
                      csqvcfs = csqvcfs,
-                     info_to_get = "CHROM:POS:REF_ALLELE:ALT_ALLELE:QUAL:GT:"
-                                   "AA_CHANGE:AA_CHANGE_MDOM:AD:EXON",
+                     info_to_get = ["CHROM",
+                                    "POS",
+                                    "REF_ALLELE",
+                                    "ALT_ALLELE",
+                                    "QUAL",
+                                    "GT",
+                                    "AA_CHANGE",
+                                    "AA_CHANGE_MDOM",
+                                    "AD",
+                                    "EXON"],
                      header = "#ID\tCHROM\tPOS\tREF_ALLELE\tALT_ALLELE\tQUAL\tGT\t"
                               "AA_CHANGE\tAA_CHANGE_HOUSEFLY\tAD\tEXON",
                      bed_file = genome_ref.bed,

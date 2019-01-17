@@ -57,7 +57,7 @@ class GenomeRef:
                       file = sys.stderr)
                 os.mkdir(hisatdb)
                 subprocess.call(['hisat2-build',
-                                '-p', num_cpu,
+                                '-p', str(num_cpu),
                                 self.ref_fa,
                                 hisatdb + '/ref'])
         else:
