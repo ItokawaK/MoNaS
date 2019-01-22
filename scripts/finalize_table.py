@@ -49,10 +49,14 @@ class VCF_line:
 
         if self.sample_data[sample_name]["GT"] == ".":
             return None
+        else:
+            GT_indx = [int(i) for i in self.sample_data[sample_name]["GT"].split("/")]
 
-        GT_indx = [int(i) for i in self.sample_data[sample_name]["GT"].split("/")]
         al = [ "", ""]
         AA_change = ["", ""]
+        AA_change_simple = ["", ""]
+        AA_change_mdom  = ["", ""]
+        kdr_type =  ["", ""]
         for i in [0, 1]:
             al[i] = self.alleles[GT_indx[i]]
 
@@ -74,14 +78,23 @@ class VCF_line:
                 except:
                     print("error!:" + self.line)
 
-        AA_change_mdom = [self.mdom_conv.mos2fly(AA_change[0]),
-                          self.mdom_conv.mos2fly(AA_change[1])]
 
-        self.sample_data[sample_name]["GT"] = al[0] + "/" + al[1]
-        self.sample_data[sample_name]["AA_CHANGE"] = \
-                                    AA_change[0] + "/" + AA_change[1]
-        self.sample_data[sample_name]["AA_CHANGE_MDOM"] = \
-                                  AA_change_mdom[0] + "/" + AA_change_mdom[1]
+        for i in [0, 1]:
+            matchOB = re.match(r"(\d+)([^\d]+)>(\d+)([^\d]+)", AA_change[i])
+            if matchOB:
+                coord = matchOB.group(1)
+                old_AA = matchOB.group(2)
+                new_AA = matchOB.group(4)
+                AA_change_simple[i] = old_AA + coord + new_AA
+            else:
+                AA_change_simple[i] = AA_change[i]
+
+            AA_change_mdom[i], kdr_type[i] = self.mdom_conv.mos2fly(AA_change[i])
+
+        self.sample_data[sample_name]["GENOTYPE"] = al[0] + "/" + al[1]
+        self.sample_data[sample_name]["AA_CHANGE"] = "/".join(AA_change_simple)
+        self.sample_data[sample_name]["AA_CHANGE_MDOM"] = "/".join(AA_change_mdom)
+        self.sample_data[sample_name]["KDR_EVIDENCE"] = "/".join(kdr_type)
 
     def get_info(self, sample, info_to_get):
         """
@@ -198,24 +211,27 @@ class MDom_comvert:
                 print("\t".join([str(idx[0]), mos, mdom, str(idx[1])]), file = sys.stderr)
 
     def mos2fly(self, AA_str):
-        if AA_str == "wild":
-            return("wild")
+        kdr_evidence = "NA"
 
-        matchOB = re.match(r"(\d+)([^\d]+)>(\d+)([^\d]+)", AA_str)
-        if matchOB:
-            mos_coord = matchOB.group(1)
-            old_AA = matchOB.group(2)
-            new_AA = matchOB.group(4)
+        if AA_str == "wild":
+            return ("wild", kdr_evidence)
+
+        match_change = re.match(r"(\d+)([^\d]+)>(\d+)([^\d]+)", AA_str)
+        if match_change:
+            mos_coord = match_change.group(1)
+            old_AA = match_change.group(2)
+            new_AA = match_change.group(4)
             fly_coord = self.hash[mos_coord]
-            kdr_symbol = ""
-            if (fly_coord + new_AA) in self.kdr_dict:
-                if self.kdr_dict[(fly_coord + new_AA)] == 1:
-                    kdr_symbol = "!!"
-                else:
-                    kdr_symbol = "??"
-            return(old_AA + fly_coord + new_AA + kdr_symbol)
+
+            if not (fly_coord + new_AA) in self.kdr_dict:
+                kdr_evidence = "Unknown"
+            elif self.kdr_dict[(fly_coord + new_AA)] == 1:
+                kdr_evidence = "Strong"
+            elif self.kdr_dict[(fly_coord + new_AA)] == 2:
+                kdr_evidence = "Supportive"
+            return (old_AA + fly_coord + new_AA, kdr_evidence)
         else:
-            return("synonymous")
+            return ("synonymous", kdr_evidence)
 
 
 class Bed:
@@ -283,33 +299,44 @@ def create_table(csqvcfs, info_to_get, bed_file, mdom_fasta, out_table_file, hea
     5. Retrieves information described in info_to_get string from VCF_line object
     """
 
+    def vcf_to_table(in_fh, bed, md_conv, info_to_get):
+        out_lines = []
+        for l in in_fh.readlines():
+            if l.startswith("#CHROM"):
+                samples = l.rstrip().split("\t")[9:]
+            if l.startswith("#"):
+                continue
+
+            vcf_l = VCF_line(l.rstrip(), bed, md_conv, samples)
+            if vcf_l.tbcsq == None:
+                continue
+            for sample in samples:
+                if vcf_l.sample_data[sample]["GT"] in ["0/0", "."]:
+                    continue
+
+                info = vcf_l.get_info(sample, info_to_get)
+                out_str = [sample] + [str(info_) for info_ in info]
+                out_lines.append("\t".join(out_str))
+        return out_lines
+
     kdr_list = os.path.dirname(os.path.abspath(__file__)) + "/kdr_list.json"
-    #print(kdr_list, file = sys.stderr)
     md_conv = MDom_comvert(mdom_fasta, kdr_list)
     bed = Bed(bed_file)
 
     if header == 'auto':
         header = "\t".join(["#ID"] + info_to_get)
 
+    print_header = True
+
     with open(out_table_file, "w") as out_f:
-        print_header = True
         for csqvcf in csqvcfs:
             with open(csqvcf) as f:
                 if print_header:
                     print(header, file = out_f)
                 print_header = False
-                for l in f.readlines():
-                    if l.startswith("#CHROM"):
-                        samples = l.rstrip().split("\t")[9:]
-                    if not l.startswith("#"):
-                        vcf_l = VCF_line(l.rstrip(), bed, md_conv, samples)
-                        if vcf_l.tbcsq == None:
-                            continue
-                        for sample in samples:
-                            if not vcf_l.sample_data[sample]["GT"] in ["0/0", "."]:
-                                out_str = [sample] + [str(info) for info in vcf_l.get_info(sample, info_to_get)]
-
-                                print("\t".join(out_str), file = out_f)
+                write_us = vcf_to_table(f, bed, md_conv, info_to_get)
+                for l in write_us:
+                    print(l, file = out_f)
 
 if __name__ == '__main__':
     import argparse
@@ -333,9 +360,10 @@ if __name__ == '__main__':
                                 "REF_ALLELE",
                                 "ALT_ALLELE",
                                 "QUAL",
-                                "GT",
+                                "GENOTYPE",
                                 "AA_CHANGE",
                                 "AA_CHANGE_MDOM",
+                                "KDR_EVIDENCE",
                                 "AD",
                                 "EXON"],
                  bed_file = args.ref_bed,

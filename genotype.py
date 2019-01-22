@@ -169,13 +169,14 @@ if __name__ == '__main__':
                                     "REF_ALLELE",
                                     "ALT_ALLELE",
                                     "QUAL",
-                                    "GT",
+                                    "GENOTYPE",
                                     "AA_CHANGE",
                                     "AA_CHANGE_MDOM",
+                                    "KDR_EVIDENCE",
                                     "AD",
                                     "EXON"],
-                     header = "#ID\tCHROM\tPOS\tREF_ALLELE\tALT_ALLELE\tQUAL\tGT\t"
-                              "AA_CHANGE\tAA_CHANGE_HOUSEFLY\tAD\tEXON",
+                     # header = "#ID\tCHROM\tPOS\tREF_ALLELE\tALT_ALLELE\tQUAL\tGT\t"
+                     #          "AA_CHANGE\tAA_CHANGE_HOUSEFLY\tAD\tEXON",
                      bed_file = genome_ref.bed,
                      mdom_fasta = genome_ref.mdom_fa,
                      out_table_file = out_dir + "/table_with_Mdomcoord.tsv"
