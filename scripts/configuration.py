@@ -27,8 +27,6 @@ class GenomeRef:
         self.ref_fa =  os.path.join(self.root_dir, "ref.fa")
         self.bed =  os.path.join(self.root_dir, "ref.bed")
         self.mdom_fa = os.path.join(self.root_dir, "ref.mdom.fa")
-        self.mdom_coord_ck = os.path.join(self.root_dir, "ref.mdomcoord")
-        self.mdom_coord_dl = os.path.join(self.root_dir, "ref.mdomcoord")
 
     #########################################################################
     def check_genomedb(self, mode, variant_caller, num_cpu = 1):
