@@ -1,0 +1,530 @@
+1. Multiple aligment in ClustW format
+    MUSCLE (3.8) multiple sequence alignment
+    
+    
+    AAB47604        MTEDSDSISEEERSLFRPFTRESLLQIEQRIAEHE-KQKELERKRAAEGE----------
+    VGSC_ck         MTEDSDSISEEERSLFRPFTRESLAAIERRIADAEAKQRELEKKR-AEGETGFGRKKKKK
+    VGSC_dl         MTEDSDSISEEERSLFRPFTRESLAAIERRIADAEAKQRELEKKR-AEGETGFGRKKKKK
+                    ************************  **.***: * **.***.** ****
+    
+    AAB47604        QIRYDDEDEDEGPQPDPTLEQGVPIPVRMQGSFPPELASTPLEDIDPFYSNVLTFVVISK
+    VGSC_ck         EIRYDDEDEDEGPQPDSTLEQGVPIPVRMQGSFPPELASTPLEDIDSYYANQRTFVVVSK
+    VGSC_dl         EIRYDDEDEDEGPQPDSTLEQGVPIPVRMQGSFPPELASTPLEDIDSYYANQRTFVVVSK
+                    :***************.*****************************.:*:*  ****:**
+    
+    AAB47604        GKDIFRFSASKAMWLLDPFNPIRRVAIYILVHPLFSLFIITTILTNCILMIMPTTPTVES
+    VGSC_ck         GKDIFRFSATNALYVLDPFNPIRRVAIYILVHPLFSFFIITTILTNCILMIMPSTPTVES
+    VGSC_dl         GKDIFRFSATNALYVLDPFNPIRRVAIYILVHPLFSFFIITTILTNCILMIMPSTPTVES
+                    *********::*:::*********************:****************:******
+    
+    AAB47604        TEVIFTGIYTFESAVKVMARGFILCPFTYLRDAWNWLDFVVIALAYVTMGIDLGNLAALR
+    VGSC_ck         TEVIFTGIYTFESAVKVMARGFILQPFTYLRDAWNWLDFVVIALAYVTMGIDLGNLAALR
+    VGSC_dl         TEVIFTGIYTFESAVKVMARGFILQPFTYLRDAWNWLDFVVIALAYVTMGIDLGNLAALR
+                    ************************ ***********************************
+    
+    AAB47604        TFRVLRALKTVAIVPGLKTIVGAVIESVKNLRDVIILTMFSLSVFALMGLQIYMGVLTQK
+    VGSC_ck         TFRVLRALKTVAIVPGLKTIVGAVIESVKNLRDVIILTMFSLSVFALMGLQIYMGVLTQK
+    VGSC_dl         TFRVLRALKTVAIVPGLKTIVGAVIESVKNLRDVIILTMFSLSVFALMGLQIYMGVLTQK
+                    ************************************************************
+    
+    AAB47604        CIKRFPLDGSWGNLTDENWFLHNSNSSNWFTENDGESYPVCGNVSGAGQCGEDYVCLQGF
+    VGSC_ck         CIKEFPLDGSWGNLSDENWERFNNNDSNWFFSETGDT-PLCGNSSGAGQCEEGYICLQGY
+    VGSC_dl         CIKEFPLDGSWGNLSDENWERFNNNDSNWFFSETGDT-PLCGNSSGAGQCEEGYICLQGY
+                    *** **********:****  .*.*.**** .: *:: *:*** ****** *.*:****:
+    
+    AAB47604        GPNPNYDYTSFDSFGWAFLSAFRLMTQDFWEDLYQHVLQAAGPWHMLFFIVIIFLGSFYL
+    VGSC_ck         GDNPNYGYTSFDTFGWAFLSAFRLMTQDYWENLYQLVLRSAGPWHMLFFIVIIFLGSFYL
+    VGSC_dl         GDNPNYGYTSFDTFGWAFLSAFRLMTQDYWENLYQLVLRSAGPWHMLFFIVIIFLGSFYL
+                    * ****.*****:***************:**:*** **.:********************
+    
+    AAB47604        VNLILAIVAMSYDELQKKAEEEEAAEEEAIREAEEAAAAKAAKLEERANVAAQAAQDAAD
+    VGSC_ck         VNLILAIVAMSYDELQKKAEEEEAAEEEALREAEEAAAAKAAKLEAQAA-----------
+    VGSC_dl         VNLILAIVAMSYDELQKKAEEEEAAEEEALREAEEAAAAKAAKLEAQAA-----------
+                    *****************************:*************** .*
+    
+    AAB47604        AAAAALHPEMAKSPT-YSCISYELFVGGEKGNDDNNKEKMSIRSVEVESESVSVIQRQPA
+    VGSC_ck         AAAAAANPEIAKSPSDFSCHSYELFVNQEKGNDDNNKEKMSIRSEGLESVSEITRTTAPT
+    VGSC_dl         AAAAAANPEIAKSPSDFSCHSYELFVNQEKGNDDNNKEKMSIRSEGLESVSEITRTTAPT
+                    ***** :**:****: :** ******. ****************  :** *  .    *:
+    
+    AAB47604        PTTAPATKVRKVSTTSLSLPGSPFNLRRGSRSSHKYTIRNGRGRF-GIPGSDRKPLVLQT
+    VGSC_ck         ATAAGTAKARKVSAASLSLPGSPFNLRRGSRGSHQFTIRNGRGRFVGVPGSDRKPLVLST
+    VGSC_dl         ATAAGTAKARKVSAASLSLPGSPFNLRRGSRGSHQFTIRNGRGRFVGVPGSDRKPLVLST
+                    .*:* ::*.****::****************.**::********* *:**********.*
+    
+    AAB47604        YQDAQQHLPYADDSNAVTPMSEENGAIIVPAYYCNLGSRHSSYTSHQSRISYTSHGDLLG
+    VGSC_ck         YLDAQEHLPYADDSNAVTPMSEENGAIIVPVYYANLGSRHSSYTSHQSRISYTSHGDLLG
+    VGSC_dl         YLDAQEHLPYADDSNAVTPMSEENGAIIVPVYYANLGSRHSSYTSHQSRISYTSHGDLLG
+                    * ***:************************.**.**************************
+    
+    AAB47604        GMAAMGASTMTKESKLRSRNTRNQSIGAATNGGSSTAGGGYPDANHKEQRDYEMGQDYTD
+    VGSC_ck         G--------MTKESRLRNRSARNTNHSIVPPPNMSGPNMSYVDTNHKGQRDFDMSQDCTD
+    VGSC_dl         G--------MTKESRLRNRSARNTNHSIVPPPNMSGPNMSYVDTNHKGQRDFDMSQDCTD
+                    *        *****.**.*.:** . . ..  . * .. .* *:*** ***::*.** **
+    
+    AAB47604        EAGKIKHHDNPFIEPVQTQTVVDMKDVMVLNDIIEQAAGRHSRASERG------------
+    VGSC_ck         EAGKIKHNDNPFIEPSQTQTVVDMKDVMVLNDIIEQAAGRHSRASDHGVCITTISLHRFS
+    VGSC_dl         EAGKIKHNDNPFIEPSQTQTVVDMKDVMVLNDIIEQAAGRHSRASDHGVCITTISLHRFS
+                    *******:******* *****************************:.*
+    
+    AAB47604        -----------EDDDEDGPTFKDIALEYILKGIEIFCVWDCCWVWLKFQEWVSFIVFDPF
+    VGSC_ck         FCCVSVYYFPTEDDDEDGPTFKDKALEFAMRMIDIFCVWDCCWVWLKFQEWVSFIVFDPF
+    VGSC_dl         FCCVSVYYFPTEDDDEDGPTFKDKALEFAMRMIDIFCVWDCCWVWLKFQEWVSFIVFDPF
+                               ************ ***: :. *:**************************
+    
+    AAB47604        VELFITLCIVVNTMFMAMDHHDMNPELEKVLKSGNYFFTATFAIEASMKLMAMSPKYYFQ
+    VGSC_ck         VELFITLCIVVNTLFMALDHHDMDPDMERALKSGNYFFTATFAIEATMKLIAMSPKYYFQ
+    VGSC_dl         VELFITLCIVVNTLFMALDHHDMDPDMERALKSGNYFFTATFAIEATMKLIAMSPKYYFQ
+                    *************:***:*****:*::*..****************:***:*********
+    
+    AAB47604        EGWNIFDFIIVALSLLELGLEGVQGLSVLRSFRLLRVFKLAKSWPTLNLLISIMGRTMGA
+    VGSC_ck         EGWNIFDFIIVALSLLELGLEGVQGLSVLRSFRLLRVFKLAKSWPTLNLLISIMGRTVGA
+    VGSC_dl         EGWNIFDFIIVALSLLELGLEGVQGLSVLRSFRLLRVFKLAKSWPTLNLLISIMGRTMGA
+                    *********************************************************:**
+    
+    AAB47604        LGNLTFVLCIIIFIFAVMGMQLFGKNYIDHKDRFKDHELPRWNFTDFMHSFMIVFRVLCG
+    VGSC_ck         LGNLTFVLCIIIFIFAVMGMQLFGKNYTDNVDRFPDKDLPRWNFTDFMHSFMIVFRVLCG
+    VGSC_dl         LGNLTFVLCIIIFIFAVMGMQLFGKNYIDNVDRFPDKDLPRWNFTDFMHSFMIVFRVLCG
+                    *************************** *: *** *::**********************
+    
+    AAB47604        EWIESMWDCMYVGDVSCIPFFLATVVIGNLVVLNLFLALLLSNFGSSSLSAPTADNDTNK
+    VGSC_ck         EWIESMWDCMLVGDVSCIPFFLATVVIGNLVVLNLFLALLLSNFGSSSLSAPTADNETNK
+    VGSC_dl         EWIESMWDCMLVGDVSCIPFFLATVVIGNLVVLNLFLALLLSNFGSSSLSAPTADNETNK
+                    ********** *********************************************:***
+    
+    AAB47604        IAEAFNRIARFKNWVKRNIADCFKLIRNKLTNQISD-QP---------------------
+    VGSC_ck         IAEAFNRISRFSNWIKSNIANALKFVKNKLTSQIASVQPAGEQHNHLSWIWNEGKGVCPC
+    VGSC_dl         IAEAFNRISRFSNWIKSNIANALKFVKNKLTSQIASVQPAGEQHNHLSWIWNEGKGVCPC
+                    ********:**.**:* ***:.:*::.****.**:. **
+    
+    AAB47604        --SEHGDNELELGHDEIMGDGLIKKGMKGETQLEVAIGDGMEFTIHGDMKNNKPKKSKFM
+    VGSC_ck         ISAEHGENELELTPDDILADGLLKKGVKEHNQLEVAIGDGMEFTIHGDLKNKGKKNKQLM
+    VGSC_dl         ISAEHGENELELTPDDILADGLLKKGVKEHNQLEVAIGDGMEFTIHGDLKNKGKKNKQLM
+                      :***:*****  *:*:.***:***:*  .*****************:**:  *:.::*
+    
+    AAB47604        NNTT-MIGNSI-NHQDNRLEHELNHRGLSIQDDDTASINSYGSHKNRPFKDESHKGSAET
+    VGSC_ck         NNSNKVIGNSISNHQDNKLEHELNHRGMSLQDDDTASIKSYGSHKNRPFKDESHKGSAET
+    VGSC_dl         NNSNKVIGNSISNHQDNKLEHELNHRGMSLQDDDTASIKSYGSHKNRPFKDESHKGSAET
+                    **:. :***** *****.*********:*:********:*********************
+    
+    AAB47604        IEGEEKRDVSKEDLGLDEELDEEAEGDEGQLDGDIIIHAQNDDEIIDDYPADCFPDSYYK
+    VGSC_ck         MEGEEKRDVSKEDLGIDEELDDECDGEEGPLDGELIIHA-DEDEVIEDSPADCCPDNCYK
+    VGSC_dl         MEGEEKRDVSKEDLGIDEELDDECDGEEGPLDGELIIHA-DEDEVIEDSPADCCPDNCYK
+                    :**************:*****:*.:*:** ***::**** ::**:*:* **** **. **
+    
+    AAB47604        KFPILAGDEDSPFWQGWGNLRLKTFQLIENKYFETAVITMILMSSLALALEDVHLPDRPV
+    VGSC_ck         KFPVLAGDDDAPFWQGWANLRLKTFQLIENKYFETAVITMILLSSLALALEDVHLPHRPI
+    VGSC_dl         KFPVLAGDDDAPFWQGWANLRLKTFQLIENKYFETAVITMILLSSLALALEDVHLPHRPI
+                    ***:****:*:******.************************:************* **:
+    
+    AAB47604        MQDILYYMDRIFTVIFFLEMLIKWLALGFKVYFTNAWCWLDFVIVMLSLINLVAVWSGLN
+    VGSC_ck         LQDVLYYMDRIFTVIFFLEMLIKWLALGFRVYFTNAWCWLDFIIVMLSLINLTAIMVGAA
+    VGSC_dl         LQDVLYYMDRIFTVIFFLEMLIKWLALGFRVYFTNAWCWLDFIIVMVSLINFVASLCGAG
+                    :**:*************************.************:***:****:.*   *
+    
+    AAB47604        DIAVFRSMRTLRALRPLRAVSRWEGMKVVVNALVQAIPSIFNVLLVCLIFWLIFAIMGVQ
+    VGSC_ck         DIPAFRSMRTLRALRPLRAVSRWEGMRVVVNALVQAIPSIFNVLLVCLIFWLIFAIMGVQ
+    VGSC_dl         GIQAFKTMRTLRALRPLRAMSRMQGMRVVVNALVQAIPSIFNVLLVCLIFWLIFAIMGVQ
+                    .* .*.:************:** :**.*********************************
+    
+    AAB47604        LFAGKYFKCKDGNDTVLSHEIIPNRNACKSENYTWENSAMNFDHVGNAYLCLFQVATFKG
+    VGSC_ck         LFAGKYFKCVDKNKTTLSHEIIPDVNACVAENYTWENSPMNFDHVGKAYLCLFQVATFKG
+    VGSC_dl         LFAGKYFKCVDKNKTTLSHEIIPDVNACVAENYTWENSPMNFDHVGKAYLCLFQVATFKG
+                    ********* * *.*.*******: *** :********.*******:*************
+    
+    AAB47604        WIQIMNDAIDSREVDKQPIRETNIYMYLYFVFFIIFGSFFTLNLFIGVIIDNFNEQKKKA
+    VGSC_ck         WIQIMNDAIDSREVGKQPIRETNIYMYLYFVFFIIFGSFFTLNLFIGVIIDNFNEQKKKA
+    VGSC_dl         WIQIMNDAIDSREVGKQPIRETNIYMYLYFVFFIIFGSFFTLNLFIGVIIDNFNEQKKKA
+                    **************.*********************************************
+    
+    AAB47604        GGSLEMFMTEDQKKYYNAMKKMGSKKPLKAIPRPRWRPQAIVFEIVTDKKFDIIIMLFIG
+    VGSC_ck         GGSLEMFMTEDQKKYYNAMKKMGSKKPLKAIPRPRWRPQAIVFEIVTNKKFDMIIMLFIG
+    VGSC_dl         GGSLEMFMTEDQKKYYNAMKKMGSKKPLKAIPRPRWRPQAIVFEIVTNKKFDMIIMLFIG
+                    ***********************************************:****:*******
+    
+    AAB47604        LNMFTMTLDRYDASEAYNNVLDKLNGIFVVIFSGECLLKIFALRYHYFKEPWNLFDVVVV
+    VGSC_ck         FNMLTMTLDHYKQTDTFSAVLDYLNMIFICIFSSECLMKIFALRYHYFIEPWNLFDFVVV
+    VGSC_dl         FNMLTMTLDHYKQTDTFSAVLDYLNMIFICIFSSECLMKIFALRYHYFIEPWNLFDFVVV
+                    :**:*****.*. ::::. *** ** **: ***.***:********** *******.***
+    
+    AAB47604        ILSILGLVLSDIIEKYFVSPTLLRVVRVAKVGRVLRLVKGAKGIRTLLFALAMSLPALFN
+    VGSC_ck         ILSILGLVLSDLIEKYFVSPTLLRVVRVAKVGRVLRLVKGAKGIRTLLFALAMSLPALFN
+    VGSC_dl         ILSILGLVLSDLIEKYFVSPTLLRVVRVAKVGRVLRLVKGAKGIRTLLFALAMSLPALFN
+                    ***********:************************************************
+    
+    AAB47604        ICLLLFLVMFIFAIFGMSFFMHVKEKSGINAVYNFKTFGQSMILLFQMSTSAGWDGVLDA
+    VGSC_ck         ICLLLFLVMFIFAIFGMSFFMHVKDKSGLDDVYNFKTFGQSMILLFQMSTSAGWDGVLDG
+    VGSC_dl         ICLLLFLVMFIFAIFGMSFFMHVKDKSGLDDVYNFKTFGQSMILLFQMSTSAGWDGVLDG
+                    ************************:***:: ****************************.
+    
+    AAB47604        IINEEDCDPPDNDKGYPGNCGSATVGITFLLSYLVISFLIVINMYIAVILENYSQATEDV
+    VGSC_ck         IINEDECLPPDNDKGYPGNCGSATIGITYLLAYLVISFLIVINMYIAVILENYSQATEDV
+    VGSC_dl         IINEDECLPPDNDKGYPGNCGSATIGITYLLAYLVISFLIVINMYIAVILENYSQATEDV
+                    ****::* ****************:***:**:****************************
+    
+    AAB47604        QEGLTDDDYDMYYEIWQQFDPEGTQYIRYDQLSEFLDVLEPPLQIHKPNKYKIISMDMPI
+    VGSC_ck         QEGLTDDDYDMYYEIWQQFDPDGTQYIRYDQLSDFLDVLEPPLQIHKPNKYKIISMDIPI
+    VGSC_dl         QEGLTDDDYDMYYEIWQQFDPDGTQYIRYDQLSDFLDVLEPPLQIHKPNKYKIISMDIPI
+                    *********************:***********:***********************:**
+    
+    AAB47604        CRGDMMYCVDILDALTKDFFARKGNPIEETGEIGEIAARPDTEGYDPVSSTLWRQREEYC
+    VGSC_ck         CRGDMMFCVDILDALTKDFFARKGNPIEETAELGEVQARPDEVGYEPVSSTLWRQREEYC
+    VGSC_dl         CRGDMMFCVDILDALTKDFFARKGNPIEETAELGEVQARPDEVGYEPVSSTLWRQREEYC
+                    ******:***********************.*:**: ****  **:**************
+    
+    AAB47604        AKLIQNAWRRYKNGPPQEGDEGEAAGGEDGAEGGEGEGGSGGGG-GDDGGSATGATAAAG
+    VGSC_ck         ARVIQHAWRKHKE--RQAGGGGGDDTDADACDNDDGDGGGGGGGSAGDGGSAGGGVTSPG
+    VGSC_dl         ARVIQHAWRKHKE--RQAGGGGGDDTDADACDNDDGDGGGGGGGSAGDGGSAGGGVTSPG
+                    *.:**:***.:*:   * *. *    . *..:..:*:**.**** ..***** *..::.*
+    
+    AAB47604        ATSPSDPDAGEADGASVGGP-----------LSPGCVSGGSN---GRQTAVLVESDGFVT
+    VGSC_ck         AGSGSIVGGGTTPGSGGGGSQANLGIVVEHNLSPKESPDGNNDPQGRQTAVLVESDGFVT
+    VGSC_dl         AGSGSIVGGGTTPGSGGGGSQANLGIVVEHNLSPKESPDGNNDPQGRQTAVLVESDGFVT
+                    * * *  ..* : *:. **.           ***   ..*.*   ***************
+    
+    AAB47604        KNGHKVVIHSRSPSITSRTADV
+    VGSC_ck         KNGHRVVIHSRSPSITSRSADV
+    VGSC_dl         KNGHRVVIHSRSPSITSRSADV
+                    ****.*************:***
+
+2. AAs different from M. domestica VGSC
+    25A in ck and dl 
+    26A in ck and dl 
+    29R in ck and dl 
+    33D in ck and dl 
+    34A in ck and dl 
+    38R in ck and dl 
+    42K in ck and dl 
+    50E in ck and dl 
+    66S in ck and dl 
+    96S in ck and dl 
+    97Y in ck and dl 
+    99A in ck and dl 
+    101Q in ck and dl 
+    102R in ck and dl 
+    107V in ck and dl 
+    119T in ck and dl 
+    120N in ck and dl 
+    122L in ck and dl 
+    123Y in ck and dl 
+    124V in ck and dl 
+    146F in ck and dl 
+    163S in ck and dl 
+    194Q in ck and dl 
+    293E in ck and dl 
+    304S in ck and dl 
+    309E in ck and dl 
+    310R in ck and dl 
+    311F in ck and dl 
+    313N in ck and dl 
+    315D in ck and dl 
+    320F in ck and dl 
+    321S in ck and dl 
+    322E in ck and dl 
+    323T in ck and dl 
+    325D in ck and dl 
+    326T in ck and dl 
+    329L in ck and dl 
+    333S in ck and dl 
+    340E in ck and dl 
+    342G in ck and dl 
+    344I in ck and dl 
+    349Y in ck and dl 
+    351D in ck and dl 
+    356G in ck and dl 
+    362T in ck and dl 
+    378Y in ck and dl 
+    381N in ck and dl 
+    385L in ck and dl 
+    388R in ck and dl 
+    389S in ck and dl 
+    439L in ck and dl 
+    455A in ck and dl 
+    456Q in ck and dl 
+    458A in ck and dl 
+    475A in ck and dl 
+    476N in ck and dl 
+    479I in ck and dl 
+    484S in ck and dl 
+    485F in ck and dl 
+    488H in ck and dl 
+    495N in ck and dl 
+    496Q in ck and dl 
+    513E in ck and dl 
+    514G in ck and dl 
+    515L in ck and dl 
+    518V in ck and dl 
+    520E in ck and dl 
+    521I in ck and dl 
+    522T in ck and dl 
+    523R in ck and dl 
+    524T in ck and dl 
+    525T in ck and dl 
+    526A in ck and dl 
+    528T in ck and dl 
+    529A in ck and dl 
+    531A in ck and dl 
+    533G in ck and dl 
+    534T in ck and dl 
+    535A in ck and dl 
+    537A in ck and dl 
+    542A in ck and dl 
+    543A in ck and dl 
+    560G in ck and dl 
+    563Q in ck and dl 
+    564F in ck and dl 
+    575V in ck and dl 
+    586S in ck and dl 
+    589L in ck and dl 
+    593E in ck and dl 
+    618V in ck and dl 
+    621A in ck and dl 
+    662R in ck and dl 
+    665N in ck and dl 
+    667S in ck and dl 
+    668A in ck and dl 
+    671T in ck and dl 
+    672N in ck and dl 
+    673H in ck and dl 
+    674S in ck and dl 
+    675I in ck and dl 
+    676V in ck and dl 
+    677P in ck and dl 
+    678P in ck and dl 
+    679P in ck and dl 
+    680N in ck and dl 
+    681M in ck and dl 
+    683G in ck and dl 
+    684P in ck and dl 
+    685N in ck and dl 
+    686M in ck and dl 
+    687S in ck and dl 
+    689V in ck and dl 
+    691T in ck and dl 
+    695G in ck and dl 
+    699F in ck and dl 
+    700D in ck and dl 
+    702S in ck and dl 
+    705C in ck and dl 
+    715N in ck and dl 
+    723S in ck and dl 
+    753D in ck and dl 
+    754H in ck and dl 
+    768K in ck and dl 
+    772F in ck and dl 
+    773A in ck and dl 
+    774M in ck and dl 
+    775R in ck and dl 
+    776M in ck and dl 
+    778D in ck and dl 
+    818L in ck and dl 
+    822L in ck and dl 
+    828D in ck and dl 
+    830D in ck and dl 
+    831M in ck and dl 
+    833R in ck and dl 
+    834A in ck and dl 
+    851T in ck and dl 
+    855I in ck and dl 
+    922V in ck 
+    952T in ck 
+    954N in ck and dl 
+    955V in ck and dl 
+    959P in ck and dl 
+    961K in ck and dl 
+    962D in ck and dl 
+    995L in ck and dl 
+    1041E in ck and dl 
+    1053S in ck and dl 
+    1056S in ck and dl 
+    1059I in ck and dl 
+    1061S in ck and dl 
+    1065N in ck and dl 
+    1066A in ck and dl 
+    1067L in ck and dl 
+    1069F in ck and dl 
+    1070V in ck and dl 
+    1071K in ck and dl 
+    1076S in ck and dl 
+    1079A in ck and dl 
+    1080S in ck and dl 
+    1083A in ck and dl 
+    1087E in ck and dl 
+    1093T in ck and dl 
+    1094P in ck and dl 
+    1096D in ck and dl 
+    1098L in ck and dl 
+    1099A in ck and dl 
+    1103L in ck and dl 
+    1107V in ck and dl 
+    1109E in ck and dl 
+    1110H in ck and dl 
+    1111N in ck and dl 
+    1129L in ck and dl 
+    1132K in ck and dl 
+    1133G in ck and dl 
+    1134K in ck and dl 
+    1136N in ck and dl 
+    1137K in ck and dl 
+    1138Q in ck and dl 
+    1139L in ck and dl 
+    1143S in ck and dl 
+    1144N in ck and dl 
+    1145V in ck and dl 
+    1156K in ck and dl 
+    1166M in ck and dl 
+    1168L in ck and dl 
+    1177K in ck and dl 
+    1199M in ck and dl 
+    1214I in ck and dl 
+    1220D in ck and dl 
+    1222C in ck and dl 
+    1223D in ck and dl 
+    1225E in ck and dl 
+    1228P in ck and dl 
+    1232E in ck and dl 
+    1233L in ck and dl 
+    1239D in ck and dl 
+    1240E in ck and dl 
+    1243V in ck and dl 
+    1245E in ck and dl 
+    1247S in ck and dl 
+    1252C in ck and dl 
+    1255N in ck and dl 
+    1256C in ck and dl 
+    1262V in ck and dl 
+    1267D in ck and dl 
+    1269A in ck and dl 
+    1276A in ck and dl 
+    1301L in ck and dl 
+    1315H in ck and dl 
+    1318I in ck and dl 
+    1319L in ck and dl 
+    1322V in ck and dl 
+    1348R in ck and dl 
+    1361I in ck and dl 
+    1365V in dl 
+    1370F in dl 
+    1371T in ck 
+    1373I in ck 
+    1374M in ck 
+    1375V in ck 
+    1377A in ck and dl 
+    1378A in ck 
+    1379G in dl 
+    1381P in ck 
+    1382A in ck and dl 
+    1384K in dl 
+    1385T in dl 
+    1398M in dl 
+    1401M in dl 
+    1402Q in dl 
+    1405R in ck and dl 
+    1448V in ck and dl 
+    1450K in ck and dl 
+    1452K in ck and dl 
+    1454T in ck and dl 
+    1462D in ck and dl 
+    1463V in ck and dl 
+    1467V in ck and dl 
+    1468A in ck and dl 
+    1477P in ck and dl 
+    1485K in ck and dl 
+    1513G in ck and dl 
+    1606N in ck and dl 
+    1611M in ck and dl 
+    1619F in ck and dl 
+    1622L in ck and dl 
+    1628H in ck and dl 
+    1630K in ck and dl 
+    1631Q in ck and dl 
+    1632T in ck and dl 
+    1633D in ck and dl 
+    1634T in ck and dl 
+    1635F in ck and dl 
+    1636S in ck and dl 
+    1637A in ck and dl 
+    1641Y in ck and dl 
+    1644M in ck and dl 
+    1647I in ck and dl 
+    1648C in ck and dl 
+    1652S in ck and dl 
+    1656M in ck and dl 
+    1667I in ck and dl 
+    1675F in ck and dl 
+    1690L in ck and dl 
+    1763D in ck and dl 
+    1767L in ck and dl 
+    1768D in ck and dl 
+    1769D in ck and dl 
+    1798G in ck and dl 
+    1803D in ck and dl 
+    1804E in ck and dl 
+    1806L in ck and dl 
+    1823I in ck and dl kdr?
+    1827Y in ck and dl 
+    1830A in ck and dl 
+    1880D in ck and dl 
+    1892D in ck and dl 
+    1916I in ck and dl 
+    1925F in ck and dl 
+    1949A in ck and dl 
+    1951L in ck and dl 
+    1954V in ck and dl 
+    1955Q in ck and dl 
+    1960E in ck and dl 
+    1961V in ck and dl 
+    1964E in ck and dl 
+    1980R in ck and dl 
+    1981V in ck and dl 
+    1984H in ck and dl 
+    1988K in ck and dl 
+    1989H in ck and dl 
+    1991E in ck and dl 
+    1994R in ck and dl 
+    1996A in ck and dl 
+    1998G in ck and dl 
+    1999G in ck and dl 
+    2001G in ck and dl 
+    2002D in ck and dl 
+    2003D in ck and dl 
+    2004T in ck and dl 
+    2005D in ck and dl 
+    2006A in ck and dl 
+    2008A in ck and dl 
+    2009C in ck and dl 
+    2010D in ck and dl 
+    2011N in ck and dl 
+    2012D in ck and dl 
+    2013D in ck and dl 
+    2015D in ck and dl 
+    2018G in ck and dl 
+    2023A in ck and dl 
+    2024G in ck and dl 
+    2030G in ck and dl 
+    2032G in ck and dl 
+    2033V in ck and dl 
+    2034T in ck and dl 
+    2035S in ck and dl 
+    2036P in ck and dl 
+    2039G in ck and dl 
+    2041G in ck and dl 
+    2043I in ck and dl 
+    2044V in ck and dl 
+    2045G in ck and dl 
+    2046G in ck and dl 
+    2048T in ck and dl 
+    2049T in ck and dl 
+    2050P in ck and dl 
+    2052S in ck and dl 
+    2053G in ck and dl 
+    2054G in ck and dl 
+    2057S in ck and dl 
+    2061K in ck and dl 
+    2062E in ck and dl 
+    2063S in ck and dl 
+    2064P in ck and dl 
+    2065D in ck and dl 
+    2067N in ck and dl 
+    2088R in ck and dl 
+    2102S in ck and dl 
