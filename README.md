@@ -27,7 +27,8 @@ However, MoNaS depends some third-party softwares described below:
 - [freebayes](https://github.com/ekg/freebayes) v1.2.0-2\* or  [GATK 4x](https://software.broadinstitute.org/gatk/) v4.0.11.0\*
 - Optionally [MUSCLE](https://www.drive5.com/muscle/) v3.8.31\*  
 
-    \*Versions we are currently using.
+
+  \*Versions we are currently using.
 
 Root directories of those software executables should be included in your $PATH environment variable,
 or you can directly specify these paths in the **scripts/bin_path.json** file.
@@ -37,10 +38,10 @@ Additionary, you will need [biopython](https://biopython.org/) package installed
 ### Genome references
 MoNaS requires a reference genomic sequence in FASTA, and annotation for CDSs in [BED](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) and [GFF3](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md) files for *VGSC* gene of your species.
 Accurate genome and annotation information, of course, is the most vital part of this pipeline.
-Currently, we have reference files of three species of mosquitos, *Aedes aegypti*, *Aedes albopictus* and *Culex quinquefasciatus* which will be uploaded somewhere (please wait for a while).
+Currently, MoNas includes reference files of three species of mosquitos, *Aedes aegypti* (-s Aaeg), *Aedes albopictus* (-s Aalb) and *Culex quinquefasciatus* (-s Cpip).
 
 Each file should have name with prefix **ref** (eg. ref.ga) and be organized under
-a directory as
+a directory as:
 
 ```
   your_species_dir/           # Arbitrary name of directory. Will be recognized as a species name (-s).
@@ -64,203 +65,47 @@ a directory as
 ```
 Practically, many of those files (with asterisk\*) will be created automatically by MoNaS if absent.
 You will need only **re.fa** and **ref.bed** files, at least, to start analysis.
-In default, MoNaS expect **your_species_dir/** locates under in the **references/** directory of MoNaS.
+In default, MoNaS expect **your_species_dir/** locates under in the [references](https://github.com/ItokawaK/MoNaS/tree/master/references) directory of MoNaS.
 You can explicitly specify the location of **your_species_dir/** by
 ```
 -r your_reference_dir -s your_species_dir
 ```
 in which reference files will be searched from **your_reference_dir/your_species_dir**.
 
-- Example of **ref.bed** annotation file.
+- **ref.bed** annotation file.
 
-4-th column should be in format **ExonXX(c/d/k/l)**.
+  The 4th column (name) should be in a string with format as **ExonXX(c/d/k/l)**.
+The 5th column (score) is not used.
 
+  [example](https://raw.githubusercontent.com/ItokawaK/MoNaS/master/references/Aaeg/ref.bed)
 ```
-3:315930000-316250000	879	1875	Exon32
-3:315930000-316250000	1941	2246	Exon31
-3:315930000-316250000	8708	8979	Exon30
-3:315930000-316250000	9046	9292	Exon29
-3:315930000-316250000	9361	9556	Exon28
-3:315930000-316250000	9627	9750	Exon27
-3:315930000-316250000	17891	18014	Exon26l
-3:315930000-316250000	20113	20236	Exon26k
-3:315930000-316250000	29958	30132	Exon25
-3:315930000-316250000	30224	30490	Exon24
-3:315930000-316250000	30555	30775	Exon23
-3:315930000-316250000	42191	42403	Exon22
-3:315930000-316250000	53517	53764	Exon21
-3:315930000-316250000	53997	54185	Exon20
-3:315930000-316250000	68369	68532	Exon19d
-3:315930000-316250000	69185	69348	Exon19c
-3:315930000-316250000	70427	70601	Exon18
-3:315930000-316250000	70707	70985	Exon17
-3:315930000-316250000	84047	84086	Exon16.5
-3:315930000-316250000	84426	84495	Exon16
-3:315930000-316250000	84558	84658	Exon15
-3:315930000-316250000	99303	99506	Exon14
-3:315930000-316250000	100295	100479	Exon13
-3:315930000-316250000	100610	100673	Exon12
-3:315930000-316250000	137698	137974	Exon11
-3:315930000-316250000	150630	150795	Exon10
-3:315930000-316250000	151034	151179	Exon9
-3:315930000-316250000	152010	152071	Exon8
-3:315930000-316250000	152157	152370	Exon7
-3:315930000-316250000	152469	152561	Exon6
-3:315930000-316250000	171848	171977	Exon5
-3:315930000-316250000	199583	199789	Exon4
-3:315930000-316250000	240354	240510	Exon3
-3:315930000-316250000	273651	273684	Exon2
-3:315930000-316250000	313935	314082	Exon1
+3:315930000-316250000	879	1875	Exon32	0	-
+3:315930000-316250000	1941	2246	Exon31	0	-
+3:315930000-316250000	8708	8979	Exon30	0	-
+3:315930000-316250000	9046	9292	Exon29	0	-
+3:315930000-316250000	9361	9556	Exon28	0	-
+3:315930000-316250000	9627	9750	Exon27	0	-
+3:315930000-316250000	17891	18014	Exon26l	0	-
+3:315930000-316250000	20113	20236	Exon26k	0	-
+3:315930000-316250000	29958	30132	Exon25	0	-
+...
+3:315930000-316250000	68369	68532	Exon19d	0	-
+3:315930000-316250000	69185	69348	Exon19c	0	-
+3:315930000-316250000	70427	70601	Exon18	0	-
+...
 ```
 
-- Example of **ref.gff3** file
-The GFF3 file interpretable by BCFtools csq. This file can be created from **ref.bed**
-using [scripts/bed2gff.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/bed2gff3.py).
+- **ref.gff3** file
 
-```
-##gff-version 3
-###
-3:315930000-316250000	.	gene	880	314082	.	-	.	ID=gene:VGSC;biotype=protein_coding;Name=VGSC
-###
-3:315930000-316250000	.	mRNA	880	314082	.	-	.	ID=transcript:VGSC_ck;Parent=gene:VGSC;Name=VGSCck;biotype=protein_coding
-3:315930000-316250000	.	exon	880	1875	.	-	.	Parent=transcript:VGSC_ck;Name=Exon32
-3:315930000-316250000	.	exon	1942	2246	.	-	.	Parent=transcript:VGSC_ck;Name=Exon31
-3:315930000-316250000	.	exon	8709	8979	.	-	.	Parent=transcript:VGSC_ck;Name=Exon30
-3:315930000-316250000	.	exon	9047	9292	.	-	.	Parent=transcript:VGSC_ck;Name=Exon29
-3:315930000-316250000	.	exon	9362	9556	.	-	.	Parent=transcript:VGSC_ck;Name=Exon28
-3:315930000-316250000	.	exon	9628	9750	.	-	.	Parent=transcript:VGSC_ck;Name=Exon27
-3:315930000-316250000	.	exon	20114	20236	.	-	.	Parent=transcript:VGSC_ck;Name=Exon26k
-3:315930000-316250000	.	exon	29959	30132	.	-	.	Parent=transcript:VGSC_ck;Name=Exon25
-3:315930000-316250000	.	exon	30225	30490	.	-	.	Parent=transcript:VGSC_ck;Name=Exon24
-3:315930000-316250000	.	exon	30556	30775	.	-	.	Parent=transcript:VGSC_ck;Name=Exon23
-3:315930000-316250000	.	exon	42192	42403	.	-	.	Parent=transcript:VGSC_ck;Name=Exon22
-3:315930000-316250000	.	exon	53518	53764	.	-	.	Parent=transcript:VGSC_ck;Name=Exon21
-3:315930000-316250000	.	exon	53998	54185	.	-	.	Parent=transcript:VGSC_ck;Name=Exon20
-3:315930000-316250000	.	exon	69186	69348	.	-	.	Parent=transcript:VGSC_ck;Name=Exon19c
-3:315930000-316250000	.	exon	70428	70601	.	-	.	Parent=transcript:VGSC_ck;Name=Exon18
-3:315930000-316250000	.	exon	70708	70985	.	-	.	Parent=transcript:VGSC_ck;Name=Exon17
-3:315930000-316250000	.	exon	84048	84086	.	-	.	Parent=transcript:VGSC_ck;Name=Exon16.5
-3:315930000-316250000	.	exon	84427	84495	.	-	.	Parent=transcript:VGSC_ck;Name=Exon16
-3:315930000-316250000	.	exon	84559	84658	.	-	.	Parent=transcript:VGSC_ck;Name=Exon15
-3:315930000-316250000	.	exon	99304	99506	.	-	.	Parent=transcript:VGSC_ck;Name=Exon14
-3:315930000-316250000	.	exon	100296	100479	.	-	.	Parent=transcript:VGSC_ck;Name=Exon13
-3:315930000-316250000	.	exon	100611	100673	.	-	.	Parent=transcript:VGSC_ck;Name=Exon12
-3:315930000-316250000	.	exon	137699	137974	.	-	.	Parent=transcript:VGSC_ck;Name=Exon11
-3:315930000-316250000	.	exon	150631	150795	.	-	.	Parent=transcript:VGSC_ck;Name=Exon10
-3:315930000-316250000	.	exon	151035	151179	.	-	.	Parent=transcript:VGSC_ck;Name=Exon9
-3:315930000-316250000	.	exon	152011	152071	.	-	.	Parent=transcript:VGSC_ck;Name=Exon8
-3:315930000-316250000	.	exon	152158	152370	.	-	.	Parent=transcript:VGSC_ck;Name=Exon7
-3:315930000-316250000	.	exon	152470	152561	.	-	.	Parent=transcript:VGSC_ck;Name=Exon6
-3:315930000-316250000	.	exon	171849	171977	.	-	.	Parent=transcript:VGSC_ck;Name=Exon5
-3:315930000-316250000	.	exon	199584	199789	.	-	.	Parent=transcript:VGSC_ck;Name=Exon4
-3:315930000-316250000	.	exon	240355	240510	.	-	.	Parent=transcript:VGSC_ck;Name=Exon3
-3:315930000-316250000	.	exon	273652	273684	.	-	.	Parent=transcript:VGSC_ck;Name=Exon2
-3:315930000-316250000	.	exon	313936	314082	.	-	.	Parent=transcript:VGSC_ck;Name=Exon1
-3:315930000-316250000	.	CDS	880	1875	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon32
-3:315930000-316250000	.	CDS	1942	2246	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon31
-3:315930000-316250000	.	CDS	8709	8979	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon30
-3:315930000-316250000	.	CDS	9047	9292	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon29
-3:315930000-316250000	.	CDS	9362	9556	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon28
-3:315930000-316250000	.	CDS	9628	9750	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon27
-3:315930000-316250000	.	CDS	20114	20236	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon26k
-3:315930000-316250000	.	CDS	29959	30132	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon25
-3:315930000-316250000	.	CDS	30225	30490	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon24
-3:315930000-316250000	.	CDS	30556	30775	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon23
-3:315930000-316250000	.	CDS	42192	42403	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon22
-3:315930000-316250000	.	CDS	53518	53764	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon21
-3:315930000-316250000	.	CDS	53998	54185	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon20
-3:315930000-316250000	.	CDS	69186	69348	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon19c
-3:315930000-316250000	.	CDS	70428	70601	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon18
-3:315930000-316250000	.	CDS	70708	70985	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon17
-3:315930000-316250000	.	CDS	84048	84086	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon16.5
-3:315930000-316250000	.	CDS	84427	84495	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon16
-3:315930000-316250000	.	CDS	84559	84658	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon15
-3:315930000-316250000	.	CDS	99304	99506	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon14
-3:315930000-316250000	.	CDS	100296	100479	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon13
-3:315930000-316250000	.	CDS	100611	100673	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon12
-3:315930000-316250000	.	CDS	137699	137974	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon11
-3:315930000-316250000	.	CDS	150631	150795	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon10
-3:315930000-316250000	.	CDS	151035	151179	.	-	1	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon9
-3:315930000-316250000	.	CDS	152011	152071	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon8
-3:315930000-316250000	.	CDS	152158	152370	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon7
-3:315930000-316250000	.	CDS	152470	152561	.	-	1	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon6
-3:315930000-316250000	.	CDS	171849	171977	.	-	1	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon5
-3:315930000-316250000	.	CDS	199584	199789	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon4
-3:315930000-316250000	.	CDS	240355	240510	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon3
-3:315930000-316250000	.	CDS	273652	273684	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon2
-3:315930000-316250000	.	CDS	313936	314082	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_ck;Name=Exon1
-###
-3:315930000-316250000	.	mRNA	880	314082	.	-	.	ID=transcript:VGSC_dl;Parent=gene:VGSC;Name=VGSCdl;biotype=protein_coding
-3:315930000-316250000	.	exon	880	1875	.	-	.	Parent=transcript:VGSC_dl;Name=Exon32
-3:315930000-316250000	.	exon	1942	2246	.	-	.	Parent=transcript:VGSC_dl;Name=Exon31
-3:315930000-316250000	.	exon	8709	8979	.	-	.	Parent=transcript:VGSC_dl;Name=Exon30
-3:315930000-316250000	.	exon	9047	9292	.	-	.	Parent=transcript:VGSC_dl;Name=Exon29
-3:315930000-316250000	.	exon	9362	9556	.	-	.	Parent=transcript:VGSC_dl;Name=Exon28
-3:315930000-316250000	.	exon	9628	9750	.	-	.	Parent=transcript:VGSC_dl;Name=Exon27
-3:315930000-316250000	.	exon	17892	18014	.	-	.	Parent=transcript:VGSC_dl;Name=Exon26l
-3:315930000-316250000	.	exon	29959	30132	.	-	.	Parent=transcript:VGSC_dl;Name=Exon25
-3:315930000-316250000	.	exon	30225	30490	.	-	.	Parent=transcript:VGSC_dl;Name=Exon24
-3:315930000-316250000	.	exon	30556	30775	.	-	.	Parent=transcript:VGSC_dl;Name=Exon23
-3:315930000-316250000	.	exon	42192	42403	.	-	.	Parent=transcript:VGSC_dl;Name=Exon22
-3:315930000-316250000	.	exon	53518	53764	.	-	.	Parent=transcript:VGSC_dl;Name=Exon21
-3:315930000-316250000	.	exon	53998	54185	.	-	.	Parent=transcript:VGSC_dl;Name=Exon20
-3:315930000-316250000	.	exon	68370	68532	.	-	.	Parent=transcript:VGSC_dl;Name=Exon19d
-3:315930000-316250000	.	exon	70428	70601	.	-	.	Parent=transcript:VGSC_dl;Name=Exon18
-3:315930000-316250000	.	exon	70708	70985	.	-	.	Parent=transcript:VGSC_dl;Name=Exon17
-3:315930000-316250000	.	exon	84048	84086	.	-	.	Parent=transcript:VGSC_dl;Name=Exon16.5
-3:315930000-316250000	.	exon	84427	84495	.	-	.	Parent=transcript:VGSC_dl;Name=Exon16
-3:315930000-316250000	.	exon	84559	84658	.	-	.	Parent=transcript:VGSC_dl;Name=Exon15
-3:315930000-316250000	.	exon	99304	99506	.	-	.	Parent=transcript:VGSC_dl;Name=Exon14
-3:315930000-316250000	.	exon	100296	100479	.	-	.	Parent=transcript:VGSC_dl;Name=Exon13
-3:315930000-316250000	.	exon	100611	100673	.	-	.	Parent=transcript:VGSC_dl;Name=Exon12
-3:315930000-316250000	.	exon	137699	137974	.	-	.	Parent=transcript:VGSC_dl;Name=Exon11
-3:315930000-316250000	.	exon	150631	150795	.	-	.	Parent=transcript:VGSC_dl;Name=Exon10
-3:315930000-316250000	.	exon	151035	151179	.	-	.	Parent=transcript:VGSC_dl;Name=Exon9
-3:315930000-316250000	.	exon	152011	152071	.	-	.	Parent=transcript:VGSC_dl;Name=Exon8
-3:315930000-316250000	.	exon	152158	152370	.	-	.	Parent=transcript:VGSC_dl;Name=Exon7
-3:315930000-316250000	.	exon	152470	152561	.	-	.	Parent=transcript:VGSC_dl;Name=Exon6
-3:315930000-316250000	.	exon	171849	171977	.	-	.	Parent=transcript:VGSC_dl;Name=Exon5
-3:315930000-316250000	.	exon	199584	199789	.	-	.	Parent=transcript:VGSC_dl;Name=Exon4
-3:315930000-316250000	.	exon	240355	240510	.	-	.	Parent=transcript:VGSC_dl;Name=Exon3
-3:315930000-316250000	.	exon	273652	273684	.	-	.	Parent=transcript:VGSC_dl;Name=Exon2
-3:315930000-316250000	.	exon	313936	314082	.	-	.	Parent=transcript:VGSC_dl;Name=Exon1
-3:315930000-316250000	.	CDS	880	1875	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon32
-3:315930000-316250000	.	CDS	1942	2246	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon31
-3:315930000-316250000	.	CDS	8709	8979	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon30
-3:315930000-316250000	.	CDS	9047	9292	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon29
-3:315930000-316250000	.	CDS	9362	9556	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon28
-3:315930000-316250000	.	CDS	9628	9750	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon27
-3:315930000-316250000	.	CDS	17892	18014	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon26l
-3:315930000-316250000	.	CDS	29959	30132	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon25
-3:315930000-316250000	.	CDS	30225	30490	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon24
-3:315930000-316250000	.	CDS	30556	30775	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon23
-3:315930000-316250000	.	CDS	42192	42403	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon22
-3:315930000-316250000	.	CDS	53518	53764	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon21
-3:315930000-316250000	.	CDS	53998	54185	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon20
-3:315930000-316250000	.	CDS	68370	68532	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon19d
-3:315930000-316250000	.	CDS	70428	70601	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon18
-3:315930000-316250000	.	CDS	70708	70985	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon17
-3:315930000-316250000	.	CDS	84048	84086	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon16.5
-3:315930000-316250000	.	CDS	84427	84495	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon16
-3:315930000-316250000	.	CDS	84559	84658	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon15
-3:315930000-316250000	.	CDS	99304	99506	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon14
-3:315930000-316250000	.	CDS	100296	100479	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon13
-3:315930000-316250000	.	CDS	100611	100673	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon12
-3:315930000-316250000	.	CDS	137699	137974	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon11
-3:315930000-316250000	.	CDS	150631	150795	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon10
-3:315930000-316250000	.	CDS	151035	151179	.	-	1	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon9
-3:315930000-316250000	.	CDS	152011	152071	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon8
-3:315930000-316250000	.	CDS	152158	152370	.	-	2	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon7
-3:315930000-316250000	.	CDS	152470	152561	.	-	1	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon6
-3:315930000-316250000	.	CDS	171849	171977	.	-	1	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon5
-3:315930000-316250000	.	CDS	199584	199789	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon4
-3:315930000-316250000	.	CDS	240355	240510	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon3
-3:315930000-316250000	.	CDS	273652	273684	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon2
-3:315930000-316250000	.	CDS	313936	314082	.	-	0	ID=CDS:VGSC;Parent=transcript:VGSC_dl;Name=Exon1
-###
-```
-- Example of **ref.mdom.fa** file
-A multi alignment FASTA file of VGSC amino-acid (aa) sequences.
+  The GFF3 file interpretable by BCFtools csq.
+This file can be created from **ref.bed** using [scripts/bed2gff.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/bed2gff3.py).
+
+  [example](https://raw.githubusercontent.com/ItokawaK/MoNaS/master/references/Aaeg/ref.gff3).
+
+
+- **ref.mdom.fa** file
+
+    A multi alignment FASTA file of VGSC amino-acid (aa) sequences.
 The first entry should be house fly (*M. domestica*) VGSC. The second
 and third entries are aa sequences of ck and dl transcript variants
 of your species, respectively.
@@ -269,122 +114,7 @@ This data will be used to convert aa position coordinate of your species to
 This file can also be created from **ref.fa** and **ref.bed** using [scripts/make_AA_alignment.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/make_AA_alignment.py)
 (MUSCLE and biopython are required).
 
-```
->AAB47604 M.domestica VGSC
-MTEDSDSISEEERSLFRPFTRESLLQIEQRIAEHE-KQKELERKRAAEGE----------
-QIRYDDEDEDEGPQPDPTLEQGVPIPVRMQGSFPPELASTPLEDIDPFYSNVLTFVVISK
-GKDIFRFSASKAMWLLDPFNPIRRVAIYILVHPLFSLFIITTILTNCILMIMPTTPTVES
-TEVIFTGIYTFESAVKVMARGFILCPFTYLRDAWNWLDFVVIALAYVTMGIDLGNLAALR
-TFRVLRALKTVAIVPGLKTIVGAVIESVKNLRDVIILTMFSLSVFALMGLQIYMGVLTQK
-CIKRFPLDGSWGNLTDENWFLHNSNSSNWFTENDGESYPVCGNVSGAGQCGEDYVCLQGF
-GPNPNYDYTSFDSFGWAFLSAFRLMTQDFWEDLYQHVLQAAGPWHMLFFIVIIFLGSFYL
-VNLILAIVAMSYDELQKKAEEEEAAEEEAIREAEEAAAAKAAKLEERANVAAQAAQDAAD
-AAAAALHPEMAKSPT-YSCISYELFVGGEKGNDDNNKEKMSIRSVEVESESVSVIQRQPA
-PTTAPATKVRKVSTTSLSLPGSPFNLRRGSRSSHKYTIRNGRGRF-GIPGSDRKPLVLQT
-YQDAQQHLPYADDSNAVTPMSEENGAIIVPAYYCNLGSRHSSYTSHQSRISYTSHGDLLG
-GMAAMGASTMTKESKLRSRNTRNQSIGAATNGGSSTAGGGYPDANHKEQRDYEMGQDYTD
-EAGKIKHHDNPFIEPVQTQTVVDMKDVMVLNDIIEQAAGRHSRASERG------------
----------EDDDEDGPTFKDIALEYILKGIEIFCVWDCCWVWLKFQEWVSFIVFDPFVE
-LFITLCIVVNTMFMAMDHHDMNPELEKVLKSGNYFFTATFAIEASMKLMAMSPKYYFQEG
-WNIFDFIIVALSLLELGLEGVQGLSVLRSFRLLRVFKLAKSWPTLNLLISIMGRTMGALG
-NLTFVLCIIIFIFAVMGMQLFGKNYIDHKDRFKDHELPRWNFTDFMHSFMIVFRVLCGEW
-IESMWDCMYVGDVSCIPFFLATVVIGNLVVLNLFLALLLSNFGSSSLSAPTADNDTNKIA
-EAFNRIARFKNWVKRNIADCFKLIRNKLTNQISD-QP-----------------------
-SEHGDNELELGHDEIMGDGLIKKGMKGETQLEVAIGDGMEFTIHGDMKNNKPKKSKFMNN
-TTMIGNSI-NHQDNRLEHELNHRGLSIQDDDTASINSYGSHKNRPFKDESHKGSAETIEG
-EEKRDVSKEDLGLDEELDEEAEGDEGQLDGDIIIHAQNDDEIIDDYPADCFPDSYYKKFP
-ILAGDEDSPFWQGWGNLRLKTFQLIENKYFETAVITMILMSSLALALEDVHLPDRPVMQD
-ILYYMDRIFTVIFFLEMLIKWLALGFKVYFTNAWCWLDFVIVMLSLINLVAVWSGLNDIA
-VFRSMRTLRALRPLRAVSRWEGMKVVVNALVQAIPSIFNVLLVCLIFWLIFAIMGVQLFA
-GKYFKCKDGNDTVLSHEIIPNRNACKSENYTWENSAMNFDHVGNAYLCLFQVATFKGWIQ
-IMNDAIDSREVDKQPIRETNIYMYLYFVFFIIFGSFFTLNLFIGVIIDNFNEQKKKAGGS
-LEMFMTEDQKKYYNAMKKMGSKKPLKAIPRPRWRPQAIVFEIVTDKKFDIIIMLFIGLNM
-FTMTLDRYDASEAYNNVLDKLNGIFVVIFSGECLLKIFALRYHYFKEPWNLFDVVVVILS
-ILGLVLSDIIEKYFVSPTLLRVVRVAKVGRVLRLVKGAKGIRTLLFALAMSLPALFNICL
-LLFLVMFIFAIFGMSFFMHVKEKSGINAVYNFKTFGQSMILLFQMSTSAGWDGVLDAIIN
-EEDCDPPDNDKGYPGNCGSATVGITFLLSYLVISFLIVINMYIAVILENYSQATEDVQEG
-LTDDDYDMYYEIWQQFDPEGTQYIRYDQLSEFLDVLEPPLQIHKPNKYKIISMDMPICRG
-DMMYCVDILDALTKDFFARKGNPIEETGEIGEIAARPDTEGYDPVSSTLWRQREEYCAKL
-IQNAWRRYKN-------GPPQEGDEGEAAGGEDGAEGGEGEGGSGGGGG-DDGGSATGAT
-AAAGATSPSDPDAGEAD-GASVGGPLSPGCVSGGSN---GRQTAVLVESDGFVTKNGHKV
-VIHSRSPSITSRTADV
->VGSC_ck
-MTEDSDSISEEERSLFRPFTRESLAAIERRIADAEAKQRELEKKR-AEGETGFGRKKKKK
-EIRYDDEDEDEGPQPDSTLEQGVPIPVRMQGSFPPELASTPLEDIDSYYANQRTFVVVSK
-GKDIFRFSATNALYVLDPFNPIRRVAIYILVHPLFSFFIITTILTNCILMIMPSTPTVES
-TEVIFTGIYTFESAVKVMARGFILQPFTYLRDAWNWLDFVVIALAYVTMGIDLGNLAALR
-TFRVLRALKTVAIVPGLKTIVGAVIESVKNLRDVIILTMFSLSVFALMGLQIYMGVLTQK
-CIREFPMDGSWGNLSDENWERFNNNDSNWYFSETGDT-PLCGNSSGAGQCEEGYICLQGY
-GDNPNYGYTSFDTFGWAFLSAFRLMTQDYWENLYQLVLRSAGPWHMLFFIVIIFLGSFYL
-VNLILAIVAMSYDELQKKAEEEEAAEEEALREAEEAAAAKAAKLEAQAA-----------
-AAAAAANPEIAKSPSDFSCHSYELFVNQEKGNDDNNKEKMSIRSEGLESVSEITRTTAPT
-ATAAGTAKARKVSAASLSLPGSPFNLRRGSRGSHQFTIRNGRGRFVGVPGSDRKPLVLST
-YLDAQEHLPYADDSNAVTPMSEENGAIIVPVYYANLGSRHSSYTSHQSRISYTSHGDLLG
-G--------MTKESRLRNRSARNTNHSIVPPPNMSGPNMSYVDSNHKGQRDFDMSQDCTD
-EAGKIKHNDNPFIEPSQTQTVVDMKDVMVLNDIIEQAAGRHSRASDHGVCILSLHRFSFC
-CVSVYYFPTEDDDEDGPTFKDKALEFTMRMIDVFCVWDCCWVWLKFQEWVAFIVFDPFVE
-LFITLCIVVNTLFMALDHHDMDPDMERALKSGNYFFTATFAIEATMKLIAMSPKYYFQEG
-WNIFDFIIVALSLLELGLEGVQGLSVLRSFRLLRVFKLAKSWPTLNLLISIMGRTVGALG
-NLTFVLCIIIFIFAVMGMQLFGKNYTDNVDRFPDKDLPRWNFTDFMHSFMIVFRVLCGEW
-IESMWDCMLVGDVSCIPFFLATVVIGNLVVLNLFLALLLSNFGSSSLSAPTADNETNKIA
-EAFNRISRFSNWIKSNIANALKFVKNKLTSQIASVQPAGEQHNHLSWIWNEGKGVCPCIS
-AEHGENELELTPDDILADGLLKKGVKEHNQLEVAIGDGMEFTIHGDLKNKGKKNKQLMNN
-SKVIGNSISNHQDNKLEHELNHRGMSLQDDDTASIKSYGSHKNRPFKDESHKGSAETMEG
-EEKRDVSKEDLGIDEELDDECDGEEGPLDGELIIHA-DEDEVIEDSPADCCPDNCYKKFP
-VLAGDDDAPFWQGWANLRLKTFQLIENKYFETAVITMILLSSLALALEDVHLPHRPILQD
-VLYYMDRIFTVIFFLEMLIKWLALGFRVYFTNAWCWLDFIIVMLSLINLTAIWVGAADIP
-AFRSMRTLRALRPLRAVSRWEGMRVVVNALVQAIPSIFNVLLVCLIFWLIFAIMGVQLFA
-GKYFKCVDKNKTTLSHEIIPDVNACVAENYTWENSPMNFDHVGKAYLCLFQVATFKGWIQ
-IMNDAIDSREVGKQPIRETNIYMYLYFVFFIIFGSFFTLNLFIGVIIDNFNEQKKKAGGS
-LEMFMTEDQKKYYNAMKKMGSKKPLKAIPRPRWRPQAIVFEIVTNKKFDMIIMLFIGFNM
-LTMTLDHYKQTDTFSAVLDYLNMIFICIFSSECLMKIFALRYHYFIEPWNLFDFVVVILS
-ILGLVLSDLIEKYFVSPTLLRVVRVAKVGRVLRLVKGAKGIRTLLFALAMSLPALFNICL
-LLFLVMFIFAIFGMSFFMHVKDKSGLDDVYNFKTFGQSMILLFQMSTSAGWDGVLDGIIN
-EDECLPPDNDKGYPGNCGSATIGITYLLAYLVISFLIVINMYIAVILENYSQATEDVQEG
-LTDDDYDMYYEIWQQFDPDGTQYIRYDQLSDFLDVLEPPLQIHKPNKYKIISMDIPICRG
-DMMFCVDILDALTKDFFARKGNPIEETAELGEVQARPDEVGYEPVSSTLWRQREEYCARV
-IQHAWRKHKERQAGGGGGDDTDADACDNDDGDDGG-GGAGDGGSAGGGGVTSPGVGSGSI
-VGGGTTPGSGGGGSQANLGIVVEHNLSPKESPDGNNDPQGRQTAVLVESDGFVTKNGHRV
-VIHSRSPSITSRSADV
->VGSC_dl
-MTEDSDSISEEERSLFRPFTRESLAAIERRIADAEAKQRELEKKR-AEGETGFGRKKKKK
-EIRYDDEDEDEGPQPDSTLEQGVPIPVRMQGSFPPELASTPLEDIDSYYANQRTFVVVSK
-GKDIFRFSATNALYVLDPFNPIRRVAIYILVHPLFSFFIITTILTNCILMIMPSTPTVES
-TEVIFTGIYTFESAVKVMARGFILQPFTYLRDAWNWLDFVVIALAYVTMGIDLGNLAALR
-TFRVLRALKTVAIVPGLKTIVGAVIESVKNLRDVIILTMFSLSVFALMGLQIYMGVLTQK
-CIREFPMDGSWGNLSDENWERFNNNDSNWYFSETGDT-PLCGNSSGAGQCEEGYICLQGY
-GDNPNYGYTSFDTFGWAFLSAFRLMTQDYWENLYQLVLRSAGPWHMLFFIVIIFLGSFYL
-VNLILAIVAMSYDELQKKAEEEEAAEEEALREAEEAAAAKAAKLEAQAA-----------
-AAAAAANPEIAKSPSDFSCHSYELFVNQEKGNDDNNKEKMSIRSEGLESVSEITRTTAPT
-ATAAGTAKARKVSAASLSLPGSPFNLRRGSRGSHQFTIRNGRGRFVGVPGSDRKPLVLST
-YLDAQEHLPYADDSNAVTPMSEENGAIIVPVYYANLGSRHSSYTSHQSRISYTSHGDLLG
-G--------MTKESRLRNRSARNTNHSIVPPPNMSGPNMSYVDSNHKGQRDFDMSQDCTD
-EAGKIKHNDNPFIEPSQTQTVVDMKDVMVLNDIIEQAAGRHSRASDHGVCILSLHRFSFC
-CVSVYYFPTEDDDEDGPTFKDKALEFTMRMIDVFCVWDCCWVWLKFQEWVAFIVFDPFVE
-LFITLCIVVNTLFMALDHHDMDPDMERALKSGNYFFTATFAIEATMKLIAMSPKYYFQEG
-WNIFDFIIVALSLLELGLEGVQGLSVLRSFRLLRVFKLAKSWPTLNLLISIMGRTMGALG
-NLTFVLCIIIFIFAVMGMQLFGKNYIDNVDRFPDKDLPRWNFTDFMHSFMIVFRVLCGEW
-IESMWDCMLVGDVSCIPFFLATVVIGNLVVLNLFLALLLSNFGSSSLSAPTADNETNKIA
-EAFNRISRFSNWIKSNIANALKFVKNKLTSQIASVQPAGEQHNHLSWIWNEGKGVCPCIS
-AEHGENELELTPDDILADGLLKKGVKEHNQLEVAIGDGMEFTIHGDLKNKGKKNKQLMNN
-SKVIGNSISNHQDNKLEHELNHRGMSLQDDDTASIKSYGSHKNRPFKDESHKGSAETMEG
-EEKRDVSKEDLGIDEELDDECDGEEGPLDGELIIHA-DEDEVIEDSPADCCPDNCYKKFP
-VLAGDDDAPFWQGWANLRLKTFQLIENKYFETAVITMILLSSLALALEDVHLPHRPILQD
-VLYYMDRIFTVIFFLEMLIKWLALGFRVYFTNAWCWLDFIIVMVSLINFVASLCGAGGIQ
-AFKTMRTLRALRPLRAMSRMQGMRVVVNALVQAIPSIFNVLLVCLIFWLIFAIMGVQLFA
-GKYFKCVDKNKTTLSHEIIPDVNACVAENYTWENSPMNFDHVGKAYLCLFQVATFKGWIQ
-IMNDAIDSREVGKQPIRETNIYMYLYFVFFIIFGSFFTLNLFIGVIIDNFNEQKKKAGGS
-LEMFMTEDQKKYYNAMKKMGSKKPLKAIPRPRWRPQAIVFEIVTNKKFDMIIMLFIGFNM
-LTMTLDHYKQTDTFSAVLDYLNMIFICIFSSECLMKIFALRYHYFIEPWNLFDFVVVILS
-ILGLVLSDLIEKYFVSPTLLRVVRVAKVGRVLRLVKGAKGIRTLLFALAMSLPALFNICL
-LLFLVMFIFAIFGMSFFMHVKDKSGLDDVYNFKTFGQSMILLFQMSTSAGWDGVLDGIIN
-EDECLPPDNDKGYPGNCGSATIGITYLLAYLVISFLIVINMYIAVILENYSQATEDVQEG
-LTDDDYDMYYEIWQQFDPDGTQYIRYDQLSDFLDVLEPPLQIHKPNKYKIISMDIPICRG
-DMMFCVDILDALTKDFFARKGNPIEETAELGEVQARPDEVGYEPVSSTLWRQREEYCARV
-IQHAWRKHKERQAGGGGGDDTDADACDNDDGDDGG-GGAGDGGSAGGGGVTSPGVGSGSI
-VGGGTTPGSGGGGSQANLGIVVEHNLSPKESPDGNNDPQGRQTAVLVESDGFVTKNGHRV
-VIHSRSPSITSRSADV
-```
+    [example](https://raw.githubusercontent.com/ItokawaK/MoNaS/master/references/Aaeg/ref.mdom.fa)
 
 ### Usage
 
@@ -437,15 +167,13 @@ MoNaS/genotype.py  -s Aalb  -l sample_list.txt  -t 16  -o out_dir -m ngs_rna
 
 - `-s`, `--species`
 
-This option specifies the name of directory storing reference files of each species.
-In default, the **species_dir/** will be searched in the **MoNaS/references/**.
-In stead, you can explicitly specify another directory using `-r, --ref_root` option.
-If the program could not find **bwadb/**, **hisatdb/**, **ref.fa.fai** or **ref.dict**
-within the reference directory, MoNaS will automatically try to create them.
+  This option specifies the name of directory storing reference files of each species.
+In default, this directory will be searched in the **MoNaS/references/**.
+In stead, you can explicitly specify another directory using `-r, --ref_root` option (see below).
 
 - `-l`, `--sample_list`
 
- Specify a path of space-delimited text file describing sample names and FASTQ paths (paried-ends or single-end) in each single row.
+  Specify a path of space-delimited text file describing sample names and FASTQ paths (paried-ends or single-end) in each single row.
 
 ```example
   sample1 pe_1F.fq[.gz] pe_1R.fq[.gz]
@@ -455,17 +183,33 @@ within the reference directory, MoNaS will automatically try to create them.
   ...            
 ```
 
-`sample1, sample2, ...` are arbitrary unique strings identifying each your sample. Do not include a space or characters such as /, \*, \, etc. because MoNaS will use these values for file names.
+  `sample1, sample2, ...` are arbitrary unique strings identifying each your sample. Do not include a space or characters such as /, \*, \, etc. because MoNaS will use these values for file names.
 The FASTQ paths can be either absolute or relative from where you execute the `genotype.py`.
 
 #### Other options
-- `-m`, `--mode`
+- `-t`, `--mode`
 
-Choose your sample type either from `-m ngs_dna` or `-m ngs_rna`:
+  Choose your sample type either from `-m ngs_dna` or `-m ngs_rna`:
 
      ngs_dna: NGS reads from genomic DNA (i.e. including intron) [default].
      ngs_rna: NGS reads from RNA/cDNA (i.e. introns are spliced).
 
+- `-m`, `--max_cpu` and `-b`, `--bwa_treads`
+
+  MoNaS uses `-m` number of threads at the same time in maximum.
+  In the BWA or HISAT2 stage, several samples are processed parallelly using `-b` threads for each sample. Thus, number of BWA or HISAT2 processes running at simultaneously will be `-m` // `-b`.
+  Basically, running many BWA or HISAT2 processes with small number of thread/process may
+  increase speed of analysis but increases memory usage especially if you use
+  large genome reference (e.g. full genome).
+
+- `-r`, `--ref_root`
+
+  You can specify, path of root directory where the species directory will be searched.
+
+- `-v`, `--variant_caller`
+
+  You can select variant caller program to be used (freebayes or gatk).
+  Currently, we have tested MoNaS extensively with freebayes more than gatk.  
 
 Pipeline detail
 --------------
@@ -516,15 +260,21 @@ table_with_Mdomcoord.tsv
 The final output table, **table_with_Mdomcoord.tsv**, will look like as below.
 
 ```
-#ID             CHROM          POS   REF_ALELE  ALT_ALLELE(s)   GT      QUAL    AA_CHANGE    AA_CHANGE_HOUSEFLY   AD  EXON
-Aalb-SP-08      MNAF02001058.1  2207911 T   G  G/G  231859.0   1574F>1574C/1574F>1574C F1534C!!/F1534C!!   0,931   Exon29
-Aalb-SP-06      MNAF02001058.1  2207911 T   G  G/G  231859.0   1574F>1574C/1574F>1574C F1534C!!/F1534C!!   0,847   Exon29
-Aalb-SP-01      MNAF02001058.1  2207911 T   G  G/G  231859.0   1574F>1574C/1574F>1574C F1534C!!/F1534C!!   1,934   Exon29
-Aalb-SP-03      MNAF02001058.1  2207911 T   G  G/G  231859.0   1574F>1574C/1574F>1574C F1534C!!/F1534C!!   0,910   Exon29
-Aalb-SP-02      MNAF02001058.1  2207911 T   G  G/G  231859.0   1574F>1574C/1574F>1574C F1534C!!/F1534C!!   1,990   Exon29
-Aalb-Toyama-01  MNAF02001058.1  2226519 G   A  G/A  279220.0   wild/2062A>2062T        wild/A2023T         444,472 Exon32
-Aalb-Viet-01    MNAF02001058.1  2226519 G   A  G/A  279220.0   wild/2062A>2062T        wild/A2023T         434,372 Exon32
-Aalb-SP-08      MNAF02001058.1  2226519 G   A  A/A  279220.0   2062A>2062T/2062A>2062T A2023T/A2023T       0,1048  Exon32
+#ID     CHROM   POS     REF_ALLELE      ALT_ALLELE      QUAL    GENOTYPE        AA_CHANGE       AA_CHANGE_MDOM  KDR_EVIDENCE    AD      EXON
+Aalb-Yona-02    MNAF02001058.1  1930245 T       C       6445.79 T/C     wild/14S        wild/synonymous NA/NA   287,249 Exon1
+Aalb-Okayama-02 MNAF02001058.1  1978801 G       T       10826.2 G/T     wild/74P        wild/synonymous NA/NA   163,172 Exon3
+Aalb-Yona-04    MNAF02001058.1  1978801 G       T       10826.2 G/T     wild/74P        wild/synonymous NA/NA   263,239 Exon3
+Aalb-Okayama-02 MNAF02001058.1  1978810 A       G       10877.2 A/G     wild/77T        wild/synonymous NA/NA   163,173 Exon3
+...
+Aalb-Yona-08    MNAF02001058.1  2179316 CATC    TATT    507016.0        TATT/TATT       1335VI/1335VI   synonymous/synonymous   NA/NA   0,286   Exon24
+Aalb-SP-02      MNAF02001058.1  2179316 CATC    TATT    507016.0        TATT/TATT       1335VI/1335VI   synonymous/synonymous   NA/NA   0,1307  Exon24
+Aalb-SP-04      MNAF02001058.1  2179316 CATC    TATT    507016.0        TATT/TATT       1335VI/1335VI   synonymous/synonymous   NA/NA   0,1008  Exon24
+Aalb-SP-07      MNAF02001058.1  2179316 CATC    TATT    507016.0        TATT/TATT       1335VI/1335VI   synonymous/synonymous   NA/NA   0,1272  Exon24
+Aalb-SP-06      MNAF02001058.1  2179316 CATC    TATT    507016.0        TATT/TATT       1335VI/1335VI   synonymous/synonymous   NA/NA   0,1104  Exon24
+...
+Aalb-SP-03      MNAF02001058.1  2207911 T       G       231649.0        G/G     F1574C/F1574C   F1534C/F1534C   Strong/Strong   0,906   Exon29
+Aalb-SP-01      MNAF02001058.1  2207911 T       G       231649.0        G/G     F1574C/F1574C   F1534C/F1534C   Strong/Strong   1,934   Exon29
+Aalb-SP-02      MNAF02001058.1  2207911 T       G       231649.0        G/G     F1574C/F1574C   F1534C/F1534C   Strong/Strong   1,990   Exon29
 ```
 Column 1: Sample ID
 
@@ -532,32 +282,39 @@ Column 2: Name of scaffold
 
 Column 3: Nucleotide position of variant
 
-Column 4: Nucleotide(s) in reference
+Column 4: Reference allele at this site
 
-Column 5: Set of alternative alleles
+Column 5: One or set of alternative alleles at this site
 
-Column 6: Genotype of each sample
+Column 6: Quality score from variant caller
 
-Column 7: Quality of variant
+Column 7: Genotype of this sample
 
 Column 8: Annotated AA change **in reference AA position**
 
 Column 9: Annotated AA change **in *M. domestica* AA position**.
-          Known *kdr* mutations which are listed in [scripts/kdr_list.json](https://github.com/ItokawaK/MoNaS/blob/master/scripts/kdr_list.json) will be annotated with "!!" character.
-          **Note that the list would not be complete!**.
 
-Column 10: Read depth for each allele
+Collum 10: Whether AA change is known *kdr* mutation or not.
 
-Column 11: Corresponding exon
+  - AA variant which is confirmed to decrease VGSC sensitivity to pyrethroid
+  in electrophysiological assay will be described "Strong".
+  Those with weaker evidences are described as "Weak".
+  Other unknown AA variants will be described as "Unknown".
+  Known kdr AA varoamts are listed in [scripts/kdr_list.json](https://github.com/ItokawaK/MoNaS/blob/master/scripts/kdr_list.json) which will be updated as possible as regularly.
+
+  **Note that the list would not always be complete!**.
+
+Column 11: Read depth for each allele
+
+Column 12: Exon where this variant belongs
 
 ### Aanlyzing Sanger sequence reads
-Although it does not seem the best approach, reads from Sanger sequence technology could be analyzed in
+  Although it does not seem the best approach, reads from Sanger sequence technology could be analyzed in
 MoNaS pipeline by regarding those Sanger reads as NGS reads. [genotype_sanger.py](https://github.com/ItokawaK/MoNaS/blob/master/genotype_sanger.py) is a wrapper script to conduct
 chopping input Sanger reads into 150 bp short reads (~ x5 coverage) with fake quality values, writing fastq and sample list files,
 and then executing MoNaS for those data.
 
-As any sequecing errors existing in input Sanger reads will be considered as **true variants**, it is important to
-trim low-quality regions in advance. Also, ambiguous nucleotide codes (R, Y, S, etc...) are not supported yet (ToDo).
+  As any sequecing errors existing in input Sanger reads will be considered as **true variants**, it is important to trim low-quality regions in advance. Also, ambiguous nucleotide codes (R, Y, S, etc...) are not supported yet (ToDo).
 
 ```bash
 MoNaS/genotype_sanger.py -s Aalb -t 16 -o out_table.tsv sanger_reads.fa
@@ -566,8 +323,48 @@ MoNaS/genotype_sanger.py -s Aalb -t 16 -o out_table.tsv sanger_reads.fa
 
 Helper tools
 ------
-1. [scripts/bed2gff.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/bed2gff3.py) creates a gff3 file which is interpretable by bcftools csq from a bed file describing *VGSC* CDSs.
-1. [scripts/translate.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/make_AA_alignment.py) translates genome to VGSC protein using CDS information described in bed file, then conducts
-pairwise alignment with VGSC in *M. domestica* which is usable as **ref.mdom.fa**. The script also output mismatched AA
-between your reference VGSC and *M. domestica* VGSC as standard error with notation for potential kdr(s) listed in
-[scripts/kdr_list.json](https://github.com/ItokawaK/MoNaS/blob/master/scripts/kdr_list.json) if exist in your reference genome.   
+
+MoNaS includes some tools assisting creation of new reference annotation file for species of your interest.
+
+- [scripts/bed2gff.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/bed2gff3.py)
+
+  This script creates a gff3 file which is interpretable by bcftools csq from a bed file describing *VGSC* CDSs.
+
+```
+usage: bed2gff3.py [-h] bed
+
+Create gff3 from bed
+
+positional arguments:
+  bed         bed file
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+- [scripts/make_AA_alignment.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/make_AA_alignment.py)
+
+  This script translates genome to VGSC protein using CDS information described in bed file, then conducts
+pairwise alignment with VGSC in *M. domestica* which is usable as **ref.mdom.fa**.
+The script also reports mismatched AA between your reference VGSC and *M. domestica* in **VGSC  OUT_FASTA_PATH.info** with notification for potential kdr(s) listed in [scripts/kdr_list.json](https://github.com/ItokawaK/MoNaS/blob/master/scripts/kdr_list.json) if found.
+
+```
+usage: make_AA_alignment.py [-h] [-o OUT_FASTA_PATH] [-t TRANSLATE]
+                            [-m MDOM_PATH]
+                            ref_fa bed
+
+Make AA aligment with M. domestica VGSCfrom dna fasta and bed
+
+positional arguments:
+  ref_fa                Reference fasta
+  bed                   Reference annotation bed
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o OUT_FASTA_PATH, --out_aln_fasta OUT_FASTA_PATH
+                        Multiple AA aligment fasta file to output.
+  -t TRANSLATE, --translate TRANSLATE
+                        Output only translation to this file.
+  -m MDOM_PATH, --mdom_path MDOM_PATH
+                        M. domestica aa fasta path [MoNaS/misc/AAB47604.fa]
+```
