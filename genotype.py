@@ -10,6 +10,8 @@ from scripts import finalize_table
 from scripts.configuration import GenomeRef
 from scripts.jobs import Job
 
+version = "1.0"
+
 def parse_sample_list(sample_list):
     # Read sample list file
     # Returns a list of lists [sample_name, fq.gz path1, fq.gz path2]
@@ -26,18 +28,30 @@ def parse_sample_list(sample_list):
 
 def usage():
     return (
-    """genotyp.py -s species_name -o out_dir_path -l list_file_path
+    """
+                  __  __       _   _        _____
+                 |..\\/..|     |.\\ |.|      /.____|
+                 |.\\../.| ___ |..\\|.| __ _|.(___
+                 |.|\\/|.|/._.\\|...`.|/._`.|\\___ \\
+                 |.|  |.|.(_).|.|\\..|.(_|.|____).|
+                 |_|  |_|\\___/|_| \\_|\\__,_|_____/
+
+    genotyp.py -s species_name -o out_dir_path -l list_file_path
                  (-t num_max_threads -b num_threads_per_bwa
                   -m mode[ngs_dna|ngs_rna] -r ref_dir_path
                   -v variant_caller[freebayes|gatk]
                   )
     """)
 
+def description(version):
+    return (
+       " MoNaS (version {}) - A program genotyping VGSC genes from NGS reads.".format(version)
+     )
 if __name__ == '__main__':
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    parser = argparse.ArgumentParser(description = 'Genotype VGSC gene.',
+    parser = argparse.ArgumentParser(description = description(version),
                                      usage = usage())
 
     parser.add_argument('-s', '--species', dest = 'species',
@@ -62,7 +76,7 @@ if __name__ == '__main__':
                          choices = ['ngs_dna', 'ngs_rna'],
                          help = 'Analysis mode. [ngs_dna]'
                          )
-    parser.add_argument('-v', '--variant_caller', dest = 'variant_caller',
+    parser.add_argument('-c', '--variant_caller', dest = 'variant_caller',
                          default = "freebayes",
                          choices = ['freebayes', 'gatk'],
                          help = 'Variant caller to be used. Default is freebayes.'
@@ -72,10 +86,17 @@ if __name__ == '__main__':
                          default = True,
                          help = 'Do not clean old BAM files after rmdup. Off in default.'
                          )
-
-
+    parser.add_argument('-v', '--version', dest = 'show_version',
+                        action='store_true',
+                        default = False,
+                        help = 'Show version and exit.'
+                        )
 
     args = parser.parse_args()
+
+    if args.show_version:
+        print(version)
+        sys.exit(0)
 
     if not (args.species and args.out_dir and args.sample_list):
         print("Error: Species, out_dir and list are mandately!", file = sys.stderr)
