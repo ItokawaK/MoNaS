@@ -119,14 +119,15 @@ This file can also be created from **ref.fa** and **ref.bed** using [scripts/mak
 ### Usage
 
 ```
-usage: genotyp.py -s species_name -o out_dir_path -l list_file_path
+usage:
+    genotyp.py -s species_name -o out_dir_path -l list_file_path
                  (-t num_max_threads -b num_threads_per_bwa
                   -m mode[ngs_dna|ngs_rna] -r ref_dir_path
                   -v variant_caller[freebayes|gatk]
                   )
 
 
-Genotype VGSC gene.
+MoNaS (version 1.0) - A program genotyping VGSC genes from NGS reads.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -146,10 +147,11 @@ optional arguments:
                         Root directly of references. Deault = MoNaS/references
   -m {ngs_dna,ngs_rna}, --mode {ngs_dna,ngs_rna}
                         Analysis mode. [ngs_dna]
-  -v {freebayes,gatk}, --variant_caller {freebayes,gatk}
+  -c {freebayes,gatk}, --variant_caller {freebayes,gatk}
                         Variant caller to be used. Default is freebayes.
   -n, --no_clean        Do not clean old BAM files after rmdup. Off in
                         default.
+  -v, --version         Show version and exit.
 ```
 
 #### Examples
@@ -187,17 +189,17 @@ In stead, you can explicitly specify another directory using `-r, --ref_root` op
 The FASTQ paths can be either absolute or relative from where you execute the `genotype.py`.
 
 #### Other options
-- `-t`, `--mode`
+- `-m`, `--mode`
 
   Choose your sample type either from `-m ngs_dna` or `-m ngs_rna`:
 
      ngs_dna: NGS reads from genomic DNA (i.e. including intron) [default].
      ngs_rna: NGS reads from RNA/cDNA (i.e. introns are spliced).
 
-- `-m`, `--max_cpu` and `-b`, `--bwa_treads`
+- `-t`, `--max_cpu` and `-b`, `--bwa_treads`
 
-  MoNaS uses `-m` number of threads at the same time in maximum.
-  In the BWA or HISAT2 stage, several samples are processed parallelly using `-b` threads for each sample. Thus, number of BWA or HISAT2 processes running at simultaneously will be `-m` // `-b`.
+  MoNaS uses `-t` number of threads at the same time in maximum.
+  In the BWA or HISAT2 stage, several samples are processed parallelly using `-b` threads for each sample. Thus, number of BWA or HISAT2 processes running at simultaneously will be `-t` // `-b`.
   Basically, running many BWA or HISAT2 processes with small number of thread/process may
   increase speed of analysis but increases memory usage especially if you use
   large genome reference (e.g. full genome).
@@ -206,7 +208,7 @@ The FASTQ paths can be either absolute or relative from where you execute the `g
 
   You can specify, path of root directory where the species directory will be searched.
 
-- `-v`, `--variant_caller`
+- `-c`, `--variant_caller`
 
   You can select variant caller program to be used (freebayes or gatk).
   Currently, we have tested MoNaS extensively with freebayes more than gatk.  
