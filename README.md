@@ -2,7 +2,7 @@
 MoNaS
 ======
 **An automated pipeline to genotype mosquito's voltage-gated sodium channel genes using NGS data**
-### Status: <font color="Red">Under construction. Sorry!</font>
+### Status: <font color="Red">Version 1.0</font>
 
 About
 -------
