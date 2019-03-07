@@ -11,6 +11,8 @@ conducting genotyping of voltage-gated sodium channel (VGSC) in mosquitos from N
 Basically, MoNaS is designed to utilize NGS data from genomic DNA such as targeted captured
 library (SureSelect, xGen probes for instance) or RNA/cDNA such as shotgun library of PCR amplified VGSC cDNA.
 
+You may `git clone` MoNaS and use locally. Instead, you would be interested in the MoNaS as a [WEB service](https://gph.niid.go.jp/monas). 
+
 How To Use
 -------
 Currently, we have confirmed MoNaS works in Linux OSs of both Ubuntu18 and CentOS6.
