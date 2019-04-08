@@ -64,7 +64,7 @@ class VCF_line:
                 AA_change[i] = "wild"
                 continue
 
-            if len(self.tbcsq.dict_ck) == 0 and len(self.tbcsq.dict_ck) == 0:
+            if len(self.tbcsq.dict_ck) == 0 and len(self.tbcsq.dict_dl) == 0:
                 AA_change[i] = "synonymous"
             elif len(self.tbcsq.dict_ck) > 0:
                 try:
