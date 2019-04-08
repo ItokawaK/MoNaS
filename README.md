@@ -11,7 +11,9 @@ conducting genotyping of voltage-gated sodium channel (VGSC) in mosquitos from N
 Basically, MoNaS is designed to utilize NGS data from genomic DNA such as targeted captured
 library (SureSelect, xGen probes for instance) or RNA/cDNA such as shotgun library of PCR amplified VGSC cDNA.
 
-Manuals
+You may `git clone` MoNaS and use locally. Instead, you would be interested in the MoNaS as a [WEB service](https://gph.niid.go.jp/monas). 
+
+How To Use
 -------
 Currently, we have confirmed MoNaS works in Linux OSs of both Ubuntu18 and CentOS6.
 Although we have not confirmed yet, this program could also be run in Mac OS.
@@ -38,7 +40,7 @@ Additionary, you will need [biopython](https://biopython.org/) package installed
 ### Genome references
 MoNaS requires a reference genomic sequence in FASTA, and annotation for CDSs in [BED](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) and [GFF3](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md) files for *VGSC* gene of your species.
 Accurate genome and annotation information, of course, is the most vital part of this pipeline.
-Currently, MoNas includes reference files of three species of mosquitos, *Aedes aegypti* (-s Aaeg), *Aedes albopictus* (-s Aalb) and *Culex quinquefasciatus* (-s Cpip).
+Indefault, MoNas includes references of three species of mosquitos, *Aedes aegypti* (-s Aaeg), *Aedes albopictus* (-s Aalb) and *Culex quinquefasciatus* (-s Cpip). Those references only include subregions of genome which contain *VGSC* of each species.
 
 Each file should have name with prefix **ref** (eg. ref.ga) and be organized under
 a directory as:
@@ -370,3 +372,5 @@ optional arguments:
   -m MDOM_PATH, --mdom_path MDOM_PATH
                         M. domestica aa fasta path [MoNaS/misc/AAB47604.fa]
 ```
+Citation:
+   - Kentaro Itokawa et al. (2019), High-throughput genotyping of a full voltage-gated sodium channel gene via genomic DNA using target capture sequencing and analytical pipeline MoNaS to discover novel insecticide resistance mutations, [BioRxiv](https://www.biorxiv.org/content/10.1101/564609v1)
