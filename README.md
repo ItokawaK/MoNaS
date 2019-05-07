@@ -49,10 +49,10 @@ a directory as:
   your_species_dir/           # Arbitrary name of directory. Will be recognized as a species name (-s).
        ├- ref.fa         # Reference FASTA.
        ├- ref.fa.fai*    # FASTA index.
-       ├- ref.gff3       # GFF3 annotation file for VGSC gene.
+       ├- ref.gff3*      # GFF3 annotation file for VGSC gene.
        ├- ref.bed        # BED annotation file for VGSC CDSs.
        ├- ref.dict*      # Genome dictionary used by GATK.
-       ├- ref.mdom.fa    # Pair-wise aligned VGSC amino-acid sequences.
+       ├- ref.mdom.fa*   # Pair-wise aligned VGSC amino-acid sequences.
        ├- bwadb*/        # BWA indices
        │     ├- ref.amb
        │     ├- ref.ann
