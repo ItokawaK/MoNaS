@@ -11,7 +11,7 @@ conducting genotyping of voltage-gated sodium channel (VGSC) in mosquitos from N
 Basically, MoNaS is designed to utilize NGS data from genomic DNA such as targeted captured
 library (SureSelect, xGen probes for instance) or RNA/cDNA such as shotgun library of PCR amplified VGSC cDNA.
 
-You may `git clone` MoNaS and use locally. Instead, you would be interested in the MoNaS as a [WEB service](https://gph.niid.go.jp/monas). 
+You may `git clone` MoNaS and use locally. Instead, you would be interested in the MoNaS as a [WEB service](https://gph.niid.go.jp/monas).
 
 How To Use
 -------
@@ -40,7 +40,7 @@ Additionary, you will need [biopython](https://biopython.org/) package installed
 ### Genome references
 MoNaS requires a reference genomic sequence in FASTA, and annotation for CDSs in [BED](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) and [GFF3](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md) files for *VGSC* gene of your species.
 Accurate genome and annotation information, of course, is the most vital part of this pipeline.
-Indefault, MoNas includes references of three species of mosquitos, *Aedes aegypti* (-s Aaeg), *Aedes albopictus* (-s Aalb) and *Culex quinquefasciatus* (-s Cpip). Those references only include subregions of genome which contain *VGSC* of each species.
+By default, MoNas includes references of three species of mosquitos, *Aedes aegypti* (-s Aaeg), *Aedes albopictus* (-s Aalb) and *Culex quinquefasciatus* (-s Cpip). Those references only include subregions of genome which contain *VGSC* of each species.
 
 Each file should have name with prefix **ref** (eg. ref.ga) and be organized under
 a directory as:
@@ -67,7 +67,7 @@ a directory as:
 ```
 Practically, many of those files (with asterisk\*) will be created automatically by MoNaS if absent.
 You will need only **re.fa** and **ref.bed** files, at least, to start analysis.
-In default, MoNaS expect **your_species_dir/** locates under in the [references](https://github.com/ItokawaK/MoNaS/tree/master/references) directory of MoNaS.
+By default, MoNaS expect **your_species_dir/** locates under in the [references](https://github.com/ItokawaK/MoNaS/tree/master/references) directory of MoNaS.
 You can explicitly specify the location of **your_species_dir/** by
 ```
 -r your_reference_dir -s your_species_dir
@@ -151,7 +151,7 @@ optional arguments:
                         Analysis mode. [ngs_dna]
   -c {freebayes,gatk}, --variant_caller {freebayes,gatk}
                         Variant caller to be used. Default is freebayes.
-  -n, --no_clean        Do not clean old BAM files after rmdup. Off in
+  -n, --no_clean        Do not clean old BAM files after rmdup. Off by
                         default.
   -v, --version         Show version and exit.
 ```
@@ -172,7 +172,7 @@ MoNaS/genotype.py  -s Aalb  -l sample_list.txt  -t 16  -o out_dir -m ngs_rna
 - `-s`, `--species`
 
   This option specifies the name of directory storing reference files of each species.
-In default, this directory will be searched in the **MoNaS/references/**.
+By default, this directory will be searched in the **MoNaS/references/**.
 In stead, you can explicitly specify another directory using `-r, --ref_root` option (see below).
 
 - `-l`, `--sample_list`
