@@ -101,7 +101,7 @@ if __name__ == '__main__':
     parser.add_argument('-n', '--no_clean', dest = 'do_clean',
                          action='store_false',
                          default = True,
-                         help = 'Do not clean old BAM files after rmdup. Off in default.'
+                         help = 'Do not clean old BAM files after rmdup. Off by default.'
                          )
     parser.add_argument('-v', '--version', dest = 'show_version',
                         action='store_true',
