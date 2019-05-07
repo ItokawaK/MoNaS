@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 import os
-from finalize_table import Bed
+if __name__ != '__main__':
+    from .finalize_table import Bed
 import argparse
 
 def create_bed_from_gff3(bed_file):
@@ -117,6 +118,7 @@ def create_bed_from_gff3(bed_file):
     return out_str
 
 if __name__ == '__main__':
+    from finalize_table import Bed
 
     parser = argparse.ArgumentParser(description = 'Create gff3 from bed')
 

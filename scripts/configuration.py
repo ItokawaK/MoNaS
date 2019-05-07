@@ -21,6 +21,8 @@ import subprocess
 import shutil
 import json
 
+from . import bed2gff3
+
 
 class GenomeRef:
     '''
@@ -49,6 +51,22 @@ class GenomeRef:
     def check_genomedb(self, mode, variant_caller, num_cpu = 1):
         if not os.path.isfile(self.ref_fa + '.fai'):
             subprocess.call(['samtools', 'faidx', self.ref_fa])
+
+        #Creating a gff3 file if absent
+        if not os.path.isfile(self.gff3):
+            if os.path.isfile(self.bed):
+                out_line = bed2gff3.create_bed_from_gff3(self.bed)
+                with open(self.gff3, 'w') as f:
+                    for l in out_line:
+                        f.write(l + "\n")
+
+        #Creating a protein alignment file if absent
+        if not os.path.isfile(self.mdom_fa):
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            cmd = [script_dir + "/make_AA_alignment.py",
+                   "-o", self.mdom_fa,
+                   self.ref_fa, self.bed]
+            subprocess.call(cmd)
 
         if variant_caller == "gatk" and not os.path.isfile(os.path.join(self.root_dir, "ref.dict")):
             subprocess.call(['gatk', 'CreateSequenceDictionary',
