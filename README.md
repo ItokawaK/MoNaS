@@ -118,6 +118,16 @@ This file can also be created from **ref.fa** and **ref.bed** using [scripts/mak
 
     [example](https://raw.githubusercontent.com/ItokawaK/MoNaS/master/references/Aaeg/ref.mdom.fa)
 
+### Testing
+If you have cloned MoNaS from GitHub, example fastq.gz files to test scripts are included.
+To conduct a test run `cd MoNaS/misc/example`, and then, execute
+
+```
+../../genotype.py -l list.txt -s Aalb -o out
+```
+
+Check `out/table_with_Mdomcoord.tsv` to confirm if your test run finished properly.
+
 ### Usage
 
 ```
