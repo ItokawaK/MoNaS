@@ -18,15 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import subprocess
 import sys
+import shutil
+import logging
+
 from scripts.configuration import GenomeRef
 from concurrent.futures import ProcessPoolExecutor
-import shutil
 
 class Job:
-    def __init__(self, genome_ref, mode):
+    def __init__(self, genome_ref, mode, out_dir):
         self.gref = genome_ref
         self.bams_to_process = [] #List of bam files to be processed in next step
         self.mode = mode
+        self.logger = logging.getLogger(__name__)
+        self.out_dir = out_dir
+        self.log_file = os.path.join(self.out_dir, "job.err")
 
     def map_and_sort(self, sample, num_threads, out_bam_dir):
         #Mapping and sort
@@ -60,9 +65,18 @@ class Job:
         #if os.path.isfile(out_bam_path + ".bai"):
         #    return(out_bam_path)
 
-        proc1 = subprocess.Popen(cmd1, stdout = subprocess.PIPE)
-        proc2 = subprocess.Popen(cmd2, stdin = proc1.stdout)
-        proc2.communicate()
+        with open(self.log_file, "a") as err_log:
+            proc1 = subprocess.Popen(
+                         cmd1,
+                         stdout = subprocess.PIPE,
+                         stderr = err_log)
+            proc2 = subprocess.Popen(
+                         cmd2,
+                         stdin = proc1.stdout,
+                         stderr = err_log)
+            proc2.communicate()
+
+        self.logger.info("   Finished mapping and sorting: " + sample[0])
         return(out_bam_path)
 
     def map_and_sort_mp(self, num_threads, num_proc, samples, out_bam_dir):
@@ -92,8 +106,9 @@ class Job:
                out_bam_path
                ]
 
-        subprocess.call(cmd1)
-        subprocess.call(cmd2)
+        with open(self.log_file, "a") as err_log:
+            p = subprocess.Popen(cmd1, stdout = err_log, stderr = err_log).communicate()
+            p = subprocess.Popen(cmd2, stdout = err_log, stderr = err_log).communicate()
 
         return(out_bam_path)
 
@@ -137,9 +152,10 @@ class Job:
                "-o", out_csqvcf,
                out_vcf]
 
-        proc1 = subprocess.call(cmd1)
-        proc2 = subprocess.call(cmd2)
-        proc3 = subprocess.call(cmd3)
+        with open(self.log_file, "a") as err_log:
+            p = subprocess.Popen(cmd1, stderr=err_log).communicate()
+            p = subprocess.Popen(cmd2, stderr=err_log).communicate()
+            p = subprocess.Popen(cmd3, stderr=err_log).communicate()
 
         return(out_csqvcf)
 
@@ -166,7 +182,10 @@ class Job:
                    "-r", region,
                    "-f", self.gref.ref_fa] + in_bams
 
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        with open(self.log_file, "a") as err_log:
+            proc = subprocess.Popen(cmd,
+                      stdout=subprocess.PIPE,
+                      stderr=err_log)
 
         header = []
         body = []
@@ -191,6 +210,7 @@ class Job:
 
         regions = [b[0] + ":" + b[1] + "-" + b[2] for b in bed if b is not '']
 
+        self.logger.info("   Conducting for {} partioned regions...".format(len(regions)))
         with ProcessPoolExecutor(max_workers = num_cpu) as executor:
             executed = [executor.submit(self.run_freebayes,
                                         in_bams,
@@ -209,12 +229,7 @@ class Job:
                     if l.rstrip() is not '':
                         print(l.rstrip(), file = f)
 
-        # cmd1 = ['freebayes',
-        #         "-t", self.gref.bed,
-        #         "-f", self.gref.ref_fa,
-        #         "-v", out_vcf] + in_bam_list
-
-        cmd2 = ['bcftools', "csq",
+        cmd = ['bcftools', "csq",
                 "-g", self.gref.gff3,
                 "-f", self.gref.ref_fa,
                 "-p", "a",
@@ -222,11 +237,5 @@ class Job:
                 "-o", out_csqvcf,
                 out_vcf]
 
-        # cmd3 = ['bcftools', "query",
-        #        "-f", r"[%SAMPLE\t%CHROM\t%POS\t%REF\t%ALT\t%QUAL\t%TBCSQ\t%TGT\t%AD\n]",
-        #        "-o", out_table,
-        #        out_csqvcf]
-
-        #subprocess.call(cmd1)
-        subprocess.call(cmd2)
-        #subprocess.call(cmd3)
+        with open(self.log_file, "a") as err_log:
+            p = subprocess.Popen(cmd, stderr=err_log).communicate()

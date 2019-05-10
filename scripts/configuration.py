@@ -20,6 +20,7 @@ import os
 import subprocess
 import shutil
 import json
+import logging
 
 from . import bed2gff3
 
@@ -35,9 +36,10 @@ class GenomeRef:
 
     def __init__(self, ref_dir, species):
 
+        self.logger = logging.getLogger(__name__)
         self.root_dir = os.path.join(ref_dir, species)
         if not os.path.isdir(self.root_dir):
-            print(self.root_dir + " was not found!", file = sys.stderr)
+            self.logger.error(self.root_dir + " does not exist!")
             sys.exit(1)
 
         self.bwa_db = os.path.join(self.root_dir, "bwadb", "ref")
@@ -51,6 +53,7 @@ class GenomeRef:
     def check_genomedb(self, mode, variant_caller, num_cpu = 1):
         if not os.path.isfile(self.ref_fa + '.fai'):
             subprocess.call(['samtools', 'faidx', self.ref_fa])
+            self.logger.info(self.ref_fa + '.fai was newly created.')
 
         #Creating a gff3 file if absent
         if not os.path.isfile(self.gff3):
@@ -59,6 +62,7 @@ class GenomeRef:
                 with open(self.gff3, 'w') as f:
                     for l in out_line:
                         f.write(l + "\n")
+                self.logger.info(self.gff3 + ' was newly created.')
 
         #Creating a protein alignment file if absent
         if not os.path.isfile(self.mdom_fa):
@@ -67,34 +71,30 @@ class GenomeRef:
                    "-o", self.mdom_fa,
                    self.ref_fa, self.bed]
             subprocess.call(cmd)
+            self.logger.info(self.mdom_fa + ' was newly created.')
 
         if variant_caller == "gatk" and not os.path.isfile(os.path.join(self.root_dir, "ref.dict")):
-            subprocess.call(['gatk', 'CreateSequenceDictionary',
-                            '-R', self.ref_fa])
+            cmd = ['gatk', 'CreateSequenceDictionary', '-R', self.ref_fa]
+            subprocess.call(cmd)
 
         if mode == 'ngs_dna':
             bwadb = os.path.join(self.root_dir, 'bwadb')
             if not os.path.exists(bwadb):
-                print("Creating bwadb for " + self.ref_fa + "\n This may take for a while."\
-                      " Please wait patiently.",
-                      file = sys.stderr)
+                self.logger.info("Creating bwadb for " + self.ref_fa + "\n This may take for a while."\
+                      " Please wait patiently.")
                 os.mkdir(bwadb)
-                subprocess.call(['bwa', 'index',
-                                '-p', bwadb + '/ref',
-                                self.ref_fa])
+                cmd = ['bwa', 'index', '-p', bwadb + '/ref', self.ref_fa]
+                subprocess.call(cmd)
         elif mode == 'ngs_rna':
             hisatdb = os.path.join(self.root_dir, 'hisatdb')
             if not os.path.exists(hisatdb):
-                print("Creating hisat2db for " + self.ref_fa + "\n This may take for a while."\
-                      " Please wait patiently.",
-                      file = sys.stderr)
+                self.logger.info("Creating hisat2db for " + self.ref_fa + "\n This may take for a while."\
+                      " Please wait patiently.")
                 os.mkdir(hisatdb)
-                subprocess.call(['hisat2-build',
-                                '-p', str(num_cpu),
-                                self.ref_fa,
-                                hisatdb + '/ref'])
+                cmd = ['hisat2-build', '-p', str(num_cpu), self.ref_fa, hisatdb + '/ref']
+                subprocess.call(cmd)
         else:
-            print(mode + " is currently not supproted.")
+            self.logger.error(mode + " is currently not supproted.")
             sys.exit(1)
 
     def check_program_path(self, mode, variant_caller):
@@ -117,13 +117,11 @@ class GenomeRef:
                 if os.path.isfile(os.path.join(abs_path, program)):
                     os.environ['PATH'] = abs_path + os.pathsep + os.environ['PATH']
                 else:
-                    print(os.path.join(abs_path, program) + " was not found /(*o*)\ !",
-                          file = sys.stderr)
+                    self.logger.error(os.path.join(abs_path, program) + " was not found /(*o*)\ !")
                     sys.exit(1)
             else:
                 if shutil.which(program) == None:
-                    print("Error: " + program + " is not in $PATH /(*o*)\ !",
-                          file = sys.stderr)
+                    self.logger.error(program + " is not in $PATH /(*o*)\ !")
                     sys.exit(1)
 
     def check_existence_for_genotype(self):
@@ -132,7 +130,7 @@ class GenomeRef:
                      self.bed,
                      self.mdom_fa]:
             if  os.path.exists(file):
-                print("Using the reference file " + file + ".", file = sys.stderr)
+                self.logger.info("Using " + file + " as a reference.")
             else:
-                print(r"ERROR!: " + file + " does not exists /(*o*)\ !", file = sys.stderr)
+                self.logger.debug(r"ERROR!: " + file + " does not exists /(*o*)\ !")
                 sys.exit(1)

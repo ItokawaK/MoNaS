@@ -23,9 +23,13 @@ import subprocess
 import argparse
 import sys
 from concurrent.futures import ProcessPoolExecutor
+import logging
+from logging import getLogger, StreamHandler, FileHandler, Formatter
+
 from scripts import finalize_table
 from scripts.configuration import GenomeRef
 from scripts.jobs import Job
+from scripts import logging_conf
 
 version = "1.0"
 
@@ -56,7 +60,8 @@ def usage():
     genotyp.py -s species_name -o out_dir_path -l list_file_path
                  (-t num_max_threads -b num_threads_per_bwa
                   -m mode[ngs_dna|ngs_rna] -r ref_dir_path
-                  -v variant_caller[freebayes|gatk]
+                  -c variant_caller[freebayes|gatk],
+                  --version
                   )
     """)
 
@@ -140,16 +145,8 @@ if __name__ == '__main__':
     out_bam_dir1 = out_dir + "/BAMs"
     out_bam_dir2 = out_dir + "/BAMs_rmdup"
     vcf_out_dir = out_dir + "/VCFs"
-    #bin_path = Bin(args.bin_root) #Bin object
-    genome_ref = GenomeRef(args.ref_root, args.species)  #GenomeRef object
+    out_table =  out_dir + "/table_with_Mdomcoord.tsv"
 
-    #configuration for genotyping
-    genome_ref.check_program_path(args.mode, args.variant_caller)
-    genome_ref.check_genomedb(args.mode, args.variant_caller, num_cpu = args.num_cpu)
-    genome_ref.check_existence_for_genotype()
-
-
-    out_table = out_dir + "/out_table"
 
     if os.path.isfile(args.sample_list):
         sample_list = args.sample_list
@@ -162,29 +159,54 @@ if __name__ == '__main__':
         print("Error: " + out_dir + " already exists!", file = sys.stderr)
         sys.exit(1)
 
-    job = Job(genome_ref, args.mode)
-
-
     #Create output dir
     os.mkdir(out_dir)
 
+    #----logging setting----
+    log_file = os.path.join(args.out_dir, 'log')
+
+    logger = getLogger(__name__)
+    logging_conf.set(log_file)
+    logger.info("Aanalysis started")
+    #----end----
+
+    #bin_path = Bin(args.bin_root) #Bin object
+    genome_ref = GenomeRef(args.ref_root, args.species)  #GenomeRef object
+
+    #configuration for genotyping
+    genome_ref.check_program_path(args.mode, args.variant_caller)
+    genome_ref.check_genomedb(args.mode, args.variant_caller, num_cpu = args.num_cpu)
+    genome_ref.check_existence_for_genotype()
+
+    job = Job(genome_ref, args.mode, out_dir)
+
     if not os.path.isdir(out_bam_dir1):
         os.mkdir(out_bam_dir1)
+
+    logger.info("Start mapping and sorting for {} samples...".format(len(samples)))
 
     job.map_and_sort_mp(num_threads = num_threads,
                         num_proc = num_proc,
                         samples = samples,
                         out_bam_dir = out_bam_dir1)
 
+    logger.info("...Finished mapping and sorting for all samples.")
+
     if not os.path.isdir(out_bam_dir2):
         os.mkdir(out_bam_dir2)
+
+    logger.info("Start removing PCR duplicates...")
 
     job.rmdup_and_index_mp(num_cpu = num_cpu,
                            in_bams = job.bams_to_process,
                            out_bam_dir = out_bam_dir2)
 
+    logger.info("...Finished removing PCR duplicates.")
+
     if args.do_clean:
         shutil.rmtree(out_bam_dir1)
+
+    logger.info("Started variant calling using {}... ".format(args.variant_caller))
 
     if args.variant_caller == "gatk":
         if not os.path.isdir(vcf_out_dir):
@@ -200,6 +222,9 @@ if __name__ == '__main__':
 
         csqvcfs = [out_dir + "/out_csq.vcf"]
 
+    logger.info("...Finished variant calling")
+
+    logger.info("Writing the final result in table_with_Mdomcoord.tsv...")
     finalize_table.create_table(
                      csqvcfs = csqvcfs,
                      info_to_get = ["CHROM",
@@ -217,7 +242,7 @@ if __name__ == '__main__':
                      #          "AA_CHANGE\tAA_CHANGE_HOUSEFLY\tAD\tEXON",
                      bed_file = genome_ref.bed,
                      mdom_fasta = genome_ref.mdom_fa,
-                     out_table_file = out_dir + "/table_with_Mdomcoord.tsv"
+                     out_table_file = out_table
                      )
 
-    print(r"MoNaS is done \(^o^)/ !", file = sys.stderr)
+    logger.info(r"MoNaS is finished!")
