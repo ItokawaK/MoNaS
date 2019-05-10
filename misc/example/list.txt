@@ -1,2 +1,2 @@
-SP_01 FASTQ/Aalb-SP-01_S17_L001_R1_001.fastq.gz FASTQ/Aalb-SP-01_S17_L001_R2_001.fastq.gz
-SP_02 FASTQ/Aalb-SP-02_S18_L001_R1_001.fastq.gz FASTQ/Aalb-SP-02_S18_L001_R2_001.fastq.gz
+sampl1 FASTQ/sample1_S1_L001_R1_001.fastq.gz FASTQ/sample1_S1_L001_R2_001.fastq.gz
+sampl2 FASTQ/sample2_S1_L001_R1_001.fastq.gz FASTQ/sample2_S1_L001_R2_001.fastq.gz
