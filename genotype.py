@@ -25,6 +25,8 @@ import sys
 from concurrent.futures import ProcessPoolExecutor
 import logging
 from logging import getLogger, StreamHandler, FileHandler, Formatter
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 from scripts import finalize_table
 from scripts.configuration import GenomeRef
@@ -183,7 +185,10 @@ if __name__ == '__main__':
     if not os.path.isdir(out_bam_dir1):
         os.mkdir(out_bam_dir1)
 
-    logger.info("Start mapping and sorting for {} samples...".format(len(samples)))
+    logger.info("[1/3] Start mapping and sorting for {} samples...".format(len(samples)))
+    logger.info("  {} BWA processes are running concurrently, "
+                "{} therads are used at each process".format(num_proc, num_threads)
+                )
 
     job.map_and_sort_mp(num_threads = num_threads,
                         num_proc = num_proc,
@@ -195,7 +200,7 @@ if __name__ == '__main__':
     if not os.path.isdir(out_bam_dir2):
         os.mkdir(out_bam_dir2)
 
-    logger.info("Start removing PCR duplicates...")
+    logger.info("[2/3] Start removing PCR duplicates...")
 
     job.rmdup_and_index_mp(num_cpu = num_cpu,
                            in_bams = job.bams_to_process,
@@ -206,7 +211,7 @@ if __name__ == '__main__':
     if args.do_clean:
         shutil.rmtree(out_bam_dir1)
 
-    logger.info("Started variant calling using {}... ".format(args.variant_caller))
+    logger.info("[3/3] Started variant calling using {}... ".format(args.variant_caller))
 
     if args.variant_caller == "gatk":
         if not os.path.isdir(vcf_out_dir):

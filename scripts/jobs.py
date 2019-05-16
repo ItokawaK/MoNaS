@@ -66,18 +66,21 @@ class Job:
         #    return(out_bam_path)
 
         with open(self.log_file, "a") as err_log:
-            proc1 = subprocess.Popen(
-                         cmd1,
-                         stdout = subprocess.PIPE,
-                         stderr = err_log)
-            proc2 = subprocess.Popen(
-                         cmd2,
-                         stdin = proc1.stdout,
-                         stderr = err_log)
-            proc2.communicate()
+            try:
+                proc1 = subprocess.Popen(
+                             cmd1,
+                             stdout = subprocess.PIPE,
+                             stderr = err_log)
+                proc2 = subprocess.Popen(
+                             cmd2,
+                             stdin = proc1.stdout,
+                             stderr = err_log)
+                proc2.communicate()
 
-        self.logger.info("   Finished mapping and sorting: " + sample[0])
-        return(out_bam_path)
+                self.logger.info("   Finished mapping and sorting: " + sample[0])
+                return(out_bam_path)
+            except:
+                self.logger.info("   Failed mapping and sorting: " + sample[0])
 
     def map_and_sort_mp(self, num_threads, num_proc, samples, out_bam_dir):
         with  ProcessPoolExecutor(max_workers = num_proc) as executor:
@@ -107,10 +110,18 @@ class Job:
                ]
 
         with open(self.log_file, "a") as err_log:
-            p = subprocess.Popen(cmd1, stdout = err_log, stderr = err_log).communicate()
-            p = subprocess.Popen(cmd2, stdout = err_log, stderr = err_log).communicate()
-
-        return(out_bam_path)
+            try:
+                p = subprocess.Popen(
+                     cmd1,
+                     stdout = err_log,
+                     stderr = err_log).communicate()
+                p = subprocess.Popen(
+                     cmd2,
+                     stdout = err_log,
+                     stderr = err_log).communicate()
+                return(out_bam_path)
+            except:
+                self.logger.error("   Failed rmdup and indexing: " + sample[0])
 
     def rmdup_and_index_mp(self, num_cpu, in_bams, out_bam_dir):
         with ProcessPoolExecutor(max_workers = num_cpu) as executor:
