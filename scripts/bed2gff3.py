@@ -50,7 +50,6 @@ def create_bed_from_gff3(bed_file):
 
     out_str = []
     out_str.append("##gff-version 3")
-    out_str.append("###")
 
     gene_start = min([ex.start for ex in exons]) + 1
     gene_end = max([ex.end for ex in exons])
@@ -66,8 +65,6 @@ def create_bed_from_gff3(bed_file):
                               "ID=gene:VGSC;biotype=protein_coding;Name=VGSC"]
                               )
                     )
-
-    out_str.append("###")
 
     for trans in ["ck", "dl"]:
         out_str.append("\t".join([bed.chrom,
@@ -113,7 +110,6 @@ def create_bed_from_gff3(bed_file):
                                               phase,
                                               tag + exon.name])
                          )
-        out_str.append("###")
 
     return out_str
 
