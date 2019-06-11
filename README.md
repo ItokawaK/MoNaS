@@ -312,7 +312,7 @@ Collum 10: Whether AA change is known *kdr* mutation or not.
 
   - AA variant which is confirmed to decrease VGSC sensitivity to pyrethroid
   in electrophysiological assay will be described "Strong".
-  Those with weaker evidences are described as "Weak".
+  Those with weaker evidences are described as "Supportive".
   Other unknown AA variants will be described as "Unknown".
   Known kdr AA varoamts are listed in [scripts/kdr_list.json](https://github.com/ItokawaK/MoNaS/blob/master/scripts/kdr_list.json) which will be updated as possible as regularly.
 
