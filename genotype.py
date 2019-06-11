@@ -110,6 +110,10 @@ if __name__ == '__main__':
                          default = True,
                          help = 'Do not clean old BAM files after rmdup. Off by default.'
                          )
+    parser.add_argument('--suppress_fullpath', dest='no_fullpath',
+                         action ='store_true',
+                         default= False,
+                         help=argparse.SUPPRESS)
     parser.add_argument('-v', '--version', dest = 'show_version',
                         action='store_true',
                         default = False,
@@ -156,6 +160,21 @@ if __name__ == '__main__':
     else:
         print(args.sample_list + r" does not exist /(*o*)\ ")
         sys.exit(1)
+
+    if(len(samples) == 0):
+        print("Error: There was no sample.")
+        sys.exit(1)
+    else:
+        file_not_found = []
+        for sample in samples:
+            tmp = []
+            for i in (1,2):
+                if not os.path.isfile(sample[i]):
+                    file_not_found.append(sample[i])
+        if(len(file_not_found) > 0):
+            print("Error: Follwing files were not found.")
+            print(file_not_found)
+            sys.exit(1)
 
     if os.path.exists(out_dir):
         print("Error: " + out_dir + " already exists!", file = sys.stderr)
