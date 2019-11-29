@@ -11,17 +11,17 @@ conducting genotyping of voltage-gated sodium channel (VGSC) in mosquitos from N
 Basically, MoNaS is designed to utilize NGS data from genomic DNA such as targeted captured
 library (SureSelect, xGen probes for instance) or RNA/cDNA such as shotgun library of PCR amplified VGSC cDNA.
 
-You may `git clone` MoNaS and use locally. Instead, you would be interested in the MoNaS as a [WEB service](https://gph.niid.go.jp/monas).
+You may `git clone` MoNaS and use locally. Instead, you can use MoNaS on the [WEB service](https://gph.niid.go.jp/monas).
 
 How To Use
 -------
-Currently, we have confirmed MoNaS works in Linux OSs of both Ubuntu18 and CentOS6.
-Although we have not confirmed yet, this program could also be run in Mac OS.
+Currently, we have confirmed MoNaS works in Linux OSs of both Ubuntu18 and CentOS6 & 7.
+Although we have not confirmed yet, this program may work in other Linux and Mac OSs.
 
 ### Installation
 
 MoNaS consists of several python3 scripts which do not require compilation.
-However, MoNaS depends some third-party softwares described below:
+However, MoNaS depends some third-party softwares below:
 - [bwa](https://github.com/lh3/bwa) v0.7.17\* (For genomic DNA data)
 - [Hisat2](https://ccb.jhu.edu/software/hisat2/index.shtml) v2.1.0\* (For RNA data)
 - [samtools](http://www.htslib.org/) v1.9\*
@@ -30,17 +30,17 @@ However, MoNaS depends some third-party softwares described below:
 - Optionally [MUSCLE](https://www.drive5.com/muscle/) v3.8.31\*  
 
 
-  \*Versions we are currently using.
+  \*Versions are those we are currently working on.
 
-Root directories of those software executables should be included in your $PATH environment variable,
-or you can directly specify these paths in the **scripts/bin_path.json** file.
+Those softwares need to be callable through $PATH environment variable.
+Instead, you can directly specify paths of the directories in the **scripts/bin_path.json** file.
 
-Additionary, you will need [biopython](https://biopython.org/) package installed in your python to run **genotype_sanger.py**, and some helper tools to create files for your own reference genomes.
+Additionally, you need [biopython](https://biopython.org/) package installed in your python if you utilize some helper tools which automatically construct reference files or run **genotype_sanger.py**.
 
 ### Genome references
 MoNaS requires a reference genomic sequence in FASTA, and annotation for CDSs in [BED](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) and [GFF3](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md) files for *VGSC* gene of your species.
 Accurate genome and annotation information, of course, is the most vital part of this pipeline.
-By default, MoNas includes references of three species of mosquitos, *Aedes aegypti* (-s Aaeg), *Aedes albopictus* (-s Aalb) and *Culex quinquefasciatus* (-s Cpip). Those references only include subregions of genome which contain *VGSC* of each species.
+By default, MoNas includes references of three species of mosquitos, *Aedes aegypti* (-s Aaeg), *Aedes albopictus* (-s Aalb) and *Culex quinquefasciatus* (-s Cpip). Because of the file size limitation hosted in GitHub, those references only include a part of the entire genome of each species which contain *VGSC* gene.
 
 Each file should have name with prefix **ref** (eg. ref.ga) and be organized under
 a directory as:
@@ -77,7 +77,7 @@ in which reference files will be searched from **your_reference_dir/your_species
 - **ref.bed** annotation file.
 
   The 4th column (name) should be in a string with format as **ExonXX(c/d/k/l)**.
-The 5th column (score) is not used.
+The 5th column (score) is not used and is always 0.
 
   [example](https://raw.githubusercontent.com/ItokawaK/MoNaS/master/references/Aaeg/ref.bed)
 ```
@@ -111,7 +111,7 @@ This file can be created from **ref.bed** using [scripts/bed2gff.py](https://git
 The first entry should be house fly (*M. domestica*) VGSC. The second
 and third entries are aa sequences of ck and dl transcript variants
 of your species, respectively.
-This data will be used to convert aa position coordinate of your species to
+This data will be used to convert aa position coordinate of your species into
 *M. domestica* universal coordinates.
 This file can also be created from **ref.fa** and **ref.bed** using [scripts/make_AA_alignment.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/make_AA_alignment.py)
 (MUSCLE and biopython are required).
@@ -310,7 +310,7 @@ Column 9: Annotated AA change **in *M. domestica* AA position**.
 
 Collum 10: Whether AA change is known *kdr* mutation or not.
 
-  - AA variant which is confirmed to decrease VGSC sensitivity to pyrethroid
+  - AA variant which is confirmed to decrease pyrethroid susceptibility
   in electrophysiological assay will be described "Strong".
   Those with weaker evidences are described as "Supportive".
   Other unknown AA variants will be described as "Unknown".
@@ -383,4 +383,6 @@ optional arguments:
                         M. domestica aa fasta path [MoNaS/misc/AAB47604.fa]
 ```
 Citation:
-   - Kentaro Itokawa et al. (2019), High-throughput genotyping of a full voltage-gated sodium channel gene via genomic DNA using target capture sequencing and analytical pipeline MoNaS to discover novel insecticide resistance mutations, [BioRxiv](https://www.biorxiv.org/content/10.1101/564609v1)
+   - Kentaro Itokawa et al. (2019), High-throughput genotyping of a full voltage-gated sodium channel gene via genomic DNA using target capture sequencing and analytical pipeline MoNaS to discover novel insecticide resistance mutations. [PLoS Negl Trop Dis 13(11): e0007818.]https://doi.org/10.1371/journal.pntd.0007818
+
+   - [BioRxiv](https://www.biorxiv.org/content/10.1101/564609v1)
