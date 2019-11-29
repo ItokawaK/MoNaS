@@ -383,6 +383,6 @@ optional arguments:
                         M. domestica aa fasta path [MoNaS/misc/AAB47604.fa]
 ```
 Citation:
-   - Kentaro Itokawa et al. (2019), High-throughput genotyping of a full voltage-gated sodium channel gene via genomic DNA using target capture sequencing and analytical pipeline MoNaS to discover novel insecticide resistance mutations. [PLoS Negl Trop Dis 13(11): e0007818.]https://doi.org/10.1371/journal.pntd.0007818
+   - Kentaro Itokawa et al. (2019), High-throughput genotyping of a full voltage-gated sodium channel gene via genomic DNA using target capture sequencing and analytical pipeline MoNaS to discover novel insecticide resistance mutations. [PLoS Negl Trop Dis 13(11): e0007818.](https://doi.org/10.1371/journal.pntd.0007818)
 
    - [BioRxiv](https://www.biorxiv.org/content/10.1101/564609v1)
