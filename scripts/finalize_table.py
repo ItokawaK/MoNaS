@@ -24,9 +24,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 debug = False
 
 class VCF_line:
+    """
+    This object represents a single line of VCF file with TBSQ field.
+    For initialization, follwing argments are required.
+       line: a string of VCF lines
+       bed: BED object created from ref.bed file
+       mdom_conv: a MDom_comvert object created from ref.mdom.fa
+       samples: a list of all sample names
+    """
     def __init__(self, line, bed, mdom_conv, samples):
 
-        def vcf_samples(Fs, vcf_format, samples):
+        def parse_GT(Fs, vcf_format, samples):
+            """
+            Fuction to create dictionary of dictionary to represent
+            per sample GT information.
+            Arguments:
+              Fs: list of genotype fields
+              vcf_format: list of FORMAT elements (GT, AD, DP, etc.)
+              samples: list of sample name in same order to VCF file
+            Output:
+              dictionary:
+                  key: sample name, value:dictionary2
+                  dictionary2:
+                     key: FORMAT element, value: value in GT field.
+            """
             out_dict = {}
             for i in range(len(samples)):
                 sample_dict = {}
@@ -35,8 +56,8 @@ class VCF_line:
                     sample_dict[vcf_format[ii]] = sample_F[ii]
                 out_dict[samples[i]] = sample_dict
             return out_dict
-
-        Fs = line.split("\t")
+        self.line = line
+        Fs = self.line.split("\t")
 
         self.entries = dict()
         self.entries['CHROM'] = Fs[0]
@@ -46,37 +67,41 @@ class VCF_line:
         self.entries['QUAL'] = float(Fs[5])
         self.entries['EXON'] = bed.which_exon(self.entries['POS'])
 
-
-        self.line = line
-        self.alleles = [Fs[3]] + Fs[4].split(",")
+         # list of all alleles on this position
+        self.alleles = [self.entries['REF_ALLELE']] + self.entries['ALT_ALLELE'].split(",")
+        # dictionary representing INFO field values
         info = {ll[0]:ll[1] for ll in [l.split("=") for l in Fs[7].split(";")]}
         if "BCSQ" in info:
             self.tbcsq = BCSQ(info["BCSQ"])
         else:
             self.tbcsq = None
-        self.exon = bed.which_exon(self.entries['POS'])
+        #self.exon = bed.which_exon(self.entries['POS'])
         self.mdom_conv = mdom_conv
         format = Fs[8].split(":")
-        self.sample_data = vcf_samples(Fs[9:], format, samples)
+        self.sample_data = parse_GT(Fs[9:], format, samples)
         for sample in samples:
             self.set_sample_data(sample)
 
     def set_sample_data(self, sample_name):
+        """
+        This method is used to parse BCSQ field and GT, determining AA genotype
+        of each samples. Set per sample data (GENOTYPE, AA_CHANGE, etc.)
+        """
 
         if self.sample_data[sample_name]["GT"] == ".":
             return None
         else:
             GT_indx = [int(i) for i in self.sample_data[sample_name]["GT"].split("/")]
 
-        al = [ "", ""]
-        AA_change = ["", ""]
-        AA_change_simple = ["", ""]
-        AA_change_mdom  = ["", ""]
-        kdr_type =  ["", ""]
+        alleles = ["", ""] # alleles in individual genotype
+        AA_change = ["", ""] # corresponding AA changes (e.g. 123F>123L) to each allele
+        AA_change_simple = ["", ""] # corresponding AA changes (e.g. F123L) to each allele
+        AA_change_mdom  = ["", ""] # corresponding Mdom AA changes (e.g. F120L) to each allele
+        kdr_type =  ["", ""] # corresponding kdr type (Unknown, Strong, Supportive) to each AA change
         for i in [0, 1]:
-            al[i] = self.alleles[GT_indx[i]]
+            alleles[i] = self.alleles[GT_indx[i]]
 
-            if al[i] == self.entries['REF_ALLELE']:
+            if alleles[i] == self.entries['REF_ALLELE']:
                 AA_change[i] = "wild"
                 continue
 
@@ -84,13 +109,13 @@ class VCF_line:
                 AA_change[i] = "synonymous"
             elif len(self.tbcsq.dict_ck) > 0:
                 try:
-                    AA_change[i] = self.tbcsq.dict_ck[al[i]]
+                    AA_change[i] = self.tbcsq.dict_ck[alleles[i]]
                 except:
                     print("error!:" + self.line)
 
             else:
                 try:
-                    AA_change[i] = self.tbcsq.dict_dl[al[i]]
+                    AA_change[i] = self.tbcsq.dict_dl[alleles[i]]
                 except:
                     print("error!:" + self.line)
 
@@ -107,7 +132,7 @@ class VCF_line:
 
             AA_change_mdom[i], kdr_type[i] = self.mdom_conv.mos2fly(AA_change[i])
 
-        self.sample_data[sample_name]["GENOTYPE"] = al[0] + "/" + al[1]
+        self.sample_data[sample_name]["GENOTYPE"] = alleles[0] + "/" + alleles[1]
         self.sample_data[sample_name]["AA_CHANGE"] = "/".join(AA_change_simple)
         self.sample_data[sample_name]["AA_CHANGE_MDOM"] = "/".join(AA_change_mdom)
         self.sample_data[sample_name]["KDR_EVIDENCE"] = "/".join(kdr_type)

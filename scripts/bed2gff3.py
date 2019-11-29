@@ -84,19 +84,19 @@ def create_bed_from_gff3(bed_file):
 
         for ex_type in ["exon", "CDS"]:
 
-            if ex_type is "exon":
+            if ex_type == "exon":
                 tag = "Parent=transcript:VGSC_" + trans + ";Name="
             else:
                 tag = "ID=CDS:VGSC;Parent=transcript:VGSC_" + trans + ";Name="
 
-            if trans is "dl":
+            if trans == "dl":
                 not_mut = ["c", "k"]
             else:
                 not_mut = ["d", "l"]
 
             for exon in exons:
                 if not exon.mut_excl in not_mut:
-                    if ex_type is "exon":
+                    if ex_type == "exon":
                         phase = "."
                     else:
                         phase = str(exon.phase)
