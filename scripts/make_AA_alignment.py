@@ -49,7 +49,7 @@ def main(ref_path, bed_path, Mdom_path, out_fasta_path = None, translate = None)
         cnt = 0
         for aa in vgsc_prot[variant]:
             cnt += 1
-            if aa is "*":
+            if aa != "*":
                 print("Warning !: Imature stop codon (*) was found at the "
                       + str(cnt)
                       + "-th position in in VGSC_"
@@ -111,7 +111,7 @@ def main(ref_path, bed_path, Mdom_path, out_fasta_path = None, translate = None)
     each_pos = [0, 0, 0]
     for pos in range(len(alignment[0].seq)):
         for seq in [0, 1, 2]:
-            if alignment[seq][pos] is not "-":
+            if alignment[seq][pos] != "-":
                 each_pos[seq] += 1
         AA_Change_ck = ""
         AA_Change_dl = ""

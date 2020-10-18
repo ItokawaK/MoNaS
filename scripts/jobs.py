@@ -219,7 +219,7 @@ class Job:
         with open(self.gref.bed) as f:
             bed = [l.rstrip().split("\t") for l in f.readlines()]
 
-        regions = [b[0] + ":" + b[1] + "-" + b[2] for b in bed if b is not '']
+        regions = [b[0] + ":" + b[1] + "-" + b[2] for b in bed if b != '']
 
         self.logger.info("   Conducting for {} partioned regions...".format(len(regions)))
         with ProcessPoolExecutor(max_workers = num_cpu) as executor:
@@ -233,11 +233,11 @@ class Job:
         with open(out_vcf, 'w') as f:
 
             for l in header:
-                if l.rstrip() is not '':
+                if l.rstrip() != '':
                    print(l.rstrip(), file = f)
             for body in bodies:
                 for l in body:
-                    if l.rstrip() is not '':
+                    if l.rstrip() != '':
                         print(l.rstrip(), file = f)
 
         cmd = ['bcftools', "csq",
