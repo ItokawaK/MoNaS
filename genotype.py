@@ -33,7 +33,7 @@ from scripts.configuration import GenomeRef
 from scripts.jobs import Job
 from scripts import logging_conf
 
-version = "1.0"
+version = "1.1"
 
 def parse_sample_list(sample_list):
     # Read sample list file
