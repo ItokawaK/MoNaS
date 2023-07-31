@@ -58,8 +58,11 @@ class Job:
                     "--rg", "SM:" + sample[0],
                     ] + sample_cmd
 
-        cmd2 = ['samtools', "sort",
-                "-o", out_bam_path]
+        # cmd2 = ['samtools', "sort",
+        #         "-o", out_bam_path]
+        cmd2 = ['samtools', 'fixmate', '-m', '-', '-']
+        cmd3 = ['samtools', 'sort']
+        cmd4 = ['samtools', 'markdup', '--write-index', '-', out_bam_path]
 
         # Uncomment to skip if bam.bai already exists. For debuggin variant calling.
         #if os.path.isfile(out_bam_path + ".bai"):
@@ -74,8 +77,19 @@ class Job:
                 proc2 = subprocess.Popen(
                              cmd2,
                              stdin = proc1.stdout,
+                             stdout = subprocess.PIPE,
                              stderr = err_log)
-                proc2.communicate()
+                proc3 = subprocess.Popen(
+                             cmd3,
+                             stdin = proc2.stdout,
+                             stdout = subprocess.PIPE,
+                             stderr = err_log)
+                proc4 = subprocess.Popen(
+                             cmd4,
+                             stdin = proc3.stdout,
+                             stderr = err_log)
+
+                proc4.communicate()
 
                 self.logger.info("   Finished mapping and sorting: " + sample[0])
                 return(out_bam_path)

@@ -204,7 +204,7 @@ if __name__ == '__main__':
     if not os.path.isdir(out_bam_dir1):
         os.mkdir(out_bam_dir1)
 
-    logger.info("[1/3] Start mapping and sorting for {} samples...".format(len(samples)))
+    logger.info("[1/2] Start mapping and sorting for {} samples...".format(len(samples)))
     logger.info("  {} BWA processes are running concurrently, "
                 "{} therads are used at each process".format(num_proc, num_threads)
                 )
@@ -216,21 +216,21 @@ if __name__ == '__main__':
 
     logger.info("...Finished mapping and sorting for all samples.")
 
-    if not os.path.isdir(out_bam_dir2):
-        os.mkdir(out_bam_dir2)
+    # if not os.path.isdir(out_bam_dir2):
+    #     os.mkdir(out_bam_dir2)
+    #
+    # logger.info("[2/3] Start removing PCR duplicates...")
 
-    logger.info("[2/3] Start removing PCR duplicates...")
+    # job.rmdup_and_index_mp(num_cpu = num_cpu,
+    #                        in_bams = job.bams_to_process,
+    #                        out_bam_dir = out_bam_dir2)
+    #
+    # logger.info("...Finished removing PCR duplicates.")
+    #
+    # if args.do_clean:
+    #     shutil.rmtree(out_bam_dir1)
 
-    job.rmdup_and_index_mp(num_cpu = num_cpu,
-                           in_bams = job.bams_to_process,
-                           out_bam_dir = out_bam_dir2)
-
-    logger.info("...Finished removing PCR duplicates.")
-
-    if args.do_clean:
-        shutil.rmtree(out_bam_dir1)
-
-    logger.info("[3/3] Started variant calling using {}... ".format(args.variant_caller))
+    logger.info("[2/2] Started variant calling using {}... ".format(args.variant_caller))
 
     if args.variant_caller == "gatk":
         if not os.path.isdir(vcf_out_dir):
