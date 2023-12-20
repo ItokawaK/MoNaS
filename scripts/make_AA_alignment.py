@@ -49,7 +49,7 @@ def main(ref_path, bed_path, Mdom_path, out_fasta_path = None, translate = None)
         cnt = 0
         for aa in vgsc_prot[variant]:
             cnt += 1
-            if aa != "*":
+            if aa == "*":
                 print("Warning !: Imature stop codon (*) was found at the "
                       + str(cnt)
                       + "-th position in in VGSC_"
