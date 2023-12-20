@@ -170,7 +170,7 @@ class BCSQ:
 
             for info_list in split_info_lists:
                 do_skip = False
-                for pat in ["splice_region", "splice_acceptor", "splice_donor"]:
+                for pat in ["splice_region", "splice_acceptor", "splice_donor", "start_lost"]:
                     if pat in info_list[0]:
                         do_skip = True
                 if do_skip:
