@@ -23,7 +23,8 @@ import subprocess
 import argparse
 import sys
 import os
-from finalize_table import Bed
+
+from monas.finalize_table import Bed
 
 def extract(fa_path, bed_path, flanking = 0):
 
@@ -49,7 +50,7 @@ def extract(fa_path, bed_path, flanking = 0):
 
     return out
 
-if __name__ == '__main__':
+def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     parser = argparse.ArgumentParser(description='Genotype VGSC gene.')
@@ -82,3 +83,6 @@ if __name__ == '__main__':
     for seq in extract(fa_path, bed_path, flanking):
         print(">" + seq.id)
         print(str(seq.seq))
+
+if __name__ == '__main__':
+    main()

@@ -379,7 +379,7 @@ def create_table(csqvcfs, info_to_get, bed_file, mdom_fasta, out_table_file, hea
                 for l in write_us:
                     print(l, file = out_f)
 
-if __name__ == '__main__':
+def main():
     import argparse
 
     parser = argparse.ArgumentParser(description = 'Convert csqvcf to table')
@@ -411,3 +411,6 @@ if __name__ == '__main__':
                  mdom_fasta = args.mdom_fa,
                  out_table_file = "/dev/stdout"
                  )
+    
+if __name__ == '__main__':
+    main()

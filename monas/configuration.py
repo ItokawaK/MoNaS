@@ -22,7 +22,7 @@ import shutil
 import json
 import logging
 
-from . import bed2gff3
+from monas import bed2gff3
 
 
 class GenomeRef:

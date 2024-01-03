@@ -24,9 +24,10 @@ import argparse
 import sys
 import json
 import os
-import extract_exons
 
-def main(ref_path, bed_path, Mdom_path, out_fasta_path = None, translate = None):
+from monas import extract_exons
+
+def run(ref_path, bed_path, Mdom_path, out_fasta_path = None, translate = None):
 
     muscle_path = "muscle"
 
@@ -143,7 +144,7 @@ def main(ref_path, bed_path, Mdom_path, out_fasta_path = None, translate = None)
 
     info.close()
 
-if __name__ == '__main__':
+def main():
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -177,8 +178,11 @@ if __name__ == '__main__':
             print(file + " was not found!", file = sys.stderr)
             sys.exit(1)
 
-    main(ref_path = args.ref_fa,
+    run(ref_path = args.ref_fa,
          bed_path = args.bed,
          Mdom_path = args.mdom_path,
          out_fasta_path = args.out_fasta_path,
          translate = args.translate)
+
+if __name__ == '__main__':
+    main()

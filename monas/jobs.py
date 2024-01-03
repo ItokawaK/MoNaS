@@ -20,9 +20,9 @@ import subprocess
 import sys
 import shutil
 import logging
-
-from scripts.configuration import GenomeRef
 from concurrent.futures import ProcessPoolExecutor
+
+from monas.configuration import GenomeRef
 
 class Job:
     def __init__(self, genome_ref, mode, out_dir):

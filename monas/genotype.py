@@ -28,10 +28,10 @@ from logging import getLogger, StreamHandler, FileHandler, Formatter
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-from scripts import finalize_table
-from scripts.configuration import GenomeRef
-from scripts.jobs import Job
-from scripts import logging_conf
+from monas import finalize_table
+from monas.configuration import GenomeRef
+from monas.jobs import Job
+from monas import logging_conf
 
 version = "1.1"
 
@@ -71,7 +71,7 @@ def description(version):
     return (
        " MoNaS (version {}) - A program genotyping VGSC genes from NGS reads.".format(version)
      )
-if __name__ == '__main__':
+def main():
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -270,3 +270,6 @@ if __name__ == '__main__':
                      )
 
     logger.info(r"MoNaS is finished!")
+
+if __name__ == '__main__':
+    main()

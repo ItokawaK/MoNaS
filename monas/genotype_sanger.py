@@ -76,7 +76,7 @@ def write_fasta(in_seq_fasta, out_fa_dir, out_list):
         for l in out_list_lines:
             f.write(l + '\n')
 
-if __name__ == '__main__':
+def main():
     import argparse
     import random
     import atexit
@@ -173,3 +173,6 @@ if __name__ == '__main__':
     #     shutil.rmtree(monas_out_path)
     #     shutil.rmtree(out_fa_dir)
     #     os.remove(out_list)
+
+if __name__ == '__main__':
+    main()
