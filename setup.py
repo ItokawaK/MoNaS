@@ -54,15 +54,8 @@ setup(
             'finalize_table=monas.finalize_table:main',
             'make_AA_alignment=monas.make_AA_alignment:main',
             'make_jbrowse_config=monas.make_jbrowse_config:main'
-
-
         ],
     },
     author_email="itokawa@niid.go.jp",
-    classifiers=[
-        'Development Status :: 4 - Beta',
-        'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: MIT',
-        'Topic :: Scientific/Engineering :: Bio-Informatics'
-    ]
+    classifiers=[]
 )
