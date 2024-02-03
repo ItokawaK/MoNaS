@@ -47,13 +47,14 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'monas=monas.genotype:main',
-            'monas_sanger=monas.genotype_sanger:main',
-            'bed2gff3=monas.bed2gff3:main',
-            'extract_exons=monas.extract_exons:main',
-            'finalize_table=monas.finalize_table:main',
-            'make_AA_alignment=monas.make_AA_alignment:main',
-            'make_jbrowse_config=monas.make_jbrowse_config:main'
+            'monas=monas.monas:main',
+            # 'monas=monas.genotype:main',
+            # 'monas_sanger=monas.genotype_sanger:main',
+            # 'bed2gff3=monas.bed2gff3:main',
+            # 'extract_exons=monas.extract_exons:main',
+            # 'finalize_table=monas.finalize_table:main',
+            # 'make_AA_alignment=monas.make_AA_alignment:main',
+            # 'make_jbrowse_config=monas.make_jbrowse_config:main'
         ],
     },
     author_email="itokawa@niid.go.jp",

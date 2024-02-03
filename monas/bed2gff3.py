@@ -18,11 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 import os
-if __name__ != '__main__':
-    from monas.finalize_table import Bed
+
+# if __name__ != '__main__':
+#     from monas.finalize_table import Bed
+
 import argparse
 
-from monas.finalize_table import Bed
+try:
+    from monas.finalize_table import Bed
+except:
+    from finalize_table import Bed
 
 
 def create_bed_from_gff3(bed_file):
@@ -116,13 +121,7 @@ def create_bed_from_gff3(bed_file):
 
     return out_str
 
-def main():
-    parser = argparse.ArgumentParser(description = 'Create gff3 from bed')
-
-    parser.add_argument("bed",
-                        help = "bed file")
-
-    args = parser.parse_args()
+def main(args):
 
     if not os.path.isfile(args.bed):
         print(args.bed + " does not exist!")

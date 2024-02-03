@@ -75,10 +75,10 @@ def main():
                         action ='store_true',
                         default= False,
                         help='Resume from existing run')
-    parser_run.add_argument('-v', '--version', dest = 'show_version',
-                        action='store_true',
-                        default = False,
-                        help = 'Show version and exit.')
+    # parser_run.add_argument('-v', '--version', dest = 'show_version',
+    #                     action='store_true',
+    #                     default = False,
+    #                     help = 'Show version and exit.')
 
     parser_run.set_defaults(handler=genotype.main)
 

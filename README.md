@@ -2,7 +2,7 @@
 MoNaS
 ======
 **An automated pipeline to genotype mosquito's voltage-gated sodium channel genes using NGS data**
-### Status: <font color="Red">Version 1.0</font>
+### Status: <font color="Red">Version 1.2</font>
 
 About
 -------
@@ -20,20 +20,29 @@ Although we have not confirmed yet, this program may work in other Linux and Mac
 
 ### Installation
 
-MoNaS consists of several python3 scripts which do not require compilation.
-However, MoNaS depends some third-party softwares below:
-- [bwa](https://github.com/lh3/bwa) v0.7.17\* (For genomic DNA data)
-- [Hisat2](https://ccb.jhu.edu/software/hisat2/index.shtml) v2.1.0\* (For RNA data)
-- [samtools](http://www.htslib.org/) v1.9\*
-- [bcftools](http://www.htslib.org/) v1.9\*
-- [freebayes](https://github.com/ekg/freebayes) v1.2.0-2\* or  [GATK 4x](https://software.broadinstitute.org/gatk/) v4.0.11.0\*
+We recommend creating a conda environment for MoNaS as follows
+
+```
+git clone  https://github.com/ItokawaK/MoNaS.git -b conda
+
+cd MoNaS
+conda create -n monas --file requirements.txt
+
+python setup.py install
+```
+
+MoNaS depends some third-party softwares below:
+- [bwa](https://github.com/lh3/bwa)
+- [Hisat2](https://ccb.jhu.edu/software/hisat2/index.shtml)
+- [samtools](http://www.htslib.org/)
+- [bcftools](http://www.htslib.org/)
+- [freebayes](https://github.com/ekg/freebayes)
 - Optionally [MUSCLE](https://www.drive5.com/muscle/) v3.8.31\*  
 
 
   \*Versions are those we are currently working on.
 
-Those softwares need to be callable through $PATH environment variable.
-Instead, you can directly specify paths of the directories in the **scripts/bin_path.json** file.
+For manual installation, those softwares need to be callable through $PATH environment variable.
 
 Additionally, you need [biopython](https://biopython.org/) package installed in your python if you utilize some helper tools which automatically construct reference files or run **genotype_sanger.py**.
 

@@ -24,7 +24,10 @@ import argparse
 import sys
 import os
 
-from monas.finalize_table import Bed
+try:
+    from monas.finalize_table import Bed
+except:
+    from finalize_table import Bed
 
 def extract(fa_path, bed_path, flanking = 0):
 

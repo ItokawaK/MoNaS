@@ -132,6 +132,10 @@ class VCF_line:
 
             AA_change_mdom[i], kdr_type[i] = self.mdom_conv.mos2fly(AA_change[i])
 
+            if AA_change_mdom[i] == "Error!":
+                print(f'Warning: {AA_change[i]} in {sample_name} was not able to be converted properly',
+                 file=sys.stderr)
+
         self.sample_data[sample_name]["GENOTYPE"] = alleles[0] + "/" + alleles[1]
         self.sample_data[sample_name]["AA_CHANGE"] = "/".join(AA_change_simple)
         self.sample_data[sample_name]["AA_CHANGE_MDOM"] = "/".join(AA_change_mdom)
@@ -262,7 +266,11 @@ class MDom_comvert:
             mos_coord = match_change.group(1)
             old_AA = match_change.group(2)
             new_AA = match_change.group(4)
-            fly_coord = self.hash[mos_coord]
+
+            try:
+                fly_coord = self.hash[mos_coord]
+            except:
+                return ("Error!", 'NA')
 
             if not (fly_coord + new_AA) in self.kdr_dict:
                 kdr_evidence = "Unknown"
@@ -279,7 +287,7 @@ class Bed:
     class Exon:
         def __init__(self, start , end, name, strand):
             self.name = name
-            self.no = int(re.search(pattern= "\d+", string= name).group())
+            self.no = int(re.search(pattern= "[0-9]+", string= name).group())
             self.start = int(start)
             self.end = int(end)
             self.strand = strand
@@ -379,21 +387,23 @@ def create_table(csqvcfs, info_to_get, bed_file, mdom_fasta, out_table_file, hea
                 for l in write_us:
                     print(l, file = out_f)
 
-def main():
-    import argparse
+def main(args):
+    # import argparse
+    #
+    # parser = argparse.ArgumentParser(description = 'Convert csqvcf to table')
+    #
+    # parser.add_argument("out_csq",
+    #                     help = "out_csq file path")
+    #
+    # parser.add_argument("ref_bed",
+    #                     help = "ref.bed file path")
+    #
+    # parser.add_argument("mdom_fa",
+    #                     help = "ref.mdom.fa file path")
+    #
+    # args = parser.parse_args()
 
-    parser = argparse.ArgumentParser(description = 'Convert csqvcf to table')
-
-    parser.add_argument("out_csq",
-                        help = "out_csq file path")
-
-    parser.add_argument("ref_bed",
-                        help = "ref.bed file path")
-
-    parser.add_argument("mdom_fa",
-                        help = "ref.mdom.fa file path")
-
-    args = parser.parse_args()
+    print(args)
 
     create_table(csqvcfs = [args.out_csq],
                  info_to_get = ["CHROM",
@@ -411,6 +421,6 @@ def main():
                  mdom_fasta = args.mdom_fa,
                  out_table_file = "/dev/stdout"
                  )
-    
-if __name__ == '__main__':
-    main()
+
+# if __name__ == '__main__':
+#     main()
