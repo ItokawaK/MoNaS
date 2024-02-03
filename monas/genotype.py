@@ -127,9 +127,9 @@ def main(args):
     #
     # args = parser.parse_args()
 
-    if args.show_version:
-        print(version)
-        sys.exit(0)
+    # if args.show_version:
+    #     print(version)
+    #     sys.exit(0)
 
     if not (args.species and args.out_dir and args.sample_list):
         print("Error: Species, out_dir and list are mandately!", file = sys.stderr)

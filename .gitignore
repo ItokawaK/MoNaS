@@ -1,3 +1,7 @@
 *.pyc
-scripts/bin_path.json
-references/
+monas/bin_path.json
+monas/references/
+__pycache__
+dist/
+build/
+*.egg-info/
