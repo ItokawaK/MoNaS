@@ -31,6 +31,7 @@ conda create -n monas --file requirements.txt
 python setup.py install
 ```
 
+
 MoNaS depends some third-party softwares below:
 - [bwa](https://github.com/lh3/bwa)
 - [Hisat2](https://ccb.jhu.edu/software/hisat2/index.shtml)
@@ -129,10 +130,10 @@ This file can also be created from **ref.fa** and **ref.bed** using [scripts/mak
 
 ### Testing
 If you have cloned MoNaS from GitHub, example fastq.gz files to test scripts are included.
-To conduct a test run `cd MoNaS/misc/example`, and then, execute
+To conduct a test run `cd MoNaS/monas/misc/example`, and then, execute
 
 ```
-../../genotype.py -l list.txt -s Aalb -o out
+monas run -l list.txt -s Aalb -o out
 ```
 
 Check `out/table_with_Mdomcoord.tsv` to confirm if your test run finished properly.
@@ -140,24 +141,39 @@ Check `out/table_with_Mdomcoord.tsv` to confirm if your test run finished proper
 ### Usage
 
 ```
-usage:
-    genotyp.py -s species_name -o out_dir_path -l list_file_path
-                 (-t num_max_threads -b num_threads_per_bwa
-                  -m mode[ngs_dna|ngs_rna] -r ref_dir_path
-                  -v variant_caller[freebayes|gatk]
-                  )
+$ monas -h
+usage: monas [-h] {version,run,table,aln,gff3} ...
 
+MoNaS (version 2.0) - A program genotyping VGSC genes from NGS reads.
 
-MoNaS (version 1.0) - A program genotyping VGSC genes from NGS reads.
+positional arguments:
+  {version,run,table,aln,gff3}
+                        MoNaS command options
+    version             Show version and exit
+    run                 Run all processes
+    table               Convert a csq VCF to a table
+    aln                 Make AA aligment with M. domestica VGSC from DNA fasta and BED
+    gff3                Create MoNaS compartible gff3 from BED file
 
-optional arguments:
+options:
+  -h, --help            show this help message and exit
+```
+
+There are several subcommands to choose
+
+- `monas run` will execute all pipeline processes from raw fastq(.gz).
+
+```
+monas run -h 
+usage: monas run [-h] [-s SPECIES] [-l SAMPLE_LIST] [-t NUM_CPU] [-b NUM_THREADS] [-o OUT_DIR] [-r REF_ROOT]
+                 [-m {ngs_dna,ngs_rna}] [-c {freebayes,gatk}] [-n] [--resume]
+
+options:
   -h, --help            show this help message and exit
   -s SPECIES, --species SPECIES
-                        Species name. It should be same to the dirname of
-                        references.
+                        Species name. It should be same to the dirname of references.
   -l SAMPLE_LIST, --sample_list SAMPLE_LIST
-                        Path for a list file decribing name of sampeles and
-                        fastq files.
+                        Path for a list file decribing name of sampeles and fastq files.
   -t NUM_CPU, --max_cpu NUM_CPU
                         Maximum number of threads. [4]
   -b NUM_THREADS, --bwa_treads NUM_THREADS
@@ -170,20 +186,15 @@ optional arguments:
                         Analysis mode. [ngs_dna]
   -c {freebayes,gatk}, --variant_caller {freebayes,gatk}
                         Variant caller to be used. Default is freebayes.
-  -n, --no_clean        Do not clean old BAM files after rmdup. Off by
-                        default.
-  -v, --version         Show version and exit.
+  -n, --no_clean        Do not clean old BAM files after rmdup. Off by default.
+  --resume              Resume from existing run
+
 ```
 
 #### Examples
-1. For DNA data:
-```bash
-MoNaS/genotype.py  -s Aalb  -l sample_list.txt  -t 16  -o out_dir
-```
 
-2. For RNA data:
 ```bash
-MoNaS/genotype.py  -s Aalb  -l sample_list.txt  -t 16  -o out_dir -m ngs_rna
+MoNaS/genotype.py  -s Aalb  -l sample_list.txt  -t n_threads  -o out_dir
 ```
 
 #### Mandatory options
@@ -191,7 +202,7 @@ MoNaS/genotype.py  -s Aalb  -l sample_list.txt  -t 16  -o out_dir -m ngs_rna
 - `-s`, `--species`
 
   This option specifies the name of directory storing reference files of each species.
-By default, this directory will be searched in the **MoNaS/references/**.
+By default, this directory will be searched in the built-in reference folder `MoNaS/monas/references/`.
 In stead, you can explicitly specify another directory using `-r, --ref_root` option (see below).
 
 - `-l`, `--sample_list`
@@ -207,7 +218,7 @@ In stead, you can explicitly specify another directory using `-r, --ref_root` op
 ```
 
   `sample1, sample2, ...` are arbitrary unique strings identifying each your sample. Do not include a space or characters such as /, \*, \, etc. because MoNaS will use these values for file names.
-The FASTQ paths can be either absolute or relative from where you execute the `genotype.py`.
+The FASTQ paths can be either absolute or relative from where you execute  `monas run`.
 
 #### Other options
 - `-m`, `--mode`
@@ -220,14 +231,14 @@ The FASTQ paths can be either absolute or relative from where you execute the `g
 - `-t`, `--max_cpu` and `-b`, `--bwa_treads`
 
   MoNaS uses `-t` number of threads at the same time in maximum.
-  In the BWA or HISAT2 stage, several samples are processed parallelly using `-b` threads for each sample. Thus, number of BWA or HISAT2 processes running at simultaneously will be `-t` // `-b`.
+  In the BWA or HISAT2 stage, several samples are processed parallelly using `-b` threads for each sample. Thus, number of BWA or HISAT2 processes running at simultaneously will be `-t` / `-b`.
   Basically, running many BWA or HISAT2 processes with small number of thread/process may
   increase speed of analysis but increases memory usage especially if you use
   large genome reference (e.g. full genome).
 
 - `-r`, `--ref_root`
 
-  You can specify, path of root directory where the species directory will be searched.
+ Specify a path of root directory where the species directory will be searched.
 
 - `-c`, `--variant_caller`
 
@@ -239,9 +250,9 @@ Pipeline detail
 
 1. MoNaS maps NGS reads to reference genome of each mosquito species with `bwa mem` for DNA data or `hisat2` for RNA data.
 
-1. The resulted bam files are sorted, removed PCR duplicates, and indexed with `samtools sort`, `rmdup` and `index`, respectively.
+1. The resulted bam files are sorted, mark PCR duplicates, and indexed with `samtools sort`, `markdup -S` and `index`, respectively.
 
-1. Each indexed bam file are processed with `freebayes` or `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions to be analyzed. `freebayes` processes all bam files as single run, but multiprocessed by dividing the region of interest into many sub-regions (exons) which will be integrated in single **out.vcf** file at the end. `gatk HaplotypeCaller`, on the other hand, processes only single bam at once, creating vcf files for each sample.
+1. Each indexed bam file are processed with `freebayes` or `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions to be analyzed. `freebayes` processes all bam files as single run, but multiprocessed by dividing the region of interest into many sub-regions (exons) which will be integrated in single **out.vcf** file at the end. 
 
 1. Annotates the **out.vcf** for amino acid changes by `bcftools csq -p a -l` using information in **ref.gff3** resulting in **out_csq.vcf**.
 
@@ -344,52 +355,49 @@ MoNaS/genotype_sanger.py -s Aalb -t 16 -o out_table.tsv sanger_reads.fa
 ```
 
 
-Helper tools
+Other subcommands 
 ------
 
 MoNaS includes some tools assisting creation of new reference annotation file for species of your interest.
 
-- [scripts/bed2gff.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/bed2gff3.py)
+- `monas gff3`
 
-  This script creates a gff3 file which is interpretable by bcftools csq from a bed file describing *VGSC* CDSs.
+  This script creates and outputs a gff3 file which is interpretable by bcftools csq from a bed file describing *VGSC* CDSs to STDOUT.
 
 ```
-usage: bed2gff3.py [-h] bed
-
-Create gff3 from bed
+$ monas gff3 -h
+usage: monas gff3 [-h] bed
 
 positional arguments:
   bed         bed file
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
+
 ```
 
-- [scripts/make_AA_alignment.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/make_AA_alignment.py)
+- `monas aln`
 
   This script translates genome to VGSC protein using CDS information described in bed file, then conducts
 pairwise alignment with VGSC in *M. domestica* which is usable as **ref.mdom.fa**.
 The script also reports mismatched AA between your reference VGSC and *M. domestica* in **VGSC  OUT_FASTA_PATH.info** with notification for potential kdr(s) listed in [scripts/kdr_list.json](https://github.com/ItokawaK/MoNaS/blob/master/scripts/kdr_list.json) if found.
 
 ```
-usage: make_AA_alignment.py [-h] [-o OUT_FASTA_PATH] [-t TRANSLATE]
-                            [-m MDOM_PATH]
-                            ref_fa bed
-
-Make AA aligment with M. domestica VGSCfrom dna fasta and bed
+$ monas aln -h
+usage: monas aln [-h] [-o OUT_FASTA_PATH] [-t TRANSLATE] [-m MDOM_PATH] ref_fa bed
 
 positional arguments:
-  ref_fa                Reference fasta
+  ref_fa                Genome reference fasta
   bed                   Reference annotation bed
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -o OUT_FASTA_PATH, --out_aln_fasta OUT_FASTA_PATH
                         Multiple AA aligment fasta file to output.
   -t TRANSLATE, --translate TRANSLATE
                         Output only translation to this file.
   -m MDOM_PATH, --mdom_path MDOM_PATH
-                        M. domestica aa fasta path [MoNaS/misc/AAB47604.fa]
+                        M. domestica aa fasta path [MoNaS/monas/misc/AAB47604.fa]
 ```
 Citation:
    - Kentaro Itokawa et al. (2019), High-throughput genotyping of a full voltage-gated sodium channel gene via genomic DNA using target capture sequencing and analytical pipeline MoNaS to discover novel insecticide resistance mutations. [PLoS Negl Trop Dis 13(11): e0007818.](https://doi.org/10.1371/journal.pntd.0007818)
