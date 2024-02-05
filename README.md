@@ -264,29 +264,15 @@ The output directry will look like:
 
 ```bash
   out_dir/ # your specified name
-       ├- BAMs/     # Sorted bam files. Will be removed after samtools rmdupped in default.
-       │    ├- sample1.bam
-       │    ├- sample2.bam
-       │    ├- ...
-       │
-       ├- BAMs_rmdup/　# Indexed bam files after remove PCR duplicates.
+       ├- BAMs/　# Indexed bam files after marking PCR duplicates.
        │    ├- sample1.bam
        │    ├- sample1.bam.bai
        │    ├- sample2.bam
        │    ├- ...
        │       
-       ├- VCFs/ # indexed vcf files for each individual by gatk
-       │     ├- sample1.vcf
-       │     ├- sample1.vcf.idx
-       │     ├- sample2.vcf
-       │     ├- ....
-       │     
        ├- out.vcf # vcf file for multiple samples by freebayes
        ├- out_csq.vcf # vcf file for multiple samples with csq tag
        └- table_with_Mdomcoord.tsv # list of mutations and AA changes with M. domestica AA number
-
-
-
 ```
 
 table_with_Mdomcoord.tsv
