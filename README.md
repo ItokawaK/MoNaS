@@ -2,7 +2,7 @@
 MoNaS
 ======
 **An automated pipeline to genotype mosquito's voltage-gated sodium channel genes using NGS data**
-### Status: <font color="Red">Version 1.2</font>
+### Status: <font color="Red">Version 2.0</font>
 
 About
 -------
@@ -164,7 +164,7 @@ There are several subcommands to choose
 - `monas run` will execute all pipeline processes from raw fastq(.gz).
 
 ```
-monas run -h 
+monas run -h
 usage: monas run [-h] [-s SPECIES] [-l SAMPLE_LIST] [-t NUM_CPU] [-b NUM_THREADS] [-o OUT_DIR] [-r REF_ROOT]
                  [-m {ngs_dna,ngs_rna}] [-c {freebayes,gatk}] [-n] [--resume]
 
@@ -252,7 +252,7 @@ Pipeline detail
 
 1. The resulted bam files are sorted, mark PCR duplicates, and indexed with `samtools sort`, `markdup -S` and `index`, respectively.
 
-1. Each indexed bam file are processed with `freebayes` or `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions to be analyzed. `freebayes` processes all bam files as single run, but multiprocessed by dividing the region of interest into many sub-regions (exons) which will be integrated in single **out.vcf** file at the end. 
+1. Each indexed bam file are processed with `freebayes` or `gatk HaplotypeCaller`. **ref.bed** will be used to restrict regions to be analyzed. `freebayes` processes all bam files as single run, but multiprocessed by dividing the region of interest into many sub-regions (exons) which will be integrated in single **out.vcf** file at the end.
 
 1. Annotates the **out.vcf** for amino acid changes by `bcftools csq -p a -l` using information in **ref.gff3** resulting in **out_csq.vcf**.
 
@@ -355,7 +355,7 @@ MoNaS/genotype_sanger.py -s Aalb -t 16 -o out_table.tsv sanger_reads.fa
 ```
 
 
-Other subcommands 
+Other subcommands
 ------
 
 MoNaS includes some tools assisting creation of new reference annotation file for species of your interest.
