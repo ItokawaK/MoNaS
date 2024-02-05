@@ -76,7 +76,7 @@ a directory as:
 ```
 Practically, many of those files (with asterisk\*) will be created automatically by MoNaS if absent.
 You will need only **re.fa** and **ref.bed** files, at least, to start analysis.
-By default, MoNaS expect **your_species_dir/** locates under in the [references](https://github.com/ItokawaK/MoNaS/tree/master/references) directory of MoNaS.
+By default, MoNaS expect **your_species_dir/** locates under in the [references](https://github.com/ItokawaK/MoNaS/tree/master/monas/references) directory of MoNaS.
 You can explicitly specify the location of **your_species_dir/** by
 ```
 -r your_reference_dir -s your_species_dir
@@ -109,9 +109,9 @@ The 5th column (score) is not used and is always 0.
 - **ref.gff3** file
 
   The GFF3 file interpretable by BCFtools csq.
-This file can be created from **ref.bed** using [scripts/bed2gff.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/bed2gff3.py).
+This file can be created from **ref.bed** using `monas gff3`.
 
-  [example](https://raw.githubusercontent.com/ItokawaK/MoNaS/master/references/Aaeg/ref.gff3).
+  [example](https://github.com/ItokawaK/MoNaS/blob/master/monas/references/Aaeg/ref.gff3).
 
 
 - **ref.mdom.fa** file
@@ -122,16 +122,16 @@ and third entries are aa sequences of ck and dl transcript variants
 of your species, respectively.
 This data will be used to convert aa position coordinate of your species into
 *M. domestica* universal coordinates.
-This file can also be created from **ref.fa** and **ref.bed** using [scripts/make_AA_alignment.py](https://github.com/ItokawaK/MoNaS/blob/master/scripts/make_AA_alignment.py)
+This file can also be created from **ref.fa** and **ref.bed** using `monas aln`
 (MUSCLE and biopython are required).
 
-    [example](https://raw.githubusercontent.com/ItokawaK/MoNaS/master/references/Aaeg/ref.mdom.fa)
+    [example](https://github.com/ItokawaK/MoNaS/blob/master/monas/references/Aaeg/ref.mdom.fa)
 
 ### Testing
 If you have cloned MoNaS from GitHub, example fastq.gz files to test scripts are included.
 To conduct a test run `cd MoNaS/monas/misc/example`, and then, execute
 
-```
+```bash
 monas run -l list.txt -s Aalb -o out
 ```
 
@@ -139,7 +139,7 @@ Check `out/table_with_Mdomcoord.tsv` to confirm if your test run finished proper
 
 ### Usage
 
-```
+```bash
 $ monas -h
 usage: monas [-h] {version,run,table,aln,gff3} ...
 
@@ -162,7 +162,7 @@ There are several subcommands to choose
 
 - `monas run` will execute all pipeline processes from raw fastq(.gz).
 
-```
+```bash
 monas run -h
 usage: monas run [-h] [-s SPECIES] [-l SAMPLE_LIST] [-t NUM_CPU] [-b NUM_THREADS] [-o OUT_DIR] [-r REF_ROOT]
                  [-m {ngs_dna,ngs_rna}] [-c {freebayes,gatk}] [-n] [--resume]
@@ -327,7 +327,8 @@ Column 11: Read depth for each allele
 
 Column 12: Exon where this variant belongs
 
-### Aanlyzing Sanger sequence reads
+
+### Aanlyzing Sanger sequence reads (*disabled* for now)
   Although it does not seem the best approach, reads from Sanger sequence technology could be analyzed in
 MoNaS pipeline by regarding those Sanger reads as NGS reads. [genotype_sanger.py](https://github.com/ItokawaK/MoNaS/blob/master/genotype_sanger.py) is a wrapper script to conduct
 chopping input Sanger reads into 150 bp short reads (~ x5 coverage) with fake quality values, writing fastq and sample list files,
@@ -339,7 +340,6 @@ and then executing MoNaS for those data.
 MoNaS/genotype_sanger.py -s Aalb -t 16 -o out_table.tsv sanger_reads.fa
 ```
 
-
 Other subcommands
 ------
 
@@ -349,7 +349,7 @@ MoNaS includes some tools assisting creation of new reference annotation file fo
 
   This script creates and outputs a gff3 file which is interpretable by bcftools csq from a bed file describing *VGSC* CDSs to STDOUT.
 
-```
+```bash
 $ monas gff3 -h
 usage: monas gff3 [-h] bed
 
@@ -367,7 +367,7 @@ options:
 pairwise alignment with VGSC in *M. domestica* which is usable as **ref.mdom.fa**.
 The script also reports mismatched AA between your reference VGSC and *M. domestica* in **VGSC  OUT_FASTA_PATH.info** with notification for potential kdr(s) listed in [scripts/kdr_list.json](https://github.com/ItokawaK/MoNaS/blob/master/scripts/kdr_list.json) if found.
 
-```
+```bash
 $ monas aln -h
 usage: monas aln [-h] [-o OUT_FASTA_PATH] [-t TRANSLATE] [-m MDOM_PATH] ref_fa bed
 
