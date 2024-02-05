@@ -266,7 +266,7 @@ The output directry will look like:
   out_dir/ # your specified name
        ├- BAMs/　# Indexed bam files after marking PCR duplicates.
        │    ├- sample1.bam
-       │    ├- sample1.bam.bai
+       │    ├- sample1.bam.csi
        │    ├- sample2.bam
        │    ├- ...
        │       
