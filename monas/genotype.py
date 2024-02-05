@@ -28,12 +28,16 @@ from logging import getLogger, StreamHandler, FileHandler, Formatter
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-from scripts import finalize_table
-from scripts.configuration import GenomeRef
-from scripts.jobs import Job
-from scripts import logging_conf
-
-version = "1.1"
+try:
+    from monas import finalize_table
+    from monas.configuration import GenomeRef
+    from monas.jobs import Job
+    from monas import logging_conf
+except:
+    import finalize_table
+    from configuration import GenomeRef
+    from jobs import Job
+    import logging_conf
 
 def parse_sample_list(sample_list):
     # Read sample list file
@@ -71,60 +75,61 @@ def description(version):
     return (
        " MoNaS (version {}) - A program genotyping VGSC genes from NGS reads.".format(version)
      )
-if __name__ == '__main__':
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+def main(args):
 
-    parser = argparse.ArgumentParser(description = description(version),
-                                     usage = usage())
+    # script_dir = os.path.dirname(os.path.abspath(__file__))
+    #
+    # parser = argparse.ArgumentParser(description = description(version),
+    #                                  usage = usage())
+    #
+    # parser.add_argument('-s', '--species', dest = 'species',
+    #                     help = 'Species name. It should be same to the dirname of references.')
+    # parser.add_argument('-l', '--sample_list', dest = 'sample_list',
+    #                    help = 'Path for a list file decribing name of sampeles and fastq files.')
+    # parser.add_argument('-t', '--max_cpu', dest = 'num_cpu',
+    #                    type = int,
+    #                    default = 4,
+    #                    help = 'Maximum number of threads. [4]')
+    # parser.add_argument('-b', '--bwa_treads', dest = 'num_threads',
+    #                    type = int,
+    #                    default = 4,
+    #                    help = 'Number of treads per bwa process. [4]')
+    # parser.add_argument('-o', '--out_dir', dest = 'out_dir',
+    #                    help = 'Name of out directly. Should be new.')
+    # parser.add_argument('-r', '--ref_root', dest = 'ref_root',
+    #                     default = script_dir + "/references",
+    #                     help = 'Root directly of references. Deault = MoNaS/references')
+    # parser.add_argument('-m', '--mode', dest = 'mode',
+    #                      default = 'ngs_dna',
+    #                      choices = ['ngs_dna', 'ngs_rna'],
+    #                      help = 'Analysis mode. [ngs_dna]'
+    #                      )
+    # parser.add_argument('-c', '--variant_caller', dest = 'variant_caller',
+    #                      default = "freebayes",
+    #                      choices = ['freebayes', 'gatk'],
+    #                      help = 'Variant caller to be used. Default is freebayes.'
+    #                      )
+    # parser.add_argument('-n', '--no_clean', dest = 'do_clean',
+    #                      action='store_false',
+    #                      default = True,
+    #                      help = 'Do not clean old BAM files after rmdup. Off by default.'
+    #                      )
+    # parser.add_argument('--suppress_fullpath', dest='no_fullpath',
+    #                      action ='store_true',
+    #                      default= False,
+    #                      help=argparse.SUPPRESS)
+    # parser.add_argument('-v', '--version', dest = 'show_version',
+    #                     action='store_true',
+    #                     default = False,
+    #                     help = 'Show version and exit.'
+    #                     )
+    #
+    # args = parser.parse_args()
 
-    parser.add_argument('-s', '--species', dest = 'species',
-                        help = 'Species name. It should be same to the dirname of references.')
-    parser.add_argument('-l', '--sample_list', dest = 'sample_list',
-                       help = 'Path for a list file decribing name of sampeles and fastq files.')
-    parser.add_argument('-t', '--max_cpu', dest = 'num_cpu',
-                       type = int,
-                       default = 4,
-                       help = 'Maximum number of threads. [4]')
-    parser.add_argument('-b', '--bwa_treads', dest = 'num_threads',
-                       type = int,
-                       default = 4,
-                       help = 'Number of treads per bwa process. [4]')
-    parser.add_argument('-o', '--out_dir', dest = 'out_dir',
-                       help = 'Name of out directly. Should be new.')
-    parser.add_argument('-r', '--ref_root', dest = 'ref_root',
-                        default = script_dir + "/references",
-                        help = 'Root directly of references. Deault = MoNaS/references')
-    parser.add_argument('-m', '--mode', dest = 'mode',
-                         default = 'ngs_dna',
-                         choices = ['ngs_dna', 'ngs_rna'],
-                         help = 'Analysis mode. [ngs_dna]'
-                         )
-    parser.add_argument('-c', '--variant_caller', dest = 'variant_caller',
-                         default = "freebayes",
-                         choices = ['freebayes', 'gatk'],
-                         help = 'Variant caller to be used. Default is freebayes.'
-                         )
-    parser.add_argument('-n', '--no_clean', dest = 'do_clean',
-                         action='store_false',
-                         default = True,
-                         help = 'Do not clean old BAM files after rmdup. Off by default.'
-                         )
-    parser.add_argument('--suppress_fullpath', dest='no_fullpath',
-                         action ='store_true',
-                         default= False,
-                         help=argparse.SUPPRESS)
-    parser.add_argument('-v', '--version', dest = 'show_version',
-                        action='store_true',
-                        default = False,
-                        help = 'Show version and exit.'
-                        )
-
-    args = parser.parse_args()
-
-    if args.show_version:
-        print(version)
-        sys.exit(0)
+    # if args.show_version:
+    #     print(version)
+    #     sys.exit(0)
 
     if not (args.species and args.out_dir and args.sample_list):
         print("Error: Species, out_dir and list are mandately!", file = sys.stderr)
@@ -152,6 +157,7 @@ if __name__ == '__main__':
     out_bam_dir2 = out_dir + "/BAMs_rmdup"
     vcf_out_dir = out_dir + "/VCFs"
     out_table =  out_dir + "/table_with_Mdomcoord.tsv"
+    out_stats =  out_dir + "/stats"
 
 
     if os.path.isfile(args.sample_list):
@@ -176,12 +182,13 @@ if __name__ == '__main__':
             print(file_not_found)
             sys.exit(1)
 
-    if os.path.exists(out_dir):
+    #Create output dir
+    if os.path.exists(out_dir) and not args.resume:
         print("Error: " + out_dir + " already exists!", file = sys.stderr)
         sys.exit(1)
 
-    #Create output dir
-    os.mkdir(out_dir)
+    if not os.path.exists(out_dir):
+        os.mkdir(out_dir)
 
     #----logging setting----
     log_file = os.path.join(args.out_dir, 'log')
@@ -215,6 +222,13 @@ if __name__ == '__main__':
                         out_bam_dir = out_bam_dir1)
 
     logger.info("...Finished mapping and sorting for all samples.")
+    logger.info("Calculating mapping stats...")
+
+    job.get_stats_mp(num_threads=num_threads,
+                     samples = samples,
+                     in_bam_dir = out_bam_dir1,
+                     out_file = out_stats
+                     )
 
     # if not os.path.isdir(out_bam_dir2):
     #     os.mkdir(out_bam_dir2)
@@ -270,3 +284,6 @@ if __name__ == '__main__':
                      )
 
     logger.info(r"MoNaS is finished!")
+
+# if __name__ == '__main__':
+#     main()

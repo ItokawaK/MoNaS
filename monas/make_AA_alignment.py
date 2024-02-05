@@ -24,9 +24,14 @@ import argparse
 import sys
 import json
 import os
-import extract_exons
 
-def main(ref_path, bed_path, Mdom_path, out_fasta_path = None, translate = None):
+try:
+    from monas import extract_exons
+except:
+    import extract_exons
+
+
+def run(ref_path, bed_path, Mdom_path, out_fasta_path = None, translate = None):
 
     muscle_path = "muscle"
 
@@ -104,7 +109,7 @@ def main(ref_path, bed_path, Mdom_path, out_fasta_path = None, translate = None)
 
     #Check if there is any kdr mutation listed in kdr_list.json
 
-    kdr_list = os.path.dirname(os.path.abspath(__file__)) + "/../scripts/kdr_list.json"
+    kdr_list = os.path.dirname(os.path.abspath(__file__)) + "/kdr_list.json"
     with open(kdr_list) as f:
         kdr_dict = json.load(f)
 
@@ -143,31 +148,31 @@ def main(ref_path, bed_path, Mdom_path, out_fasta_path = None, translate = None)
 
     info.close()
 
-if __name__ == '__main__':
+def main(args):
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    parser = argparse.ArgumentParser(description=
-                            "Make AA aligment with M. domestica VGSC"
-                            "from dna fasta and bed")
-
-    parser.add_argument("ref_fa",
-                       help = 'Reference fasta')
-
-    parser.add_argument("bed",
-                       help = "Reference annotation bed")
-
-    parser.add_argument("-o", "--out_aln_fasta", dest = "out_fasta_path",
-                       help = "Multiple AA aligment fasta file to output.")
-
-    parser.add_argument("-t", "--translate", dest = "translate",
-                       help = "Output only translation to this file.")
-
-    parser.add_argument("-m", "--mdom_path", dest = "mdom_path",
-                       help = 'M. domestica aa fasta path [MoNaS/misc/AAB47604.fa]',
-                       default = script_dir + "/../misc/AAB47604.fa")
-
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description=
+    #                         "Make AA aligment with M. domestica VGSC"
+    #                         "from dna fasta and bed")
+    #
+    # parser.add_argument("ref_fa",
+    #                    help = 'Reference fasta')
+    #
+    # parser.add_argument("bed",
+    #                    help = "Reference annotation bed")
+    #
+    # parser.add_argument("-o", "--out_aln_fasta", dest = "out_fasta_path",
+    #                    help = "Multiple AA aligment fasta file to output.")
+    #
+    # parser.add_argument("-t", "--translate", dest = "translate",
+    #                    help = "Output only translation to this file.")
+    #
+    # parser.add_argument("-m", "--mdom_path", dest = "mdom_path",
+    #                    help = 'M. domestica aa fasta path [MoNaS/misc/AAB47604.fa]',
+    #                    default = script_dir + "/../misc/AAB47604.fa")
+    #
+    # args = parser.parse_args()
 
     if not (args.out_fasta_path or args.translate):
         sys.exit(print("Error!: Neither -o nor -t has been given."))
@@ -177,8 +182,11 @@ if __name__ == '__main__':
             print(file + " was not found!", file = sys.stderr)
             sys.exit(1)
 
-    main(ref_path = args.ref_fa,
+    run(ref_path = args.ref_fa,
          bed_path = args.bed,
          Mdom_path = args.mdom_path,
          out_fasta_path = args.out_fasta_path,
          translate = args.translate)
+
+if __name__ == '__main__':
+    main()

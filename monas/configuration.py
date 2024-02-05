@@ -22,8 +22,10 @@ import shutil
 import json
 import logging
 
-from . import bed2gff3
-
+try:
+    from monas import bed2gff3
+except:
+    import bed2gff3
 
 class GenomeRef:
     '''
@@ -117,11 +119,11 @@ class GenomeRef:
                 if os.path.isfile(os.path.join(abs_path, program)):
                     os.environ['PATH'] = abs_path + os.pathsep + os.environ['PATH']
                 else:
-                    self.logger.error(os.path.join(abs_path, program) + " was not found /(*o*)\ !")
+                    self.logger.error(os.path.join(abs_path, program) + r" was not found /(*o*)\ !")
                     sys.exit(1)
             else:
                 if shutil.which(program) == None:
-                    self.logger.error(program + " is not in $PATH /(*o*)\ !")
+                    self.logger.error(program + r" is not in $PATH /(*o*)\ !")
                     sys.exit(1)
 
     def check_existence_for_genotype(self):
@@ -132,5 +134,5 @@ class GenomeRef:
             if  os.path.exists(file):
                 self.logger.info("Using " + file + " as a reference.")
             else:
-                self.logger.debug(r"ERROR!: " + file + " does not exists /(*o*)\ !")
+                self.logger.debug(r"ERROR!: " + file + r" does not exists /(*o*)\ !")
                 sys.exit(1)
