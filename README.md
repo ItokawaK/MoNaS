@@ -21,7 +21,7 @@ Although we have not confirmed yet, this program may work in other Linux and Mac
 We recommend creating a conda environment for MoNaS as follows
 
 ```
-git clone  https://github.com/ItokawaK/MoNaS.git -b conda
+git clone  https://github.com/ItokawaK/MoNaS.git
 
 cd MoNaS
 conda create -n monas --file requirements.txt
