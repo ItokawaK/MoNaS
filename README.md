@@ -26,6 +26,7 @@ git clone  https://github.com/ItokawaK/MoNaS.git -b conda
 cd MoNaS
 conda create -n monas --file requirements.txt
 
+conda activate monas
 python setup.py install
 ```
 
