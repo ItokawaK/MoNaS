@@ -6,8 +6,8 @@ ARG TIMEZONE
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone
 
 # For internal tests
-RUN apt update && apt install -y ca-certificates && \
-   sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//https:\/\/linux.yz.yamagata-u.ac.jp\/ubuntu/' /etc/apt/sources.list
+# RUN apt update && apt install -y ca-certificates && \
+#   sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//https:\/\/linux.yz.yamagata-u.ac.jp\/ubuntu/' /etc/apt/sources.list
 
 RUN apt-get update -y && \
    apt-get install -y --no-install-recommends \
@@ -69,8 +69,8 @@ FROM ubuntu:20.04 AS release
 ARG TIMEZONE
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone
 
-RUN apt update && apt install -y ca-certificates && \
-   sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//https:\/\/linux.yz.yamagata-u.ac.jp\/ubuntu/' /etc/apt/sources.list
+# RUN apt update && apt install -y ca-certificates && \
+#   sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//https:\/\/linux.yz.yamagata-u.ac.jp\/ubuntu/' /etc/apt/sources.list
 
 RUN apt-get update -y && \
    apt-get install -y --no-install-recommends python3.9 && \
