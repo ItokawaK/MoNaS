@@ -27,17 +27,20 @@ import logging
 from logging import getLogger, StreamHandler, FileHandler, Formatter
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
+import re
 
 try:
     from monas import finalize_table
     from monas.configuration import GenomeRef
     from monas.jobs import Job
     from monas import logging_conf
+    from monas.__version__ import __version__
 except:
     import finalize_table
     from configuration import GenomeRef
     from jobs import Job
     import logging_conf
+    from __version__ import __version__
 
 def parse_sample_list(sample_list):
     # Read sample list file
@@ -53,6 +56,35 @@ def parse_sample_list(sample_list):
 
     return(samples)
 
+def check_versions():
+
+    versions ={}    
+    versions['bwa'] = 'Unknown'
+    versions['samtools'] = 'Unknown'
+    versions['freebayes'] = 'Unknown'
+
+    # bwa
+    sbp = subprocess.run('bwa', stderr=subprocess.PIPE, universal_newlines=True)
+    for l in sbp.stderr.split('\n'):
+        match = re.findall('Version: (.+)', l)
+        if match:
+            versions['bwa'] = match[0]
+            break
+
+    # samtools 
+    sbp = subprocess.run(['samtools', 'version'], stdout=subprocess.PIPE, universal_newlines=True)
+    versions['samtools'] = sbp.stdout.split('\n')[0].split(' ')[1]
+
+    # freeBayes
+    sbp = subprocess.run(['freebayes'], stdout=subprocess.PIPE, universal_newlines=True)
+    for l in sbp.stdout.split('\n'):
+        match = re.findall('version: +(.+)', l)
+        if match:
+            versions['freebayes'] =  match[0]
+            break
+
+    return versions
+
 def usage():
     return (
     """
@@ -63,7 +95,7 @@ def usage():
                  |.|  |.|.(_).|.|\\..|.(_|.|____).|
                  |_|  |_|\\___/|_| \\_|\\__,_|_____/
 
-    genotyp.py -s species_name -o out_dir_path -l list_file_path
+    genotype.py -s species_name -o out_dir_path -l list_file_path
                  (-t num_max_threads -b num_threads_per_bwa
                   -m mode[ngs_dna|ngs_rna] -r ref_dir_path
                   -c variant_caller[freebayes|gatk],
@@ -71,68 +103,15 @@ def usage():
                   )
     """)
 
-def description(version):
-    return (
-       " MoNaS (version {}) - A program genotyping VGSC genes from NGS reads.".format(version)
-     )
+# def description(version):
+#     return (
+#        " MoNaS (version {}) - A program genotyping VGSC genes from NGS reads.".format(version)
+#      )
 
 def main(args):
 
-    # script_dir = os.path.dirname(os.path.abspath(__file__))
-    #
-    # parser = argparse.ArgumentParser(description = description(version),
-    #                                  usage = usage())
-    #
-    # parser.add_argument('-s', '--species', dest = 'species',
-    #                     help = 'Species name. It should be same to the dirname of references.')
-    # parser.add_argument('-l', '--sample_list', dest = 'sample_list',
-    #                    help = 'Path for a list file decribing name of sampeles and fastq files.')
-    # parser.add_argument('-t', '--max_cpu', dest = 'num_cpu',
-    #                    type = int,
-    #                    default = 4,
-    #                    help = 'Maximum number of threads. [4]')
-    # parser.add_argument('-b', '--bwa_treads', dest = 'num_threads',
-    #                    type = int,
-    #                    default = 4,
-    #                    help = 'Number of treads per bwa process. [4]')
-    # parser.add_argument('-o', '--out_dir', dest = 'out_dir',
-    #                    help = 'Name of out directly. Should be new.')
-    # parser.add_argument('-r', '--ref_root', dest = 'ref_root',
-    #                     default = script_dir + "/references",
-    #                     help = 'Root directly of references. Deault = MoNaS/references')
-    # parser.add_argument('-m', '--mode', dest = 'mode',
-    #                      default = 'ngs_dna',
-    #                      choices = ['ngs_dna', 'ngs_rna'],
-    #                      help = 'Analysis mode. [ngs_dna]'
-    #                      )
-    # parser.add_argument('-c', '--variant_caller', dest = 'variant_caller',
-    #                      default = "freebayes",
-    #                      choices = ['freebayes', 'gatk'],
-    #                      help = 'Variant caller to be used. Default is freebayes.'
-    #                      )
-    # parser.add_argument('-n', '--no_clean', dest = 'do_clean',
-    #                      action='store_false',
-    #                      default = True,
-    #                      help = 'Do not clean old BAM files after rmdup. Off by default.'
-    #                      )
-    # parser.add_argument('--suppress_fullpath', dest='no_fullpath',
-    #                      action ='store_true',
-    #                      default= False,
-    #                      help=argparse.SUPPRESS)
-    # parser.add_argument('-v', '--version', dest = 'show_version',
-    #                     action='store_true',
-    #                     default = False,
-    #                     help = 'Show version and exit.'
-    #                     )
-    #
-    # args = parser.parse_args()
-
-    # if args.show_version:
-    #     print(version)
-    #     sys.exit(0)
-
     if not (args.species and args.out_dir and args.sample_list):
-        print("Error: Species, out_dir and list are mandately!", file = sys.stderr)
+        print("Error: Species, out_dir and list are mandatory!", file = sys.stderr)
         print("USAGE", file = sys.stderr)
         print(usage(), file = sys.stderr)
         sys.exit(1)
@@ -192,10 +171,13 @@ def main(args):
 
     #----logging setting----
     log_file = os.path.join(args.out_dir, 'log')
-
     logger = getLogger(__name__)
     logging_conf.set(log_file)
     logger.info("Aanalysis started")
+    logger.info(f'MoNaS version: {__version__}')
+    other_app_versions = check_versions()
+    for k,v in other_app_versions.items():
+        logger.info(f'{k} version: {v}')
     #----end----
 
     #bin_path = Bin(args.bin_root) #Bin object

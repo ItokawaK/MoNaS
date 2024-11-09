@@ -88,10 +88,11 @@ class VCF_line:
         of each samples. Set per sample data (GENOTYPE, AA_CHANGE, etc.)
         """
 
-        if self.sample_data[sample_name]["GT"] == ".":
+        if "." in self.sample_data[sample_name]["GT"]:
             return None
         else:
             GT_indx = [int(i) for i in self.sample_data[sample_name]["GT"].split("/")]
+
 
         alleles = ["", ""] # alleles in individual genotype
         AA_change = ["", ""] # corresponding AA changes (e.g. 123F>123L) to each allele
@@ -272,12 +273,19 @@ class MDom_comvert:
             except:
                 return ("Error!", 'NA')
 
-            if not (fly_coord + new_AA) in self.kdr_dict:
-                kdr_evidence = "Unknown"
-            elif self.kdr_dict[(fly_coord + new_AA)] == 1:
-                kdr_evidence = "Strong"
-            elif self.kdr_dict[(fly_coord + new_AA)] == 2:
-                kdr_evidence = "Supportive"
+            # if not (fly_coord + new_AA) in self.kdr_dict:
+            #     kdr_evidence = "Unknown"
+            # elif self.kdr_dict[(fly_coord + new_AA)] == 1:
+            #     kdr_evidence = "Strong"
+            # elif self.kdr_dict[(fly_coord + new_AA)] == 2:
+            #     kdr_evidence = "Supportive"
+
+            kdr_evidence = "Unknown"
+            if fly_coord in self.kdr_dict:
+                kdr_evidence = "Presumable"
+                if new_AA in self.kdr_dict[fly_coord]:
+                    kdr_evidence = self.kdr_dict[fly_coord][new_AA]
+
             return (old_AA + fly_coord + new_AA, kdr_evidence)
         else:
             return ("synonymous", kdr_evidence)

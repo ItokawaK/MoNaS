@@ -9,20 +9,44 @@ try:
     from monas import finalize_table
     from monas import make_AA_alignment
     from monas import bed2gff3
+    from monas.configuration import GenomeRef
+    from monas.__version__ import __version__
 except:
     import genotype
     import finalize_table
     import make_AA_alignment
     import bed2gff3
+    from configuration import GenomeRef
+    from __version__ import __version__
 
 
-VERSION = 2.0
+VERSION = __version__
 
 def show_version(args):
     print(f'MoNaS v{VERSION} by Kentaro Itokawa')
 
 def description(VERSION):
     return f" MoNaS (version {VERSION}) - A program genotyping VGSC genes from NGS reads."
+
+def list_refdb(args):
+    print(f'Reference root directory: {args.ref_root}')
+    species = os.listdir(args.ref_root)
+    print(f'Available species:')
+    for s in species:
+        if os.path.isdir(os.path.join(args.ref_root, s)):
+            print(f'   {s}')
+
+def init_all(args, mode='ngs_dna', vcaller='freebayes'):
+    species = os.listdir(args.ref_root)
+    for s in species:
+        if os.path.isdir(os.path.join(args.ref_root, s)):
+            gref = GenomeRef(args.ref_root, s)
+            if os.path.isdir(os.path.join(args.ref_root, s)):
+                try:
+                    gref.check_genomedb(mode, vcaller, num_cpu=1)
+                except Exception as e:
+                    print(e)
+                    print(f'{s} was failed to be configured.', file=sys.stderr)
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -115,6 +139,20 @@ def main():
     parser_bed2gff.add_argument("bed",
                         help = "bed file")
     parser_bed2gff.set_defaults(handler=bed2gff3.main)
+
+    # Parser list reference
+    parser_list = subparsers.add_parser('list', help='List available species refs')
+    parser_list.add_argument('-r', '--ref_root', dest = 'ref_root',
+                        default = os.path.join(SCRIPT_DIR, "references"),
+                        help = f'Root directly of references. Default={SCRIPT_DIR + "/references"}')
+    parser_list.set_defaults(handler=list_refdb)
+
+    # Parser initialize all references
+    parser_init = subparsers.add_parser('initialize', help='Initialize all available references')
+    parser_init.add_argument('-r', '--ref_root', dest = 'ref_root',
+                        default = os.path.join(SCRIPT_DIR, "references"),
+                        help = f'Root directly of references. Default={SCRIPT_DIR + "/references"}')
+    parser_init.set_defaults(handler=init_all)
 
     args = parser.parse_args()
     args.handler(args)

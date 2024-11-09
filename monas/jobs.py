@@ -166,9 +166,12 @@ class Job:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
         n_ontarget = 0
         for l in p.stdout:
-            n_ontarget += int(l.rstrip().split('\t')[6])
+            n_ontarget += int(l.rstrip().split('\t')[-1])
 
-        ontarget_rate = f'{n_ontarget/(total_n_reads):.2f}'
+        if total_n_reads > 0:
+            ontarget_rate = f'{n_ontarget/(total_n_reads):.2f}'
+        else:
+            ontarget_rate = 'NA'
 
         cmd = f'bedtools multicov -bed {bed} -bams {bam}'.split(' ')
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
@@ -176,7 +179,7 @@ class Job:
         exon_covs = [] #list of tupples (exon, covrage)
         for l in p.stdout:
             fs = l.rstrip().split('\t')
-            exon_covs.append((fs[3], fs[6]))
+            exon_covs.append((fs[3], fs[-1]))
 
         return ([total_n_reads, total_duplicated_reads, n_ontarget, ontarget_rate], exon_covs)
 

@@ -2,7 +2,6 @@
 MoNaS
 ======
 **An automated pipeline to genotype mosquito's voltage-gated sodium channel genes using NGS data**
-### Status: <font color="Red">Version 2.0</font>
 
 About
 -------
@@ -131,7 +130,7 @@ This file can also be created from **ref.fa** and **ref.bed** using `monas aln`
 If you have cloned MoNaS from GitHub, example fastq.gz files to test scripts are included.
 To conduct a test run `cd MoNaS/monas/misc/example`, and then, execute
 
-```bash
+```
 monas run -l list.txt -s Aalb -o out
 ```
 
@@ -139,7 +138,7 @@ Check `out/table_with_Mdomcoord.tsv` to confirm if your test run finished proper
 
 ### Usage
 
-```bash
+```
 $ monas -h
 usage: monas [-h] {version,run,table,aln,gff3} ...
 
@@ -162,7 +161,7 @@ There are several subcommands to choose
 
 - `monas run` will execute all pipeline processes from raw fastq(.gz).
 
-```bash
+```
 monas run -h
 usage: monas run [-h] [-s SPECIES] [-l SAMPLE_LIST] [-t NUM_CPU] [-b NUM_THREADS] [-o OUT_DIR] [-r REF_ROOT]
                  [-m {ngs_dna,ngs_rna}] [-c {freebayes,gatk}] [-n] [--resume]
@@ -271,6 +270,8 @@ The output directry will look like:
        │       
        ├- out.vcf # vcf file for multiple samples by freebayes
        ├- out_csq.vcf # vcf file for multiple samples with csq tag
+       ├- stats.exon_cov.tsv # Stats about exon coverage. PCR duplicate are not counted.
+       ├- stats.mapping.tsv # Stats about on target read rates
        └- table_with_Mdomcoord.tsv # list of mutations and AA changes with M. domestica AA number
 ```
 
@@ -328,7 +329,7 @@ Column 11: Read depth for each allele
 Column 12: Exon where this variant belongs
 
 
-### Aanlyzing Sanger sequence reads (*disabled* for now)
+### Aanlyzing Sanger sequence reads (*disabled* forna)
   Although it does not seem the best approach, reads from Sanger sequence technology could be analyzed in
 MoNaS pipeline by regarding those Sanger reads as NGS reads. [genotype_sanger.py](https://github.com/ItokawaK/MoNaS/blob/master/genotype_sanger.py) is a wrapper script to conduct
 chopping input Sanger reads into 150 bp short reads (~ x5 coverage) with fake quality values, writing fastq and sample list files,
@@ -337,7 +338,7 @@ and then executing MoNaS for those data.
   As any sequecing errors existing in input Sanger reads will be considered as **true variants**, it is important to trim low-quality regions in advance. Also, ambiguous nucleotide codes (R, Y, S, etc...) are not supported yet (ToDo).
 
 ```bash
-MoNaS/genotype_sanger.py -s Aalb -t 16 -o out_table.tsv sanger_reads.fa
+monas run -s Aalb -t 16 -o out_table.tsv sanger_reads.fa
 ```
 
 Other subcommands
@@ -349,7 +350,7 @@ MoNaS includes some tools assisting creation of new reference annotation file fo
 
   This script creates and outputs a gff3 file which is interpretable by bcftools csq from a bed file describing *VGSC* CDSs to STDOUT.
 
-```bash
+```
 $ monas gff3 -h
 usage: monas gff3 [-h] bed
 
@@ -367,7 +368,7 @@ options:
 pairwise alignment with VGSC in *M. domestica* which is usable as **ref.mdom.fa**.
 The script also reports mismatched AA between your reference VGSC and *M. domestica* in **VGSC  OUT_FASTA_PATH.info** with notification for potential kdr(s) listed in [scripts/kdr_list.json](https://github.com/ItokawaK/MoNaS/blob/master/scripts/kdr_list.json) if found.
 
-```bash
+```
 $ monas aln -h
 usage: monas aln [-h] [-o OUT_FASTA_PATH] [-t TRANSLATE] [-m MDOM_PATH] ref_fa bed
 
