@@ -185,7 +185,7 @@ class Job:
 
     def get_stats_mp(self, num_threads, in_bam_dir, samples, out_file):
 
-        with  ProcessPoolExecutor(max_workers = 18) as executor:
+        with  ProcessPoolExecutor(max_workers = num_threads) as executor:
             executed = []
             for sample in samples:
                 in_bam = os.path.join(in_bam_dir, sample[0] + '.bam')

@@ -245,23 +245,10 @@ def main(args):
     logger.info("...Finished variant calling")
 
     logger.info("Writing the final result in table_with_Mdomcoord.tsv...")
-    finalize_table.create_table(
-                     csqvcfs = csqvcfs,
-                     info_to_get = ["CHROM",
-                                    "POS",
-                                    "REF_ALLELE",
-                                    "ALT_ALLELE",
-                                    "QUAL",
-                                    "GENOTYPE",
-                                    "AA_CHANGE",
-                                    "AA_CHANGE_MDOM",
-                                    "KDR_EVIDENCE",
-                                    "AD",
-                                    "EXON"],
-                     # header = "#ID\tCHROM\tPOS\tREF_ALLELE\tALT_ALLELE\tQUAL\tGT\t"
-                     #          "AA_CHANGE\tAA_CHANGE_HOUSEFLY\tAD\tEXON",
+    finalize_table.crate_table(
+                     vcf_path = csqvcfs[0],
                      bed_file = genome_ref.bed,
-                     mdom_fasta = genome_ref.mdom_fa,
+                     mdom_aln_fasta = genome_ref.mdom_fa,
                      out_table_file = out_table
                      )
 
