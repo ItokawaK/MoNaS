@@ -264,10 +264,11 @@ class Job:
         return csqvcfs
 
 
-    def run_freebayes(self, in_bams, region):
+    def run_freebayes(self, in_bams, region, num_best_alleles=10):
         cmd = ["freebayes",
                    "-r", region,
-                   "-f", self.gref.ref_fa] + in_bams
+                   "-f", self.gref.ref_fa,
+                   "-n", str(num_best_alleles)] + in_bams
 
         with open(self.log_file, "a") as err_log:
             proc = subprocess.Popen(cmd,
